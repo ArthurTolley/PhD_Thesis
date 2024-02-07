@@ -1,12 +1,3 @@
-\bibliographystyle{iopart-num}
-\newcommand{\gguide}{{\it Preparing graphics for IOP Publishing journals}}
-\newcommand{\gw}{gravitational wave}
-\newcommand{\gws}{gravitational waves}
-\newcommand{\Gw}{Gravitational wave}
-\newcommand{\Gws}{Gravitational waves}
-\newcommand{\scl}{scattered-light}
-\newcommand{\Scl}{Scattered-light}
-
 \section{\label{sec:ArchEnemy-intro}Introduction}
 
 The Laser Interferometer Gravitational-Wave Observatory (LIGO)~\cite{aligo} and Virgo~\cite{avirgo} collaborations made the first observation of \gws{} in September 2015~\cite{first_detection}. The detection established the field of \gw{} astronomy and a global network of \gw{} detectors, now joined by KAGRA~\cite{kagra}, has allowed for the detection of approximately 100 \gw{} events~\cite{gwtc1, gwtc2, gwtc21, gwtc3}.
@@ -16,7 +7,7 @@ The detection of \gws{} is made possible by both the sensitivity of the detector
 Different classes of glitches have been characterized using tools such as Gravity Spy~\cite{gravityspy, GSpy_update}. Of the 325,101 glitches classified by Gravity Spy in the third observing run of Advanced LIGO~\cite{GSpy2022} with a confidence of $90\%$ or higher, 120,733 ($32.1\%$) were classified as ``Scattered Light''. \Scl{} glitches occur in the 10-120Hz frequency band~\cite{reducing_scattering_o3} which coincides with the frequency band where we observe the inspiral and merger signatures of compact binary coalescences. \Scl{} glitches are characterized by an arch-like pattern in a time-frequency spectrogram of the detector output, as seen in figure~\ref{fig:scattered_light}. 
 %
 \begin{figure}
-  \includegraphics[width=\textwidth]{Figures/Section1/single_stack.pdf}
+  \includegraphics[width=\textwidth]{images/archenemy/Section1/single_stack.pdf}
   \caption{An Omega scan \cite{omegascan} of \gw{} data containing an example of a \scl{} glitch. \Scl{} glitches are characterized by a symmetric arch-like pattern. Multiple \scl{} glitches can be seen at the 4, 8 \& 12 second marks as well as multiple harmonic glitches at 8 seconds.}
   \label{fig:scattered_light}
 \end{figure}
@@ -26,13 +17,13 @@ Different classes of glitches have been characterized using tools such as Gravit
 \Scl{} glitches have been a significant problem when observing compact binary mergers. As an example, GW190701\_203306 was coincident with a \scl{} glitch, as shown in figure \ref{fig:obscured_detection}~\cite{gwtc2}, requiring subtraction from the data before the event could be properly characterized~\cite{O3_subtraction}. A further 7 candidate events were found to be in coincidence with \scl{} glitches in the third observing run~\cite{gwtc3}. For this reason, it is important to reduce the effect of \scl{} glitches in the detectors and \gw{} search pipelines. \Scl{} glitches occur as single or multiple glitches and can appear rapidly in time and simultaneously in frequency (see figure \ref{fig:consec_scattered_light}), which we refer to as harmonic glitches.
 
 \begin{figure}
-  \includegraphics[width=\textwidth]{Figures/Section1/GW190701_203306_overlay.pdf}
+  \includegraphics[width=\textwidth]{images/archenemy/Section1/GW190701_203306_overlay.pdf}
   \caption{GW190701\_203306, a \gw{} event coincident with a \scl{} glitch in the data from the LIGO Livingston observatory. The orange dashed track shows the inferred time-frequency evolution of a \gw{} event produced by a compact binary merger, the red solid line is an overlaid track of the approximate location of the coincident fast scattering glitches.}
   \label{fig:obscured_detection}
 \end{figure}
 
 \begin{figure}
-  \includegraphics[width=\textwidth]{Figures/Section1/multiple_harmonics.pdf}
+  \includegraphics[width=\textwidth]{images/archenemy/Section1/multiple_harmonics.pdf}
   \caption{An Omega scan \cite{omegascan} of \gw{} data containing multiple examples of \scl{} glitches. Here we see multiple \scl{} glitches repeating periodically in a $20$ second period of time. Harmonic \scl{} glitches are also seen in multiple stacks, the harmonic glitches share \emph{time period} values and the \emph{glitch frequency} values are $n-$multiples of the lowest frequency harmonic within the stack.}
   \label{fig:consec_scattered_light}
 \end{figure}
@@ -256,7 +247,7 @@ For our \scl{} glitch search, we generated a template bank with \emph{time perio
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth]{Figures/Section3/3.2/template_bank_square.pdf}
+  \includegraphics[width=0.7\textwidth]{images/archenemy/Section3/3.2/template_bank_square.pdf}
   \caption{The template bank of \scl{} glitch templates (black points) used in the search for \scl{} glitches. The \emph{glitch frequency} parameter values range from $20$Hz - $80$Hz and the \emph{time period} parameter values range from $1.8$s - $5.5$s. This bank was created with a maximum match allowed between two templates of $0.97$ and contains 117,481 templates.}
   \label{fig:sq_bank}
 \end{figure}
@@ -283,9 +274,9 @@ The $\chi^2$ test that we employ is similar to that of \cite{Allen_2005}, howeve
 \begin{figure}
   \centering
   \begin{minipage}[t]{1.0\linewidth}
-  \includegraphics[width=0.49\textwidth]{Figures/Section3/3.4/split_bins.pdf}
+  \includegraphics[width=0.49\textwidth]{images/archenemy/Section3/3.4/split_bins.pdf}
   \hspace{0.01\linewidth}
-  \includegraphics[width=0.49\linewidth]{Figures/Section3/3.4/split_bins_qscan.pdf}
+  \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.4/split_bins_qscan.pdf}
   \end{minipage}
   \caption{A \scl{} glitch template (left) where the colours and line-styles are indicative of the four equal SNR time bins to be used in calculating the $\chi_{r}^{2}$ value and re-weighting the SNR. The same \scl{} glitch template bins overlaid on an injection of the \scl{} glitch (right). The inner two bins are considerably shorter than the outer two bins which informs us that the center - higher frequency - region of the \scl{} glitch contributes a larger amount to the SNR per unit time than the lower frequency regions.}
   \label{fig:split_temp_subplot}
@@ -305,7 +296,7 @@ where $\rho_{rw}$ represents the re-weighted signal-to-noise ratio of the \scl{}
 We do note that this re-weighting function has been tuned for compact binary merger waveforms and we did not repeat that tuning here with \scl{} glitches. One could retune this statistic, specifically targeting \scl{} glitches, using (for example) the automatic tuning procedure described in~\cite{McIsaac_2022}. However, we demonstrate the suitability of the $\chi^{2}$ test for our purposes in figure~\ref{fig:chi_snr} where we show the $\chi_{r}^{2}$ vs SNR distribution of the triggers found by our \scl{} glitch search when performed on data containing only \scl{} glitches and data containing a binary black hole \gw{} injection.
 
 \begin{figure}
-  \makebox[\textwidth][c]{\includegraphics[width=\textwidth]{Figures/Section3/3.4/SLvsBBH.pdf}}
+  \makebox[\textwidth][c]{\includegraphics[width=\textwidth]{images/archenemy/Section3/3.4/SLvsBBH.pdf}}
   \caption{The signal-to-noise ratio and $\chi_{r}^{2}$ values for the triggers identified by the matched filtering and clustering of the \scl{} glitch template bank with data containing only \scl{} glitches (grey hexagons) and data containing a binary black hole \gw{} injection (red triangles). The black contour lines represent the re-weighted signal-to-noise ratio values the trigger will take when equation \ref{eqn:reweighting} is applied. The orange dashed vertical line indicates the signal-to-noise ratio value limit of 8, above which we decide to perform the $\chi^{2}$ test and calculate the re-weighted signal-to-noise ratio. The blue solid contour line indicates a re-weighted signal-to-noise ratio value of 8, which is the limit at which we consider the trigger to be real. Different re-weighting parameter values will produce different contour line shapes. It can be seen that no triggers for the data containing the \gw{} injection lie beneath the contour line and therefore no \scl{} glitches are found on the \gw{} signal.}
   \label{fig:chi_snr}
 \end{figure}
@@ -316,14 +307,14 @@ We note that the $\chi^{2}$ test increases the number of matched filters require
 
 \begin{figure}
       \begin{minipage}[t]{1.0\linewidth}
-        \includegraphics[width=0.49\linewidth]{Figures/Section3/3.5/cluster_qscan.pdf}
+        \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.5/cluster_qscan.pdf}
         \hspace{0.01\linewidth}
-        \includegraphics[width=0.49\linewidth]{Figures/Section3/3.5/cluster_snr_ts.pdf}
+        \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.5/cluster_snr_ts.pdf}
       \end{minipage}
       \begin{minipage}[t]{1.0\linewidth}
-        \includegraphics[width=0.49\linewidth]{Figures/Section3/3.5/cluster_all_triggers.pdf}
+        \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.5/cluster_all_triggers.pdf}
         \hspace{0.01\linewidth}
-        \includegraphics[width=0.49\linewidth]{Figures/Section3/3.5/cluster_in_frequency.pdf}
+        \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.5/cluster_in_frequency.pdf}
       \end{minipage}
     \caption{The process for identifying all the \scl{} glitches in a period of \gw{} data. The red overlay in the \gw{} data used in this example (top left) indicates the highest re-weighted signal-to-noise trigger found, the dashed vertical lines represent the time slice window around this trigger. The re-weighted signal-to-noise ratio time series resulting from the matched filter of this trigger's template and the data (top right) is clustered in time to identify the triggers found above a signal-to-noise threshold of $8$, indicated by red vertical dashed lines. All the triggers from all of the templates in the template bank are then clustered in time (bottom left) to identify the highest re-weighted signal-to-noise glitches in the data, indicated by the orange vertical dashes lines. The triggers found within the time slice window, with a similar \emph{time period} value---within $\pm 10\%$---of the highest re-weighted signal-to-noise ratio trigger (bottom right) are clustered by their \emph{glitch frequency} value to find the harmonic glitches at the same time, indicated again by red dashed lines.}
     \label{fig:clustering_story}
@@ -350,9 +341,9 @@ We demonstrate the hierarchical subtraction step on an amount of data which cont
 \begin{figure}
      \centering
      \begin{minipage}[t]{1.0\linewidth}
-        \includegraphics[width=0.49\linewidth]{Figures/Section3/3.6/overlay_good_overlays_first.pdf}
+        \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.6/overlay_good_overlays_first.pdf}
         \hspace{0.02\linewidth}
-        \includegraphics[width=0.49\linewidth]{Figures/Section3/3.6/overlay_good_overlays_second.pdf}
+        \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.6/overlay_good_overlays_second.pdf}
      \end{minipage}
          \caption{LIGO-Hanford data from 2019-11-23 17:54:22 - 2019-11-23 17:55:12 containing \scl{} glitches which have been identified by the ArchEnemy search (left), there is a misalignment in the template found for a number of glitches in this period of data and some missed glitches. \Scl{} glitches remaining after running the hierarchical subtraction search (right) for the same period of data, we have missed more \scl{} glitches however misalignments have been removed. The highest harmonic at approximately $892$ seconds has been incorrectly split into two separate templates.}
     \label{fig:overlay_goods}
@@ -361,9 +352,9 @@ We demonstrate the hierarchical subtraction step on an amount of data which cont
 \begin{figure}
      \centering
      \begin{minipage}[t]{1.0\linewidth}
-        \includegraphics[width=0.49\linewidth]{Figures/Section3/3.6/injected_artefacts_initial.pdf}
+        \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.6/injected_artefacts_initial.pdf}
         \hspace{0.02\linewidth}
-        \includegraphics[width=0.49\linewidth]{Figures/Section3/3.6/injected_artefacts_subtracted.pdf}
+        \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.6/injected_artefacts_subtracted.pdf}
      \end{minipage}
          \caption{Data containing an injected stack of harmonic \scl{} glitches (left) and the corresponding data found when running the hierarchical subtraction search and subtracting the identified \scl{} glitches from the data (right).}
     \label{fig:injected_glitches}
@@ -379,7 +370,7 @@ Figure~\ref{fig:overlay_goods} is an example of the results of the ArchEnemy pip
 
 \begin{figure}
        \centering
-    \includegraphics[width=0.7\linewidth]{Figures/Section3/3.7/overlay_bad_overlays.pdf}
+    \includegraphics[width=0.7\linewidth]{images/archenemy/Section3/3.7/overlay_bad_overlays.pdf}
     \caption{LIGO-Livingston data from 2019-11-24 01:30:32 - 2019-11-24 01:31:20 containing a very large number of \scl{} glitches at multiple times and frequencies over-plotted with the \scl{} glitches identified by the ArchEnemy search. Very few overlays match well onto \scl{} glitches. The template bank used in this search terminates at $80$ Hz and so the \scl{} glitches located above this value will not be correctly identified. There are also asymmetric \scl{} glitches located which will not be identified correctly by our search which assumes symmetry in the \scl{} glitch.}
     \label{fig:overlay_bads}
 \end{figure}
@@ -398,18 +389,19 @@ To determine whether we have misidentified any \gw{} injections as \scl{} glitch
 \begin{table}[tb]
 \caption{\label{tab:coincident_triggers}For both interferometers and all $3$ injection sets we identify the number of injections which are found to have \scl{} glitches identified within $15$ seconds of merger time (``Injections with Coincident Triggers''), along with the number of \scl{} glitches found within this window for these injections (``Scattered-Light Coincident Triggers''). We investigated each of these injections and recorded the number which actually had \scl{} glitches identified due to the injected \gw{} signal (``Actual Overlapped Injections'').}
 \footnotesize
-\begin{tabular}{ccccc}
-\br
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}cccccc}
+\hline
 &    & Injections with& Scattered-Light & Actual Overlapped \\
 Interferometer & Injection Set & Coincident Triggers& Coincident Triggers&Injections \\
-\mr
+\hline
 H1 & BBH           & 20 & 45 & 1\\
    & BNS           & 23 & 50 & 2\\
    & NSBH          & 38 & 73 & 7\\
 L1 & BBH           & 13 & 21 & 2\\
    & BNS           & 18 & 30 & 2\\
    & NSBH          & 35 & 56 & 16\\
-\br
+\hline
 \end{tabular}
 
 \end{table}
@@ -421,9 +413,9 @@ We investigate each injection with coincident \scl{} triggers, seeing how many h
 \begin{figure}
   \centering
   \begin{minipage}[t]{1.0\linewidth}
-    \includegraphics[width=0.49\linewidth]{Figures/Section3/3.8/L1_loud_Original.pdf}
+    \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.8/L1_loud_Original.pdf}
     \hspace{0.02\linewidth}
-    \includegraphics[width=0.49\linewidth]{Figures/Section3/3.8/L1_loud_Subtracted.pdf}
+    \includegraphics[width=0.49\linewidth]{images/archenemy/Section3/3.8/L1_loud_Subtracted.pdf}
   \end{minipage}
     \caption{An injected binary neutron star compact binary coalescence \gw{} signal, with the \scl{} glitches identified by the ArchEnemy search pipeline overlayed in red (left). The same injected signal but with the \scl{} glitches removed from the data (right). It can be seen that power is removed from the signal track and also there is an amount of power added to the data above the track.}
     \label{fig:loud_inj}
@@ -443,16 +435,18 @@ The data we have searched over contained no previously found \gw{} signals~\cite
 \centering
 \caption{\label{tab:found_injs}The number of injections found by each search with a false-alarm rate less than 2 per year alongside the number of newly-found and newly-missed injections, those found by the glitch-subtracted and not the original search and vice versa. We also show the sensitivity ratio of the glitch-subtracted search and original search for each injection set.} 
 \footnotesize
+\renewcommand{\arraystretch}{1.2}
 \begin{tabular}{@{}cccccc}
-\br
+\hline
 Injection & Original  & Glitch- & Sensitivity & Newly & Newly \\
 Type & Search & Subtracted & ratio & Found & Missed \\
-\mr
-BBH           & 1215 & 1222 & 1.01 & 10 & 3\\
-BNS           & 1315 & 1315 & 1.00 & 5 & 5 \\
-NSBH          & 1260 & 1265 & 1.00 & 8 & 3 \\
-\br
+\hline
+BBH & 1215 & 1222 & 1.01 & 10 & 3 \\
+BNS & 1315 & 1315 & 1.00 & 5 & 5 \\
+NSBH & 1260 & 1265 & 1.00 & 8 & 3 \\
+\hline
 \end{tabular}
+
 
 \end{table}
 
@@ -463,14 +457,14 @@ The glitch-subtracted search identifies $10$ additional binary black hole inject
 \begin{figure}
   \centering
   \begin{minipage}[t]{1.0\linewidth}
-    \includegraphics[width=0.49\linewidth]{Figures/Section4/4.1/ae_found_bbh/BBH_H1_loud_Original.pdf}
+    \includegraphics[width=0.49\linewidth]{images/archenemy/Section4/4.1/BBH_H1_loud_Original.pdf}
     \hspace{0.02\linewidth}
-    \includegraphics[width=0.49\linewidth]{Figures/Section4/4.1/ae_found_bbh/BBH_H1_loud_Subtracted.pdf}
+    \includegraphics[width=0.49\linewidth]{images/archenemy/Section4/4.1/BBH_H1_loud_Subtracted.pdf}
   \end{minipage}
   \begin{minipage}[t]{1.0\linewidth}
-    \includegraphics[width=0.49\linewidth]{Figures/Section4/4.1/ae_found_nsbh/NSBH_H1_loud_Original.pdf}
+    \includegraphics[width=0.49\linewidth]{images/archenemy/Section4/4.1/NSBH_H1_loud_Original.pdf}
     \hspace{0.02\linewidth}
-    \includegraphics[width=0.49\linewidth]{Figures/Section4/4.1/ae_found_nsbh/NSBH_H1_loud_Subtracted.pdf}
+    \includegraphics[width=0.49\linewidth]{images/archenemy/Section4/4.1/NSBH_H1_loud_Subtracted.pdf}
   \end{minipage}
     \caption{Two examples of \gw{} injections found by the glitch-subtracted search for \gws{} which were not found by the original \gw{} search due to the presence of \scl{} glitches at the same time as the \gw{} inspiral. Top left: A binary black hole injection with a false-alarm rate of 1 per $8643.73$ years is shown alongside the \scl{} glitches found by the ArchEnemy search and subtracted from the data prior to performing the glitch-subtracted PyCBC search for \gws{} (top right). Bottom left: A neutron star black hole injection with a false-alarm rate of 1 per $9961.55$ years and the \scl{} glitches found by the ArchEnemy search and subtracted from the data prior to performing the glitch-subtracted PyCBC search for \gws{} (bottom right).}
     \label{fig:ae_found}
@@ -484,7 +478,7 @@ The statistical significance of the sensitivity increase we report for the binar
 
 \begin{figure}
      \centering
-     \includegraphics[width=0.7\textwidth]{Figures/Section4/4.1/allinj_vt_ratio_ArchEnemy_coinc.pdf}
+     \includegraphics[width=0.7\textwidth]{images/archenemy/Section4/4.1/allinj_vt_ratio_ArchEnemy_coinc.pdf}
      \caption{The ratio of the sensitive volume-time of the glitch-subtracted search and the original \gw{} search. The grey dashed line indicates a false-alarm rate of $2$ per year which is our threshold and the point at which we measure any sensitivity improvements of the glitch-subtracted search for each of the three \gw{} injection sets. }
      \label{fig:allinj_vt_ratio}
 \end{figure}
@@ -502,6 +496,7 @@ The results of the application of the ArchEnemy search pipeline, the list of \sc
 As a final note, while we acknowledge that the sensitivity improvements that we have observed---$\sim 1\%$---are very modest, the concept of removing \scl{} glitches, or other identified glitch classes, from the data prior to matched filtering for compact binary mergers is one that we encourage others to explore further. An increase in the rate of events or the rate of \scl{} glitches in future observing runs will mean an increase in the number of affected events, such techniques offer a method for mitigating the effect that these glitches will have on the search, maximizing the number of observations that can be made.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Appendix}
 \section{\label{sec:apdx_stat_sig}Statistical Significance}
 
 We report a $1\%$ increase in the sensitivity for the binary black hole injection set in the glitch-subtracted \gw{} search (see section~\ref{sec:results}). We wish to determine the statistical significance of this result under the null hypothesis that subtracting \scl{} glitches prior to searching for \gws{} does not increase the sensitivity of the \gw{} search. The binary black hole injection set contains $6200$ injected signals, $10$ additional injections were found in the glitch-subtracted \gw{} search, $3$ additional injections were missed in our search, this gives us $13$ injections which have changed state.

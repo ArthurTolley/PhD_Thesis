@@ -1,0 +1,12 @@
+The detector noise is approximated as Gaussian and stationary \cite{gaussian_noise}, this isn't true.
+Data artefacts (commonly referred to as glitches) are non-Gaussian noise which inhibit the sensitivity of the
+detector, reduce the quality of the data and, obscure \gw detections \cite{transient_noise}.
+
+There are a number of common glitches in the detector data: blips \cite{blips}, whistles \cite{whistles},
+scattered light \cite{Accadia}. The sources of these glitches are studied, for example, whistles are caused by the
+beating of radiofrequencies in the detector, however, some glitches are from unknown sources (e.g. blips).
+
+We can reduce the noise from the sources by making improvements to the detectors \cite{soni_scattered}, this lowers the
+frequency of some glitches but doesn't remove them entirely. We can eliminate some glitches by completely removing the
+source \cite{laura_char}. We are also able to reduce noise retroactively by gating certain times or using algorithms to
+remove noise \cite{cit_science_soni}. An example of this is detailed in the section \ref{sec:scattered_light}.

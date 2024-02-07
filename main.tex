@@ -14,30 +14,49 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
 
 \usepackage{arydshln}
 \usepackage{makecell}
 \usepackage{pdflscape}
 
+% xspace intelligently adds a space
+\usepackage{xspace}
+
+% Text commands
+\newcommand{\gw}{gravitational wave\xspace}
+\newcommand{\gws}{gravitational waves\xspace}
+\newcommand{\Gw}{Gravitational wave\xspace}
+\newcommand{\Gws}{Gravitational waves\xspace}
+\newcommand{\scl}{scattered-light\xspace}
+\newcommand{\Scl}{Scattered-light\xspace}
+\newcommand{\cbc}{compact binary coalescence\xspace}
+\newcommand{\cbcs}{compact binary coalescences\xspace}
+\newcommand{\aligo}{Advanced LIGO\xspace}
+
 % Header and Footer design
 \usepackage{fancyhdr}
 \pagestyle{fancy}
+
+\setlength{\headheight}{15pt}
+%\addtolength{\topmargin}{-2.5pt}  % Optionally, adjust the top margin
 
 % Redefine the plain page style
 \fancypagestyle{plain}{%
     \fancyhf{}%
     \fancyfoot[LO,RE]{\textbf{\thepage}}
-    \fancyfoot[C]{Arthur Tolley}
+    \fancyfoot[C]{\nouppercase{\leftmark}}
     \renewcommand{\headrulewidth}{0pt}% Line at the header invisible
 }
 
 \fancyhead{}
-\fancyhead[LO, RE]{\nouppercase{\leftmark}}
+\fancyhead[LO, RE]{}
 \fancyhead[C]{\nouppercase{\rightmark}}
 
 \fancyfoot{}
 \fancyfoot[LO,RE]{\textbf{\thepage}}
-\fancyfoot[C]{Arthur Tolley}
+\fancyfoot[C]{\nouppercase{\leftmark}}
 
 %---%---%---%---%
 \begin{document}
@@ -65,7 +84,7 @@
 \tableofcontents
 
 %---% Introduction %---%
-\chapter{Introduction}
+\chapter*{Introduction}
 \input{chapters/introduction}
 
 %---% General Relativity %---%
@@ -85,13 +104,13 @@
 I am first author on a peer-reviewer and published work carrying the name \textit{"ArchEnemy: Removing scattered-light glitches from gravitational wave data"}, within the Institute of Physics journal Classical and Quantum Gravity~\cite{ArchEnemy}.
 \input{chapters/archenemy}
 
-%---% PyCBC Live %---%
-\chapter{Improving PyCBC Live}
+%---% PyCBC Live Ranking Statistic %---%
+\chapter{Improving the PyCBC Live Ranking Statistic}
 \input{chapters/pycbclive}
 
-%---% ArchEnemy v2 %---%
-\chapter{ArchEnemy v2}
-\input{chapters/archenemyv2}
+%---% Early Warning Ranking Statistic %---%
+\chapter{Early Warning Ranking Statistic}
+\input{chapters/ew_ranking}
 
 %---% Other Work %---%
 \chapter{Other Work}
@@ -109,5 +128,9 @@ I am first author on a peer-reviewer and published work carrying the name \texti
 \appendix
 \chapter{Appendix Title}
 \input{chapters/appendix}
+
+\bibliographystyle{iopart-num}
+\bibliography{refs}
+
 
 \end{document}
