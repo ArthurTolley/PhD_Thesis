@@ -5,7 +5,8 @@
 %   Template Fits
 %   Testing - Injection Tests
 %   Sensitivity Increase
-
+%   Investigating decreases in sensitivity
+%        Templates with high spin, high mass, false alarms
 
 In this chapter we discuss the improvements made to the PyCBC Live search's ranking statistic which has enabled an increase in the sensitivity of the live search of over 30\%. We will discuss the new additions to the ranking statistic and how these have been adapted for the live search.
 
@@ -89,4 +90,47 @@ To measure the sensitivity improvements of the new statistic we count the number
 %
 The new statistic at an IFAR of 1 year can be seen to have found approximately 35\% more gravitational wave signals with an IFAR greater than 1 year. This is a large increase and demonstrates the benefit of adding the PSD variation and templates fits to the live search.
 
+\section{\label{pycbclive-ignoring-psdvar}Ignoring PSD Variation}
 
+Figure~\ref{fig:pycbclive-ifar-vs-ifar} shows a number of outlier injections which have been found with a much lower IFAR in the search with the new statistic when compared to the old statistic IFAR. This is not desirable, especially when concerning the regions toward the right hand side of the figure where we initially observed the injection with a very high significance and do not want to miss this with the new statistic.
+
+The first avenue of exploration is with the new additions made with the new statistic. These were split into the inclusion of PSD variation and template fitting. We already had reservations using the PSD variation in live due to the nature of the live search and its ever adjusting PSD so we can remove the PSD variation contribution to the ranking statistic and check the IFARs of the injections with template fitting only. The IFAR vs IFAR figure for fitting only and the old statistic can be seen in figure~\ref{fig:pycbclive-fits-only-ifar-vs-ifar}.
+%
+\begin{figure}
+       \centering
+    \includegraphics[width=1.2\textwidth]{images/pycbclive/ifar_vs_ifar_fits_only_old.png}
+    \caption{}
+    \label{fig:pycbclive-fits-only-ifar-vs-ifar}
+\end{figure}
+%
+When compared to figure~\ref{fig:pycbclive-ifar-vs-ifar} we can see the problematic injections in the bottom right corner of the figure have been removed. We can produce the sensitivity plots for both a comparison between the template fitting only statistic vs old statistic and the template fitting \& PSD variation vs template fitting only searches.
+%
+\begin{figure}
+  \centering
+  \begin{minipage}[t]{1.0\linewidth}
+  \includegraphics[width=0.49\textwidth]{images/pycbclive/fo_vs_o.png}
+  \hspace{0.01\linewidth}
+  \includegraphics[width=0.49\linewidth]{images/pycbclive/f_vs_fo.png}
+  \end{minipage}
+  \caption{}
+  \label{fig:pycbclive-sensitivity-comparisons}
+\end{figure}
+%
+Figure~\ref{fig:pycbclive-sensitivity-comparisons} (left) shows a marginal increase in sensitivity at the lower IFARs when ignoring PSD variation and (right) shows a clear decrease in sensitivity when including the PSD variation in the new statistic search. Therefore we made the choice to not use PSD variation in the PyCBC Live statistic going forward.
+
+\section{\label{pycbclive-false-alarms}Investigating Downranked Regions}
+
+While we have a sensitivity increase (shown by figure~\ref{fig:pycbclive-sensitivity-comparisons}) the IFAR vs IFAR plot in figure~\ref{fig:pycbclive-fits-only-ifar-vs-ifar} shows there are three group of injections that we need to investigate and understand before we can claim this new statistic is ready to be used in the PyCBC Live search. These three regions are highlighted in figure~\ref{fig:pycbclive-region-highlight}.
+%
+\begin{figure}
+       \centering
+    \includegraphics[width=1.2\textwidth]{images/pycbclive/ifar_vs_ifar_regions.png}
+    \caption{}
+    \label{fig:pycbclive-region-highlight}
+\end{figure}
+%
+The first region to investigate is in the top-right corner of the figure~\ref{fig:pycbclive-region-highlight}. These are injections that were found with the maximum significance by the old statistic but they have been downranked by the inclusion of template fitting in the ranking statistic. While they have been downranked, they are still all found with a high significance and there is no chance they will be missed. This region contains X injections and the primary cause of the downranked significance is due to Y.
+
+The next region is the injections which have been found by the old statistic with an IFAR greater than 1 year but missed by the search which includes template fitting. These are found in the bottom-right grid in figure~\ref{fig:pycbclive-region-highlight}. This region contains X injections and upon investigation we can see that the cuase of this downranking is Y.
+
+The final region we are investigating is those injections which were marginally missed in when using the old statistic, between an IFAR of 0.1 and 1 years, and then were further downranked by including template fitting in the statistic. This is an important region because these are the signals which are close to the IFAR threshold and we want to recover these with an improved statistic. Upon investigating these X (number of) injections we can see that the reason they are downranked is due to Y (most are found with the same template but the template is high mass/high spin/ not well fit).
