@@ -1,98 +1,29 @@
-The project described in this chapter was the second large project of my PhD and involved making significant changes to the PyCBC Live search. The changes to the PyCBC Live code were made by myself however to use these changes in the live search for gravitational waves another significant set of changes were required to implement the structural changes that define how PyCBC Live runs on the supercomputer infrastructure. Therefore this work has not currently been published, it is aimed to form part of the PyCBC Live fourth observing run methods paper. Significant contributions were made by Gareth Cabourn Davies and Max Trevor to enable these changes to be run in the second half of the fourth observing run.
+% The PyCBC Live ranking statistic in O3 was a very simple Phase-time-amplitude
+% To improve the ranking statistic in O4 we have included measurements of the noise background and template dependent ranking
+% Including these template fits in Live has a demonstrated sensitivity improvement of 10% for 0.5 IFAR and 39% for 1 IFAR in an `offline' pseudo live injected set test of the PyCBC Live search.
+% These fits are generated every week based on the previous week of triggers to be used for the next week of data searching
+% Currently gearing up for MDC testing with intentions to be used ASAP
 
-\section{\label{sec:pycbclive-introduction}Introduction}
 
-The PyCBC offline search is the most sensitive gravitational wave search pipeline~\cite{}. The PyCBC live search pipeline however, is lagging behind. In the third and first half of the fourth observing runs the GSTlal pipeline~\cite{} was the preferred event for X of the Y events whereas PyCBC live was only preferred in Z events. We want to improve the PyCBC live search to be of the same calibre as its offline counterpart and to do this we must look at the key differences between the two searches.
+\section{Updated Ranking Statistic}
 
-The offline search is capable of using information determine post-gravitational wave detection in its results and also has no limit on the amount of processing that can be done to find events. The live search in contract must detect these events with as little latency as possible and therefore cannot use post-event information and is also limited in its processing requirements due to computational cost introducing an untenable amount of lag to the search. Even with these two restrictions there are components to the offline search that can be adapted and incorporated into the live search. Including new components into the live search we will improve the sensitivity of the search, detecting more gravitational wave events with greater significance.
+\subsection{What does the Ranking Statistic do?}
 
-\section{\label{sec:pycbclive-ranking-stat}The Ranking Statistic}
+\subsection{Previous Coincident Detector Ranking Statistic}
+% The PyCBC Live ranking statistic in O3 was a very simple Phase-time-amplitude
 
-These additional components that we can take from the offline search and include in the live search come about in the ranking statistic that the searches use. The ranking statistic is the post-detection quantification of legitimacy of a gravitational wave detection and can be directly mapped to the false-alarm rate~\cite{}.
+The PyCBC Live search in the third observing run assigned ranking statistic values to events based on single detector new SNR values, calculated using matched filter SNR and two signal consistency tests, and a coincident detector phase-time-amplitude consistency. The single detector ranking statistic used was \verb|newsnr_sgveto|, re-weighting matched filter SNR by the Allen-$\chi^{2}$~(cite Allen) and sine-gaussian $\chi^{2}$ values-(cite sine-gaussian). The coincident detector ranking statistic was \verb|PhaseTD|~(cite phasetd), comparing ratios of SNR and amplitudes alongside checking phase and time differences between triggers in online detectors and a measure of detector sensitivity at the time of the trigger.
 
-The PyCBC ranking statistic is constructed using separate contributions from single and coincidence detector information. The single detector ranking is calculated first and then coincidence information is incorporated to determine the final ranking statistic. 
+\subsection{Template Dependent Noise Background Fitting}
+% To improve the ranking statistic in O4 we have included measurements of the noise background and template dependent ranking
+The ranking statistic assumes a Gaussian, stationary noise model for every template in our template bank. In the PyCBC Offline search we empirically measure the noise SNR distributions of each template instead of using the Gaussian noise model, then the triggers are ranked by how frequently its associated template triggers with high SNR in noise.
 
-The single detector ranking statistic components are as follows:
-\paragraph{newsnr}
-
-is the original matched filter SNR, $\rho$, with the signal consistency Allen $\chi^{2}$~\cite{} test applied to construct a new SNR value, $\hat{\rho}$.
-
-\paragraph{sgveto}
-
-is the inclusion of the sine-gaussian $\chi^{2}$ test in the computation of the new SNR value.
-
-\paragraph{psdvar\_threshold}
-
-includes the PSD variation measurement in the calculation of the new SNR. The \verb|threshold| applies a hard cut to the allowed $\chi^{2}$ and PSD variation values of $10.0$, where all triggers found with above this value will receive a new SNR of $1.0$.
-
-The coincident detector ranking statistic components are:
-\paragraph{dq}
-includes a likelihood ratio correction made possible by estimating the relative noise trigger rates based on the data quality veto time series.
-
-\paragraph{phasetd}
-re-ranks the combined new SNR of the two detectors and re-weights them based on coincidence parameters. The weighting is determined by a PDF of time delays, phase differences and amplitude ratios between the two detector triggers. Some combinations of these coincidence parameters will be more likely therefore the triggers will be ranked depending on how likely the event was to occur.
-
-\paragraph{exp\_fit\_fgbg}
-uses an exponential model to describe the falloff of the noise distribution at higher SNRs. The statistic calculated the log noise coincidence rate for each template using the single detector trigger new SNR values.
-
-\paragraph{kde}
-applies a mass and spin dependent weighting factor determine using KDE statistic files. The likelihood ratio is multiplied by the ratio of signal KDE to template KDE over some parameters covering the bank.
-
-\section{\label{sec:pycbclive-previous-stat}Ranking Statistic Used in O3}
-
-The PyCBC Live ranking statistic used in the third and second half of the fourth observing run remained the same and takes the form:
+To do this we create a histogram of count vs SNR for each template and fit an exponential fitting factor to the slope of the distribution, we also count the number of triggers found above a pre-defined threshold SNR (currently $\rho_{thresh} = 6.0$). Then we calculate a noise rate for each template using the single detector new SNR values and these parameters (exponential fitting factor, $\alpha$, and rate above threshold, $\mu$).
 %
-\begin{minted}{python}
-sngl-ranking = newsnr_sgveto
-ranking-statistic = phasetd
-\end{minted}
+equation
 %
-whereas the currently used PyCBC Offline ranking statistic is as follows:
 %
-\begin{minted}{python}
-sngl-ranking = newsnr_sgveto_psdvar_threshold
-ranking-statistic = dq_phasetd_exp_fit_fgbg_kde
-\end{minted}
-%
-where it can be seen quite clearly that the PyCBC Live ranking statistic is missing many components that the offline statistic has. Namely the PSD variation in the single detector statistic, the data quality correction, exponential noise falloff model and the KDE weighting.
 
-Of these missing components three of them depend on extra files being created to be used in the search where the PSD variation is the only one that doesn't. These extra files are difficult (but not impossible) for the live search to produce.
-
-\section{\label{pycbclive-new-additions}New Additions to the PyCBC Live Ranking Statistic}
-
-As previously mentioned, to improve the PyCBC Live ranking statistic we can a include some of the offline components that we currently are not using. We have chosen to adapt and include the PSD variation in the single detector ranking statistic and the exponential noise falloff model to the coincident ranking statistic to improve the sensitivity of the PyCBC Live search.
-
-The data quality likelihood ratio correction cannot be included in the live search. The flags themselves are produced as the data arrives and therefore the live search cannot produce a statistic file without introducing lag to the search.
-
-With the exponential noise falloff model however, we are able to make the assumption that the noise distribution remains constant over a small period of time. Therefore if we estimate the noise falloff for a week before the search we would expect this to be descriptive of the proceeding week's noise distributions and therefore will still increase the sensitivity of the search.
-
-We haven't considered including the KDE statistic in the live ranking statistic simply due to time constraints with having already chosen the other two statistic components to include. We assume however that this is possible and the creation and inclusion of these files in the live ranking statistic is possible and can be done in the future.
-
-\subsection{\label{pycbclive-psd-var}PSD Variation in Live}
-
-% Section introduction
-We have described the theory of PSD variation in section~\ref{sec:searches-psd-variation} and now we will describe the implementation of PSD variation in the live search and how this differs from that of the offline search.
-
-% Brief explanation of PSD variation
-The PSD represents the measured power distribution of the data in the frequency domain. When the PSD is inaccurate it can cause inaccurate measurements of a trigger's SNR. PSD variation measures the difference between the true PSD of the data and the estimated PSD being used by the search.
-
-% PSD variation in offline
-When searching through a very long stretch of time, the PyCBC Offline search splits the data into long segments ($>512$ seconds) to search over. The PSD of the long segment is calculated using Welch's method, however, instead of using a mean average of the overlapping smaller segment PSDs we use a median average to remove the effect of short duration glitches in the data.
-
-While Welch's method removes the effect of short duration glitches to achieve an average PSD for the whole segment, the PSD of the segment might actually change over the period of time it represents due to non-stationary noise in the data. Therefore the PSD might be both underestimating and overestimating the noise PSD at different times in our search. To estimate this poor PSD estimation, at each second a value for the difference between the true and the estimated PSD is calculated and included in the single detector ranking statistic.
-
-% Difference between offline and live
-In contract to the offline search, the live search maintains a data buffer of $256$ seconds, rolling the newest eight seconds on as the oldest eight second are rolled off. Due to the live search being online for potentially weeks at a time, the PSD must be updated during runtime. Instead of estimating the PSD at discrete time intervals (for example, every $512$ seconds like the offline search), we use Welch's method to estimate a PSD when enough data has been accumulated after the search has been started. After this initial PSD a new PSD is estimated every stride (eight seconds) and compared to the current PSD. This comparison is made using the neutron star binary distance, we calculate the distance at which a binary neutron star system with equal masses of $1.4 M_{\odot}$ would need to be from our detectors to be observed with an SNR of $8.0$. We have a threshold between current and new neutron star binary distances and if the different is lesser or greater than this threshold we replace the PSD: the threshold currently used is $1\%$. The reduces the effect of a poorly estimated PSD and allows for some `keeping up' with non-stationary noise in the data, for when the data changes over time the PSD is also changing to stay representative but, there is still potential for non-stationary noise to affect the search.
-
-% How we calculate the PSD var in live?
-The implementation of PSD variation in live is different to the offline search because the offline search computes the PSD variation values for the whole segment at once. If the live search were to do the same it would compute the PSD variation values every eight seconds for the whole 256 second chunk of data. This would mean that each second would be calculated 32 times as it makes its way through the buffer, wasting computing resources and introducing lag to the search. Instead, the live search only calculates the PSD variation for the latest eight seconds of data, as this is the same time when there will be any new triggers for the PSD variation to be assigned to. These PSD variation values are then saved with the triggers and the memory is re-allocated for the next stride of the search.
-
-\subsection{\label{pycbclive-template-fits}Template Fits in Live}
-
-We describe the template fits theory in section~\ref{sec:searches-template-fitting} and here we will discuss the implementation of the template fits in the live search. First, we begin with briefly discussing how template fitting is performed in the offline search. The PyCBC Offline search is run over pre-defined chunks of IGWN data which are all around one week long. The search performs the matched filtering between data and template bank and collects all triggers from all templates, at this point we can begin to analyse the noise distributions for each template and calculate the exponential fit factors. These fit files are then used to rank the triggers in the ranking statistic, meaning each trigger enter into the noise distribution it is being ranked by.
-
-We compare this to our implementation in the PyCBC Live search which demands low latency and computational efficiency so we cannot wait a week to gather these statistics before ranking new triggers. Instead we will generate fit files for a weeks worth of triggers and use these fit files for the next week of search, where the fit files are re-generated once the second week has been completed. We are making the assumption that the previous week is still representative of the current week.
-%
 \begin{figure}
   \centering
   \begin{minipage}[t]{1.0\linewidth}
@@ -108,7 +39,48 @@ We compare this to our implementation in the PyCBC Live search which demands low
   \label{fig:pycbclive-template-fits}
 \end{figure}
 %
-An example of template fits generated from a weeks worth of triggers can be seen in figure~\ref{fig:pycbclive-template-fits}. These are created from the first week of our injections testing data that was used to calculate increases in the search sensitivity from including the new ranking statistic components. From this figure we can see clearly the difference between `good' and `bad' template fits, a good fit is one with a steep slope (high $\alpha$) and the trigger distribution following closely to the slope line, bad fits have a shallow slop and poor fit to the line. It can be seen in figure~\ref{fig:pycbclive-template-fits} that we have binned over three parameters: $\chi_{eff}$, $\eta$, \verb|duration|, and we can see that high $\chi_{eff}$, low $\eta$ and short duration templates have the worst fits, meaning they are more likely to trigger on noise with a high SNR.
+
+\subsection{Ranking Statistic Formulation}
+The previous ranking statistic calculated the ranking statistic like this:
+%
+equation
+%
+whereas in our new statistic we are using this formula,
+%
+equation.
+%
+This new formulation takes the noise rate and signal rates into account differently and as you can see, the new statistic includes two new components that were previously not seen in the old statistic
+%
+1 and 2.
+%
+
+This new formulation takes equal contribution from noise and signal rate.
+
+\subsection{Sensitivity Improvements}
+% Including these template fits in Live has a demonstrated sensitivity improvement of 10% for 0.5 IFAR and 39% for 1 IFAR in an `offline' pseudo live injected set test of the PyCBC Live search.
+To estimate sensitivity improvements in the Live search from including the template fits we have performed an injection set test in `offline' with a pseudo-Live search which uses the PyCBC Live search script but the data is all pregenerated and therefore not running in real time but at the limits of computational processing as to how quickly it will search through all the data.
+
+This offline test was performed on a injection set of BBH only signals and a the BBH focussed template bank from the third observing run. An MDC test using the full PyCBC Live template bank is currently being performed (who knows when).
+
+To measure sensitivity improvements of this injection set we ran this search using the old statistic and our new statistic and compared the IFAR found for each injection at discrete IFAR thresholds. The IFAR of each injection found by both search can be seen in figure~below.
+%
+IFAR vs IFAR plot
+sensitivity plot
+%
+We expect to see an increase in the number of injections found with an IFAR greater than the threshold when using the new statistic. The sensitivity improvement at different IFAR thresholds can be seen in figure~above2. Two commonly chosen IFAR thresholds are IFAR = 0.5 years, 1 year where we see a sensitivity increase of 10\% and 30\% respectively.
+
+\subsection{Implementation in the Live Search}
+% These fits are generated every week based on the previous week of triggers to be used for the next week of data searching
+% Currently gearing up for MDC testing with intentions to be used ASAP
+The PyCBC Offline searches through a week of data and creates the template fits after all triggers have been found. We are unable to do this in Live so we choose to use the previous week of triggers and assume they will still be representative of the next weeks noise distributions. In a case where the detectors have changed significantly the fit files can be regenerated or there will only  be a week of lag time on updating them.
+
+The template fit files are created on the previous week of data and then loaded into the Live search and will be used for another week. We are currently preparing an MDC test of these changes with the hope of getting them into the PyCBC Live search on real gravitational wave data as soon as possible.
+
+
+
+
+
+
 
 \section{\label{sec:pycbclive-sensitivity-improvements}Improvements in Sensitivity}
 
@@ -837,10 +809,8 @@ This figure tells a large part of the story for this region. There is a visible 
 
 This is a consequence of the ranking statistic formulation difference between the old statistic and the new statistic and is not concerning, primarily because these injections haven't been seen in the old statistic and still are not seen in the new statistic. We are happy that we understand all three of these regions and the overall sensitivity increase of introducing the new statistic to the live search more than compensates for these injections being downranked.
 
-\section{\label{sec:pycbclive-mdc-test}Full Template Bank Test on the Mock Data Challenge Infrastructure}
+\subsection{\label{sec:pycbclive-mdc-test}Full Template Bank Test on the Mock Data Challenge Infrastructure}
 
 Finally, we were able to use the PyCBC Live Mock Data Challenge (MDC) testing computational resources to run a full template bank search to test the implementation in an environment that is effectively identical to the actual PyCBC Live search, with the inclusion of the new ranking statistic code. This environment is allocated a number of private nodes equivalent to that of the real PyCBC Live search so we didn't run into the aforementioned memory issues.
 
 We followed the same procedure as done for the offline test, creating template fits across the whole bank for a week of data and then running the search using these template fits on the proceeding weeks. We did not update the fits throughout this test. The purpose of this test was not to test sensitivity improvements, as these have already been tested in offline, it was to test for bugs and if the inclusion of template fits adds any latency to the search. We identified and fixed a number of bugs which were introducing major latency to the search, after fixing there is no latency difference between the current configuration and the new live search configuration.
-
-\section{\label{sec:pycbclive-conclusion}Conclusion}
