@@ -1,13 +1,29 @@
 \documentclass[12pt,twoside]{report} % Two-sided, reduce the size of the inner margins
-% \usepackage{setspace}
-% \doublespacing
 
-% 101 but double spaced 137
+% \usepackage{setspace}\doublespacing
+\usepackage{setspace}\onehalfspacing
+
+% \usepackage[nochapters]{classicthesis} % nochapters
+\usepackage[sc]{mathpazo}
+
+% August 16th
+% single = 117
+% 1.5 = 130
+% double = 152
+
+% August 17th
+% Changes:
+% - Font
+% - BibTex -> BibLaTeX
+% - Margins
+% - Headers
+% single = 131
+% 1.5 = 144
+% double = 170
 
 % Packages
-\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
+\usepackage[a4paper,top=30mm,bottom=30mm,inner=20mm,outer=20mm,bindingoffset=10mm]{geometry}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}
 \usepackage{graphicx}
 \usepackage{geometry}
 %\usepackage{mathtools}
@@ -23,31 +39,24 @@
 \usepackage{booktabs}
 \usepackage{rotating}
 \usepackage{adjustbox}
-\usepackage{quoting}
+\usepackage{quoting} % For quotes in chapters
+
+\usepackage[
+backend=biber,
+style=numeric-comp,
+sorting=none,
+maxnames=3,
+minnames=1
+]{biblatex}
+\addbibresource{refs.bib}
 
 \usepackage{arydshln}
 \usepackage{makecell}
-\usepackage{pdflscape}
-\usepackage{minted}
+\usepackage{pdflscape} % Landscape pdfs
+\usepackage{minted} % For code
 
 % xspace intelligently adds a space
 \usepackage{xspace}
-
-%~~~% Section Titles %~~~%
-\usepackage{titlesec}
-
-% Customize the style for numbered sections
-\titleformat{\section}
-  {\Large\bfseries\sffamily} % Font style
-  {\thesection}  % No prefix to section title
-  {1em} % No spacing between prefix and title
-  {} % Section numbering with space
-
-\titleformat{\subsection}
-  {\Large\bfseries\sffamily} % Font style
-  {}  % No prefix to section title
-  {0em} % No spacing between prefix and title
-  {\thesubsection\quad} % Section numbering with space
 
 % Define custom colors
 \definecolor{pomlightpurp}{rgb}{0.38, 0.07, 0.38}
@@ -57,33 +66,60 @@
 \definecolor{lightgray}{gray}{0.9}
 \definecolor{mediumgray}{gray}{0.5}
 
+% %~~~% Section Titles %~~~%
+\usepackage{titlesec}
 
-% Define the standard chapter format
-\titleformat{\chapter}[block] % Block format for chapter title
-  {\Huge\bfseries\sffamily} % Font style for chapter number and color
-  {Chapter \thechapter} % Chapter prefix
-  {0pt} % Space between prefix and title
-  {\Huge\bfseries\sffamily\color{pomlightpurp}\\\vspace{0pt}} % Font style and vertical space for the title
-  []
+% Customize the style for numbered sections
+\titleformat{\section}
+  {\Large\bfseries\rmfamily} % Font style
+  {\thesection}  % No prefix to section title
+  {1em} % No spacing between prefix and title
+  {} % Section numbering with space
 
-\titlespacing*{\chapter}{0pt}{0pt}{20pt} % Adjust spacing before and after chapter title
+\titleformat{\subsection}
+  {\Large\bfseries\rmfamily} % Font style
+  {}  % No prefix to section title
+  {0em} % No spacing between prefix and title
+  {\thesubsection\quad} % Section numbering with space
+%~~~% %~~~% %~~~%
 
-% Define custom format for non-standard chapters
-\titleformat{name=\chapter,numberless}[block] % Non-numbered chapters like Abstract
-  {\Huge\bfseries\sffamily}
-  {}
-  {0pt}
-  {\Huge\bfseries\sffamily}
-  []
 
+% %~~~% Chapter Titles %~~~%
+% Define the custom chapter format
+\titleformat{\chapter}[display] % Display style for chapter title
+  {\Huge\bfseries\rmfamily} % Font style for chapter title
+  {\filleft\fontsize{100}{110}\selectfont\color{pomlightpurp}{\thechapter}} % Large chapter number in purple
+  {20pt} % Space between chapter number and title
+  {\titlerule\vspace{1ex}\filleft} % Horizontal rule and vertical space, title aligned left
+  [\vspace{1ex}\titlerule] % Horizontal rule after the title
+
+% Adjust spacing before and after chapter title
+\titlespacing*{\chapter}{0pt}{*5}{*5} % Adjust spacing before and after chapter title
+
+% Define the custom numberless chapter format
+\titleformat{name=\chapter,numberless}[display] % Display style for numberless chapter title
+  {\Huge\bfseries\rmfamily\color{black}} % Font style for chapter title
+  {} % No chapter number
+  {0pt} % No space between number and title
+  {\filleft} % Horizontal rule and vertical space, title aligned left
+
+% Adjust spacing before and after numberless chapter title
+\titlespacing*{\chapter}{0pt}{*3}{*4} % Adjust spacing before and after chapter title
+%~~~% %~~~% %~~~%
+
+
+
+% %~~~% Chapter Quotes %~~~%
 % Define the custom quote formatting
 \newcommand{\chapterquote}[1]{
   \begin{quote}
     \color{mediumgray}\itshape #1
   \end{quote}
 }
-
 %~~~% %~~~% %~~~%
+
+
+
 
 %~~~% Text commands %~~~%
 \newcommand{\gw}{gravitational wave\xspace}
@@ -95,80 +131,99 @@
 \newcommand{\cbc}{compact binary coalescence\xspace}
 \newcommand{\cbcs}{compact binary coalescences\xspace}
 \newcommand{\aligo}{Advanced LIGO\xspace}
-
-
-
 %~~~% %~~~% %~~~%
+
+
+
 
 %~~~% Header and Footer design %~~~%
 \usepackage{fancyhdr}
+\usepackage{pdfpages}
+\usepackage{etoolbox}
+\setlength{\headheight}{26pt}
 \pagestyle{fancy}
 
-% Option 1: Everything in footers
-% \renewcommand{\footrulewidth}{0.4pt}
-% \renewcommand{\headrulewidth}{0pt}
-% \fancyhead{}
-% \fancyfoot{}
-% \fancyfoot[LO,RE]{\textbf{\thepage}}
-% \fancyfoot[CO]{\nouppercase{\textbf{\leftmark}}}
-% \fancyfoot[CE]{\nouppercase{\textbf{\rightmark}}}
-
-% Option 1: Everything in headers
-% \renewcommand{\footrulewidth}{0.0pt}
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0.4pt}
-\fancyhead{}
-\fancyhead[LO, RE]{\textbf{\thepage}}
-\fancyhead[CO]{\nouppercase{\leftmark}}
-\fancyhead[CE]{\nouppercase{\rightmark}}
-\fancyfoot{}
-
-% Page Style Plain used in report class for chapter start pages, this controls how they look
-\fancypagestyle{plain}{%
-    \fancyhf{}%
-    \fancyhead[C]{
-        %\hbrace[1em] % Create a custom brace that looks like 2 gravitational waves!!
-    }
-    \fancyfoot[C]{\textbf{\thepage}}
-    \renewcommand{\headrulewidth}{0pt}
-    \renewcommand{\footrulewidth}{0pt}
+% Define a command to include a specific PDF based on page number
+\newcommand{\customsymbol}[1]{%
+  \raisebox{-0.045\height}{%
+    \includegraphics[width=1.5cm]{images/header/#1.pdf}
+  }%
 }
 
+% Define a custom header for Arabic numerals pages
+\newcommand{\arabicheader}{%
+  \renewcommand{\headrule}{%
+    \vspace{0pt}
+    \hrulefill
+    \raisebox{-10.0pt}{%
+      \hspace{0.5em}%
+      \customsymbol{\thepage} % Use the page number for the PDF file
+    }%
+    \hrulefill
+  }
+  \fancyhf{}
+  \fancyhead[LO, RE]{\textbf{\thepage}}
+  \fancyhead[CO]{\nouppercase{\leftmark}}
+  \fancyhead[CE]{\nouppercase{\rightmark}}
+  \fancyfoot{}
+}
+
+% Define a custom header for Roman numerals pages
+\newcommand{\romanheader}{
+    \fancyhf{}
+    \renewcommand{\footrulewidth}{0.0pt}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \fancyhead[LO, RE]{\textbf{\thepage}}
+    \fancyhead[CO]{\nouppercase{\leftmark}}
+    \fancyhead[CE]{\nouppercase{\rightmark}}
+    \fancyfoot{}
+    }
+
+% Redefine \chaptermark to remove "Chapter X." 
+% Redefine \sectionmark to remove the "X.X"
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
 %~~~% %~~~% %~~~%
 
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+
+
+
+
+%~~~% %~~~% %~~~% %~~~% %~~~% %~~~% %~~~% %~~~% %~~~%
+%~~~% %~~~% %~~~% MAIN DOCUMENT %~~~% %~~~% %~~~%
 
 %---%---%---%---%
 \begin{document}
 
 % Preliminary sections: title, abstract, etc.
 \pagenumbering{roman} % Roman numerals for preliminary pages
+\romanheader
 
 %---% Title %---%
-\input{chapters/title}
+\input{chapters/preamble/title}
 
 %---% Quote Page %---%
 \chapter*{}
-\input{chapters/quote_page}
+\input{chapters/preamble/quote_page}
 
 %---% Declaration %---%
 \chapter*{Declaration of Authorship}
-\input{chapters/declaration}
+\input{chapters/preamble/declaration}
 
 %---% Abstract %---%
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
-\input{chapters/abstract}
+\input{chapters/preamble/abstract}
 
 %---% Dedication %---%
 \chapter*{Dedication}
 \addcontentsline{toc}{chapter}{Dedication}
-\input{chapters/dedication}
+\input{chapters/preamble/dedication}
 
 %---% Acknowledgements %---%
 \chapter*{Acknowledgements}
 \addcontentsline{toc}{chapter}{Acknowledgements}
-\input{chapters/acknowledgements}
+\input{chapters/preamble/acknowledgements}
 
 %---% Table of Contents %---%
 \tableofcontents
@@ -181,65 +236,68 @@
 
 % Reset page numbering and switch to Arabic numerals for main content
 \cleardoublepage
-\pagenumbering{arabic} 
+\pagenumbering{arabic}
+\arabicheader
 
 %---% Introduction %---%
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-\input{chapters/introduction}
+\input{chapters/content/0_introduction}
 
 %---% General Relativity %---%
-\chapter[General Relativity and Gravitational Waves]{General Relativity and\\ Gravitational Waves}
+\chapter[General Relativity and Gravitational Waves]{General Relativity and Gravitational Waves}
 \chapterquote{``The curvature of spacetime is a manifestation of gravity.'' - ChatGPT}
-\input{chapters/general_relativity}
+\input{chapters/content/1_general_relativity}
 
 %---% Searches %---%
 \chapter[Searching for Gravitational Waves from Compact Binary Coalescences]{Searching for Gravitational Waves from Compact Binary Coalescences}
 \chapterquote{``This chapter needs a quote'' - Arthur Tolley}
-\input{chapters/searches}
+\input{chapters/content/2_searches}
 
 %---% Detector Characterisation %---%
 \chapter[Detector Characterisation]{Detector Characterisation}\chapterquote{``This chapter needs a quote'' - Arthur Tolley}
-\input{chapters/detector_characterisation}
+\input{chapters/content/3_detector_characterisation}
 
 %---% ArchEnemy %---%
 \chapter[ArchEnemy]{ArchEnemy}
 \chapterquote{``This chapter needs a quote'' - Arthur Tolley}
-I am first author on a peer-reviewer and published work carrying the name \textit{"ArchEnemy: Removing scattered-light glitches from gravitational wave data"}, within the Institute of Physics journal Classical and Quantum Gravity~\cite{ArchEnemy}.
-\input{chapters/archenemy}
+I am first author on a peer-reviewer and published work carrying the name \textit{"ArchEnemy: Removing scattered-light glitches from gravitational wave data"}, within the Institute of Physics journal Classical and Quantum Gravity~\cite{ArchEnemy:2023}.
+\input{chapters/content/4_archenemy}
 
 %---% PyCBC Live Ranking Statistic %---%
-\chapter[Improving the PyCBC Live Ranking Statistic]{Improving the PyCBC Live\\ Ranking Statistic}
+\chapter[Improving the PyCBC Live Ranking Statistic]{Improving the PyCBC Live Ranking Statistic}
 \chapterquote{``This chapter needs a quote'' - Arthur Tolley}
-\input{chapters/pycbclive}
+\input{chapters/content/5_pycbclive}
 
 %---% Early Warning Ranking Statistic %---%
-\chapter[Evaluating the PyCBC Live Early Warning Search]{Evaluating the PyCBC Live\\ Early Warning Search}
+\chapter[Evaluating the PyCBC Live Early Warning Search]{Evaluating the PyCBC Live Early Warning Search}
 \chapterquote{``This chapter needs a quote'' - Arthur Tolley}
-\input{chapters/ew_ranking}
+\input{chapters/content/6_earlywarning}
 
 %---% Other Work %---%
-\chapter[]{Other Work}
+\chapter[Optimising Detection Statistic in PyCBC Live]{Optimising Detection Statistic in PyCBC Live}
 \chapterquote{``This chapter needs a quote'' - Arthur Tolley}
-\input{chapters/otherwork}
+\input{chapters/content/7_snr_optimiser}
 
 %---% Placements %---%
-\chapter[]{Working in Industry}
+\chapter[Working in Industry]{Working in Industry}
 \chapterquote{``This chapter needs a quote'' - Arthur Tolley}
-\input{chapters/placements}
+\input{chapters/content/8_placements}
 
 %---% Conclusion %---%
-\chapter[]{Conclusion}
+\chapter[Conclusion]{Conclusion}
 \chapterquote{``This chapter needs a quote'' - Arthur Tolley}
-\input{chapters/conclusion}
+\input{chapters/content/9_conclusion}
 
 %---% Appendix %---%
 \appendix
-\chapter[]{Appendix Title}
+\chapter[Appendix]{Appendix Title}
 \chapterquote{``This chapter needs a quote'' - Arthur Tolley}
-\input{chapters/appendix}
+\input{chapters/content/appendix}
 
-\bibliographystyle{iopart-num}
-\bibliography{refs}
+% \bibliographystyle{unsrt}
+% \bibliography{refs}
+\nocite{*}
+\printbibliography
 
 \end{document}
