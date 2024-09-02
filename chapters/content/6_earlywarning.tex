@@ -29,13 +29,13 @@ which is the angle between the line of sight to the observer and the orbital ang
 The redshift of a gravitational wave signal also has a degeneracy with the chirp mass of the source,
 %
 \begin{equation}
-M_{chirp} = \frac{(m_1 m_2)^{\frac{3}{5}}}{(m_1 + m_2)^{\frac{1}{5}}}.
+\mathcal{M} = \frac{(m_1 m_2)^{\frac{3}{5}}}{(m_1 + m_2)^{\frac{1}{5}}}.
 \end{equation}
 %
 The frequency evolution of the signal is dependent on the chirp mass,
 %
 \begin{equation}
-f(t) \propto M_{chirp}^{\frac{5}{8}}t^{-\frac{3}{8}},
+f(t) \propto \mathcal{M}^{\frac{5}{8}}t^{-\frac{3}{8}},
 \end{equation}
 %
 which is directly measured from the gravitational wave signal but will undergo redshifting as it travels to the detectors. Therefore we would require a measurement of the Hubble constant in order to determine the correct amount of redshifting happening to the signal. Using an accompanying electromagnetic emission from an event, a kilonova from a binary neutron star system, we can locate the host galaxy of the source and therefore the redshift for the source.
@@ -54,7 +54,7 @@ Analysing GW170817's gravitational wave signal and electromagnetic emissions rev
 
 In the future we might not get as lucky as we did with GW170817. Each electromagnetic frequency has different timing windows in which their telescopes can be pointed to observe the event. Fermi detected GW170817 $1.7$ seconds after the merger and is capable of observing the whole sky with the exception of the region occluded by the Earth~\cite{Fermi:2022}, therefore, there is a portion of the sky it cannot view, meaning the initial confirmation of a multi-messenger event could be missed for a future electromagnetically bright event.
 
-The gravitational wave signal from GW170817 was present in the LVK detectable frequency range for $60$ seconds, CUT THIS SENTENCE HERE this is $60$ seconds in which theoretically we already knew that a gravitational wave event was happening, before the merger had even occurred. If we detect events as soon as they appear then we can alert the international scientific community that a gravitational wave event was going to happen so they can be prepared. While $60$ seconds of warning might not be enough for Fermi to FIND THE PROPER WORD point at a different part of the sky, as we improve our detectors we can increase the gap between detection and merger.
+The gravitational wave signal from GW170817 was present in the LVK detectable frequency range for $60$ seconds, pre-merger had even occurred. If we detect events as soon as they appear then we can alert the international scientific community that a gravitational wave event was going to happen so they can be prepared. While $60$ seconds of warning might not be enough for Fermi to slew to a different part of the sky, as we improve our detectors we can increase the gap between detection and merger.
 
 Sky maps are used to indicate the area on the sky which contains the most likely source location of the gravitational wave signal. We can improve the sky location with: more detectors at greater geographical distances and with different orientations improves triangulation and more sensitive detectors lead to better SNRs. Other things may also affect the sky localisation such as: the sky position, we are more sensitive to some parts of the sky; the antenna pattern of the detectors, the response of the detector depends on the relative angle of the incoming signal which changes as the Earth rotates. A better sky localisation leads to a more constrained, smaller area sky map.
 
@@ -161,35 +161,41 @@ To investigate the efficacy of the early warning search I performed an injection
 
 \subsection{Injection Set \& Data}
 
-The injection set contains 32604 unique injections placed every ~100 seconds, encompassing 3456000 seconds or exactly 40 days worth of data. The parameters which vary by injection and the ranges in which they vary can be seen in table~\ref{tab:ew_inj_params}.
+The injection set contains 32,604 unique injections placed every $\sim100$ seconds, encompassing 3,456,000 seconds or exactly 40 days worth of data. The parameters which vary by injection and the ranges in which they vary can be seen in table~\ref{6:tab:ew_inj_params}.
 %
-\begin{table}
+\begin{table}[ht]
     \centering
-    \begin{tabular}{|>{\raggedright}p{3cm}|>{\raggedright}p{5cm}|>{\raggedright\arraybackslash}p{5cm}|}
-        \hline
-        \multicolumn{3}{|c|}{\textbf{Variable Parameters}} \\
-        \hline
-        \textbf{Parameter} & \textbf{Value Range} & \textbf{Prior Distribution} \\ \hline
-        mass1 & 1.0 - 3.0 & uniform \\ \hline
-        mass2 & 1.0 - 3.0 & uniform \\ \hline
-        spin1z & -0.05 - 0.05 & uniform \\ \hline
-        spin2z & -0.05 - 0.05 & uniform \\ \hline
-        distance & 10 - 1000 & uniform radius \\ \hline
-        coa\_phase & - & uniform angle \\ \hline
-        inclination & - & sin angle \\ \hline
-        polarization & - & uniform angle \\ \hline
-        ra & - & uniform sky \\ \hline
-        dec & - & uniform sky \\ \hline
-        \hline
-        \multicolumn{3}{|c|}{\textbf{Static Parameters}} \\
-        \hline
-        \textbf{Parameter} & \textbf{Value} & \textbf{} \\ \hline
-        approximant & IMRPhenomXAS & \\ \hline
-        f\_lower & 17 & \\ \hline
-        f\_ref & 17 & \\ \hline
+    % \small
+    \setlength{\tabcolsep}{4pt}
+    \rowcolors{2}{white}{lightgray}
+    \begin{tabular}{ccc}
+        \toprule
+        \multicolumn{3}{c}{\textbf{Variable Parameters}} \\
+        \cmidrule(lr){1-3}
+        \textbf{Parameter} & \textbf{Value Range} & \textbf{Prior Distribution} \\
+        \midrule
+        Primary Mass, $m_1$ & 1.0 - 3.0 [$M_{\odot}$] & uniform \\
+        Secondary Mass, $m_2$ & 1.0 - 3.0 [$M_{\odot}$] & uniform \\
+        Primary Spin z-component, $spin1z$ & -0.05 - 0.05 & uniform \\
+        Secondary Spin z-component, $spin2z$ & -0.05 - 0.05 & uniform \\
+        Distance, $r$ & 10 - 1000 [$Mpc$] & uniform radius \\
+        Phase, $\phi_{c}$ & - & uniform angle \\
+        Inclination, $\iota$ & - & sin angle \\
+        Polarization, $\psi$ & - & uniform angle \\
+        Right Ascension, $\alpha$ & - & uniform sky \\
+        Declination, $\delta$ & - & uniform sky \\
+        \bottomrule
+        \multicolumn{3}{c}{\textbf{Static Parameters}} \\
+        \cmidrule(lr){1-3}
+        \textbf{Parameter} & \textbf{Value} & \textbf{} \\
+        \midrule
+        Waveform Approximant & IMRPhenomXAS & \\
+        Lower Frequency, $f_{lower}$ & 17 [$Hz$] & \\
+        Reference Frequency, $f_{ref}$ & 17 [$Hz$] & \\
+        \bottomrule
     \end{tabular}
-    \caption{Parameters and their priors}
-    \label{tab:ew_inj_params}
+    \caption{Caption text goes here}
+    \label{6:tab:ew_inj_params}
 \end{table}
 %
 These injections are made into simulated noise with no non-Gaussian artefacts or non-stationarity and a constant PSD. The distances generated for each injection are re-scaled after the initial injection set has been created to ensure a uniform SNR distribution of the signals between 12 and 60. Therefore the distances might not be exactly uniform in radius and the injection set should be thought to be distributed uniformly in SNR instead.

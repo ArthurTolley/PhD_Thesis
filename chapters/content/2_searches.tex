@@ -1,24 +1,36 @@
 %%% CBC SEARCH %%%
+% Gravitational Wave data
+%    h = s + n
+% Signal Model
+%    Waveforms
+% Noise Model
+%    PSD
 % Search Methods
-%   Gravitational Wave Data
-%   Matched Filter
-%   Phase Maximisation
-%   Template Bank
-%   Ranking Statistic
-%       Coincident Detection
-%       Signal-consistency tests
-%       Template Fits
-%       PSD Variation
-% PyCBC Live Configuration
-%   Low-Latency Detection
-%   SNR Optimization
-%   Ranking Statistic
-%
-Search pipelines, such as PyCBC Live, are used to analyse data from \gw detectors to detect \gw signals both in real-time (live) and afterwards (offline). In this chapter we introduce the techniques used by the PyCBC search pipelines to detect astrophysical signals buried in \gw data.
+%    Matched Filter
+%    Phase Maximisation
+%    Template Bank
+%    Signal Consistency Tests
+%    Exponential Noise Model
+%    PSD Variation
+%    Coincidence Tests
+%        Simple One
+%        PhaseTD
+%    Ranking Statistic
+% PyCBC
+%    Offline vs Live
+%    Low-Latency Detection
+%    SNR Optimization
+% Gravitational-Wave Observations to date
+
+
+
+% Chapter Introduction
+
+Search pipelines, such as PyCBC, are used to analyse data from \gw detectors to detect \gw signals both in real-time (live) and afterwards (offline). In this chapter we build up the theoretical basis for gravitational wave search pipelines and introduce the techniques used by the search pipelines in the detection of gravitational waves. There is a heavy focus on the PyCBC search pipelines (PyCBC Offline \% PyCBC Live) which was used heavily and development additions have been made to in this thesis.
 
 \section{\label{2:sec:gw-data}Gravitational Wave Data}
 
-\Gw data refers to that which is received from the gravitational wave detectors and is a time-series recording of the dimensionless strain measured by the detector for a stretch of time. The data, $s(t)$, is formed of a noise component, $n(t)$, and an astrophysical signal, $h(t)$, such that
+The gravitational wave observatories will produce a dimensionless strain time-series, $s(t)$, which consists of of detector noise, $n(t)$, and where present, an astrophysical gravitational wave signal, $h(t)$ such that
 %
 \begin{equation}
     s(t) =
@@ -27,38 +39,54 @@ Search pipelines, such as PyCBC Live, are used to analyse data from \gw detector
         n(t) + h(t), & \text{signal}
     \end{cases}
 \end{equation}
+%
+The goal of the gravitational wave search pipelines is the extract $h(t)$ from $s(t)$.
 
-\section{\label{2:sec:search-methods}Search Methods}
-\Gws are difficult to find in \gw data due to the continuous parameter space and potentially infinite number of possible combinations of \gw signal parameters. In this section we will begin by briefly discussing how we model \gw waveforms in section~\ref{2:sec:waveform-modelling}, then we move onto signal processing techniques using these waveforms and the data in sections~\ref{2:sec:matched-filter}--\ref{2:sec:template-bank}.
+\section{\label{2:sec:signal-model}Modelling Gravitational-Wave Signals}
 
-\subsection{\label{2:sec:waveform-modelling}Waveform Modelling}
+% CBC Signals Only
 
-% Very brief
-% Number of parameters
-% Description of parameters
+This section focusses on identifying gravitational wave signals from compact binary coalescence (CBC) sources: the signal emitted by the inspiral and merger of two company objects (black holes or neutron stars) in a binary configuration. Any CBC signal can be characterised by a set of parameters which can be split into two categories: intrinsic parameter, which describe physical properties of the system; and extrinsic parameters, which describe the parameters relating to the orientation and position of the observing detector.
 
-The waveform is composed using 15 parameters, split into intrinsic and extrinsic parameters. Intrinsic parameters describe physical properties of the system whereas extrinsic parameters describe things related to the detector network, position and/or orientation on the sky \cite{BAYESTAR:2016}.
+% Intrinsic and Extrinsic Parameters
+%    Which parameters are we ignoring
 
-Intrinsic parameters:
+The intrinsic parameters which affect the gravitational wave signals are:
 \begin{itemize}
-   \item $m_1$, primary mass
-   \item $m_2$, secondary mass
-   \item $\vec{\chi_1}$, primary spin
-   \item $\vec{\chi_2}$, secondary spin
+   \item $m_{1}$, primary component mass
+   \item $m_{2}$, secondary component mass
+   \item $\vec{s_{1}}$, three-dimensional primary component spin
+   \item $\vec{s_{2}}$, three-dimensional secondary component spin
+   \item $t_{c}$, time of coalescence
+   \item $\phi_{c}$, coalescence phase
 \end{itemize}
+where the subscript $_1$ refers to the object in the binary system with the larger mass and $_2$ to the object with the smaller mass. It is worth noting that while $t_{c}$ and $\phi_{c}$ are intrinsic parameters that depend on the intrinsic dynamics of the system the effects of these parameters are observed extrinsically.
 
-Extrinsic parameters:
+The extrinsic parameters which affect the observation of the gravitational wave signal are:
 \begin{itemize}
    \item $\alpha$, right ascension
    \item $\delta$, declination
    \item $r$, distance
-   \item $t_c$, time of coalescence
    \item $\iota$, inclination angle
    \item $\psi$, polarization angle
-   \item $\phi_c$, coalescence phase
 \end{itemize}
 
-We create our waveform template using these parameters however, a bank of waveform templates in 15 dimensions will require an obscene number of templates to sufficiently cover. We can reduce the dimensionality by considering only signals which have no orbital precession or eccentricity. 
+There are additional parameters to describe other physical effects such as: tidal deformation, eccentricity, the neutron star equation of state or any deviations from general relativity. These can affect CBC signals but, we will ignore these in this work.
+
+% Constructing frequency domain signals
+
+While the gravitational wave detectors will deliver time-series data to the search pipelines, it is desirable to perform the analysis in the frequency domain.
+%%% FINISH THIS ONCE THE GRAVITATIONAL WAVE PHASE AND TIME DEPENDENCE THING IN CHAPTER 1 IS DONE
+% Stationary Phase approximation
+
+% Waveform models: IMR and Seob (nah?)
+
+
+\section{\label{2:sec:noise-model}Modelling Gravitational-Wave Data Noise}
+
+Gravitational wave data noise 
+
+\section{\label{2:sec:search-methods}Search Methods}
 
 \subsection{\label{2:sec:matched-filter}Matched Filter}
 
@@ -123,7 +151,15 @@ Where $\tilde{h(f)}$ and $\tilde{h}_{\pi/2}(f)$ are orthogonal phases of our tem
 
 Our waveform template bank will be only 5 parameters: the two masses, the two free spins and, the time of coalescence. We must create a bank of waveform templates describing all the possible signals and template density of the bank needs to be fine-tuned in order to ensure two things: our template bank covers the parameter space well enough to find all signals and our template bank isn't so large we are wasting computational time and resources \cite{Owen_Sathya:1999}.
 
-\section{\label{2:sec:ranking-statistic}Ranking Statistic}
+\subsection{\label{2:sec:signal-consistency}Signal Consistency Tests}
+
+\subsection{\label{2:sec:template-fits}Exponential Noise Model}
+
+\subsection{\label{2:sec:psd-var}PSD Variation}
+
+\subsection{\label{2:sec:coincidence-test}Coincidence Tests}
+
+\subsection{\label{2:sec:ranking-statistic}Ranking Statistic}
 % Searches need a ranking statistic to map to FAR
 % We will discuss the PyCBC ranking statistic in more detail later on
 % Signal Consistency Tests
@@ -194,30 +230,6 @@ To visualise this difference we can plot the distribution of H1 and L1 SNR value
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{\label{2:sec:coincident-detection}Coincident Detection}
-
-We want to see the same signal in more than one detector.
-
-\subsection{\label{2:sec:signal-consistency-tests}Signal Consistency Tests}
-
-We want the signal to follow the expected power distribution for that signal.
-
-\subsection{\label{2:sec:template-fitting}Template Fitting}
-
-When a template triggers with a large, we check to see if it commonly triggers with a large snr on noise historically. If it does then we can downweight our confidence that it is legitimate. If the template rarely ever triggers with a high snr on noise then we can increase our confidence in the detection.
-
-We fit the distribution of triggers and snr to an exponential and the coefficient of the exponential is the number we use to weight.
-
-How the fits are created:
-- binning
-- smoothing
-
-\subsection{\label{2:sec:psd-variation}PSD Variation}
-
-If the detector is behaving terribly we can model that and include it in the ranking statistic.
-
-\subsection{\label{2:sec:kde-statistic} KDE Statistic}
-
 \section{\label{2:sec:pycbc-live}PyCBC}
 
 % Overarching points:
@@ -284,3 +296,5 @@ PyCBC Live uses a ranking statistic post-detection of a gravitational wave event
 The LVK places a limit on the IFAR of a signal before it can be determined to be real. The limit has to be placed to balance the sensitivity of a search and the purity of a gravitational wave catalogue. As a quick example, if the IFAR limit is set to 1 year. Then one might expect to see one event per year in the catalog purely due to noise.
 
 We begin this chapter by detailing the components that make up the ranking statistic and then the new components of the improved ranking statistic and how these are derived and used.
+
+\section{\label{2:sec:current-detections}Gravitational-Wave Observations to date}
