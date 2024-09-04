@@ -1,36 +1,80 @@
-\section{\label{sec:GWs}Gravitational Waves}
-
 % Motivation for the study of Gravitational Waves
 
+This thesis focusses on research made to improve our capability to detect gravitational waves. While the research targeted data quality and gravitational wave searches, it is useful to introduce gravitational waves in this chapter. In this chapter a broad overview of general relativity, compact binary coalescence signals and interferometers is given and is not intended to describe fully the workings and background of these topics. The derivation of gravitational waves closely follows the textbook `A General Relativity Workbook' by Thomas A. Moore \cite{moore_2013}.
 
-% What am I going to show
-%  Make it sound like I know it
+In this chapter we begin by introducing the concept of gravitational waves and their derivation from general relativity in section~\ref{1:sec:GWs}. In section~\ref{} we discuss the primary source of gravitational wave that is observable in the modern gravitational wave detector era, compact binary coalescence. In section~\ref{} we discuss the construction of gravitational wave interferometers and how they are able to observe gravitational waves. Finally, in section~\ref{} we discuss the effects of gravitational wave astronomy on the wider astronomy field and how gravitational wave observations can be harnessed in tandem with other sources to provide greater information about astrophysical events.
 
-% 
+\section{\label{1:sec:gravitational-radiation}Gravitational Radiation}
 
-This section will reproduce the derivation of \gws, closely following the textbook `A General Relativity Workbook' by Thomas A. Moore \cite{moore_2013}.
+% Introduce the Section
+In this section we will briefly introduce gravitational radiation.
 
-General Relativity (GR) is our current theory of gravitation in the Universe. GR introduces the Einstein field equations (EFEs), described by equation \ref{eqn:EFE}, which relate the curvature of spacetime to the matter and energy
-within it. Solving EFEs is extremely difficult to do analytically so we must resort to looking at heavily simplified problems or using numerical relativity and the power of supercomputers.
+\subsection{\label{2:sec:perturbations}Perturbations in spacetime}
+%     Concept of Gravitational Waves: Describe what gravitational waves are and how they arise as perturbations in spacetime.
 
+% Introduce Einstein Field Equations
+The Einstein field equations (Einstein's equations) are a set of $10$ equations which, for a point in spacetime, relate the curvature of spacetime and the density of matter and energy. General relativity introduces the standard tensor notation, in which we can write Einstein's equations as
+%
 \begin{equation}
-   G^{\mu \nu} = 8 \pi G T^{\mu \nu}
-   \label{eqn:EFE}
+   R_{\mu \nu} - \frac{1}{2}g_{\mu \nu}R = 8 \pi T_{\mu \nu}
+   \label{2:eqn:EFE}
 \end{equation}
+%
+where $R_{\mu \nu}$ is the Ricci tensor, $R$ the Ricci scalar and $g_{\mu \nu}$ the 4-dimensional spacetime metric tensor. $T^{\mu \nu}$ is the stress energy tensor which describes the density and flux of matter, energy and momentum. We note that $R_{\mu \nu}$, $g_{\mu \nu}$ and $T_{\mu \nu}$ are all symmetric and therefore Einstein's equations consist of only $10$ equations rather than $16$.
 
-Where $G^{\mu \nu}$ is the Einstein tensor, $G$ is Newton's constant of gravitation and, $T^{\mu \nu}$ is the stress-energy tensor.
-
-One of the predictions of GR is the existence of \gws. To derive \gws with the Einstein field equations, we must begin with some assumptions about our spacetime. Far from the source of \gws, where the stress-energy tensor
-$T^{\mu \nu} = 0$, we can describe the spacetime as flat with a tiny perturbation caused by the presence of \gws. Our metric can be described as follows:
-
+% Small Perturbations in Spacetime
+We consider the case where a \textit{weak} gravitational field exists in a flat spacetime to simply Einstein's equations. In this case the spacetime metric tensor, $g_{\mu\nu}$, can be expressed as the sum of a small perturbation due to the gravitational field, $h_{\mu\nu}$, and the flat space Minkowski metric tensor $\eta_{\mu\nu}$,
+%
 \begin{equation}
-   g_{\mu \nu} = \eta_{\mu \nu} + h_{\mu \nu}
-   \label{eqn:g_mu_nu}
+g_{\mu\nu} = \eta_{\mu\nu} + h_{\mu\nu}, \quad |h_{\mu\nu}| \ll 1.
 \end{equation}
+%
+We have ensured that our gravitational field is weak by considering only perturbations with magnitude far smaller than unity.
 
-Where $\eta_{\mu \nu}$ is the spacetime metric of flat spacetime and $h_{\mu \nu}$ is a small perturbation.
+% Linearized Gravity
+With such a small perturbation the Einstein field equations can then be linearized by ignoring non-linear terms in $h_{\mu\nu}$, due to their negligible magnitude, this is known as taking the weak-field limit.
 
-By saying that $h_{\mu \nu}$ is small ($|h_{\mu \nu}| << 1$) we can disregard all 2nd order and higher terms of $h_{\mu \nu}$, this is known as taking the weak-field limit. Using the metric $g_{\mu \nu}$ from equation \ref{eqn:g_mu_nu} with a linearized perturbation is known as linearized gravity.
+% Reduce Einstein's Equations
+
+% Raising and lowering of h_munu
+
+
+\subsection{\label{2:sec:weak-field}Weak field approximations}
+%    Weak Field Approximation
+
+% Gauge Transformations
+
+
+
+% Gravitational Waves in a Vacuum
+Under the weak field approximation, Einstein's field equations reduce to a wave equation in vacuum:
+\begin{equation}
+\Box h_{\mu\nu} = 0,
+\end{equation}
+where $\Box$ is the d'Alembertian operator, indicating the wave nature of gravitational perturbations.
+
+% Wave Equation Solutions
+The solutions to the linearized equations can be expressed as plane waves:
+\begin{equation}
+h_{\mu\nu} = A_{\mu\nu} e^{i(k_\alpha x^\alpha)},
+\end{equation}
+where $A_{\mu\nu}$ is the amplitude tensor, and $k_\alpha$ is the wave vector.
+
+% Transverse traceless gauge
+%    Plus and Cross polarizations
+
+
+
+\subsection{\label{2:sec:gravitational-energy}Gravitational energy and propagation}
+%    Energy and Propagation: Discuss the energy carried by gravitational waves and how they propagate through space.
+
+% Gravitational Wave Interactions
+
+% Gravitational Emission in Linearized Gravity
+
+% Power Radiated as Gravitational Waves
+%    Need to reach h_x^tt and h_+^tt and orbital phase of binary equation
+
 
 We will proceed to work with the Einstein equation in the form:
 
@@ -129,8 +173,6 @@ only two polarizations of the waves: $A_{+}$, the plus polarization and; $A_{\ti
    \label{eqn:A_mu_nu}
 \end{equation}
 
-\section{\label{sec:Mechanics}The Physical Effects of Gravitational Waves}
-
 In order to detect \gws we must know how the presence of \gws changes some physical property that we can measure. We express our perturbation in the form $h_{\mu \nu}^{TT} = A_{\mu \nu} \cos(k_\sigma x^\sigma)$ (where superscript TT
 indicates we are in the TT gauge and we have taken the real part of our plane wave solution) and consider a set of particles position in a ring of radius $R$, illustrated in figure \ref{fig:polarization}.
 
@@ -158,7 +200,11 @@ Likewise for a \gw completely polarized in the `cross' plane:
 It is important to note that we are treating the separation between the particles and the centre in cartesian coordinates as the TT gauge is a comoving coordinate system where the coordinates of the particles are fixed
 even as a \gw passes through.
 
-\section{\label{sec:CBC}Gravitational Wave Sources - Compact Binary Coalescence}
+\section{\label{sec:CBC}Gravitational waves from compact binary coalescence}
+
+% Sources of Gravitational Waves
+%    Astrophysical Sources: Describe the various astrophysical events that generate gravitational waves, such as binary black hole mergers, neutron star collisions, supernovae, and more.
+%    Waveform Characteristics: Outline the distinctive waveforms associated with different types of gravitational wave sources and what information can be extracted from them.
 
 A \cbc occurs when two stellar remnants, such as neutron stars (NSs) or black holes (BHs), in a binary system merge. This section will discuss \cbcs (CBCs) as a source of \gws.
 
@@ -179,6 +225,11 @@ Equation \ref{eqn:frequency_sweep} shows that frequency of the \gw changes as a 
 For a BBH in a circular orbit, the evolution of the system will depend on 8 parameters: the two masses and six spin components. Further complexities such as neutron stars (non-rigid bodies) or eccentric orbits will require more parameters.
 
 \section{\label{sec:IFOs}Gravitational Wave Detection}
+
+% Detection of Gravitational Waves
+%     Overview of Detectors: Provide an overview of different types of gravitational wave detectors, focusing on ground-based detectors like LIGO and Virgo, and space-based detectors like LISA.
+%     Detector Sensitivity and Noise Sources: Discuss the key factors that influence the sensitivity of detectors, including noise sources like seismic noise, thermal noise, and quantum noise.
+%     Interferometry and Signal Extraction: Explain the basic principles of interferometry used in gravitational wave detection and how signals are extracted from the noise.
 
 The detection of \gws is made possible by \gw observatories: LIGO consists of Hanford \& Livingston \cite{aLIGO:2015}; Virgo in Pisa \cite{aVirgo:2015}; KAGRA in Japan \cite{KAGRA:2021}; and GEO in Germany \cite{GEO600:2002}. This section will focus on
 the design of the LIGO interferometers however, the techniques are similar for all detectors. The configuration of \aligo (aLIGO) is described in detail in the 2016 paper \cite{aLIGO:2015}.
@@ -203,7 +254,7 @@ $\Delta s$ depends on the radius $R$ (analogous to our arm length). We can furth
    \caption{\label{fig:FP_michelson}Fabry-Perot cavities \cite{ligo_ifo}: Additional mirrors are placed close to the beam splitter in each arm to allow the laser to traverse the arms many more times, effectively adding distance to our arms.}
 \end{figure}
 
-To create Fabry-Perot cavities extra mirrors are placed in each arm close to the beam splitter, these mirrors allow the laser to bounce back and forth within the arm many more times - effectively increasing the distance the laser has travelled. The Fabry-Perot cavities are fully evacuated, further reducing noise from the effects of interactions with particles in the air.
+To create Fabry-Perot cavities extra mirrors are placed in each arm close to the beam splitter, these mirrors allow the laser to bounce back and forth within the arm many more times---effectively increasing the distance the laser has travelled. The Fabry-Perot cavities are fully evacuated, further reducing noise from the effects of interactions with particles in the air.
 
 Laser power is continuously built up during this process, the more photons we have in our detector, the greater the resolution at our photodetector. We need to reach a laser power much higher than at the source, the Fabry-Perot
 cavities don't provide enough amplification so we need to implement power recycling mirrors prior to the laser reaching the beam splitter. Some of the light from the laser is reflected towards the photodetector from the beam
@@ -216,3 +267,9 @@ splitter, the rest of it is sent back to the power recycling mirror. The power r
 
 Within the reference frame of the beam splitter and in the absence of \gws, the distance each laser travels up the arms is equal so that upon returning to the beam splitter, we see a constant interference pattern in the photodetector.
 As a \gw propagates through the detector the beam splitter remains at rest but the mirrors at the end of each arm move (in our cartesian coordinate system), the lengths of the arms are now different and the recombination of the two beams will produce a phase difference upon returning back to the beam splitter \cite{thorne_lecture}.
+
+\section{\label{1:sec:GW-astronomy}Gravitational Wave Astronomy}
+
+% Gravitational Wave Astronomy and Astrophysics
+%     Implications for Astronomy: Highlight how gravitational wave observations have revolutionized our understanding of the universe and provided new ways to observe astrophysical phenomena.
+%     Multi-Messenger Astronomy: Discuss the role of gravitational waves in multi-messenger astronomy, especially in conjunction with electromagnetic observations.
