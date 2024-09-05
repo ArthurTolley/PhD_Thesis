@@ -265,7 +265,14 @@ Currently PyCBC operates three searches on data from the fourth observing run: t
 This section will describe the PyCBC Live search in greater detail, focussing on the optimizations and unique components that differ it from the offline search and how these help to improve our detection of gravitational waves. The full bandwidth search is being described in these sections, the early warning search varies every so slightly but not enough to require distinctions to be made.
 
 \subsection{\label{2:sec:low-latency-detection}Low-Latency Detection}
-
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/2_searches/live_latency_diagram.pdf}
+    \caption{Caption}
+    \label{2:fig:live_latency_diagram}
+\end{figure}
+%
 The PyCBC Live search aims to detect all gravitational waves in real time. This is a feat of software engineering to obtain the gravitational wave data, perform the matched filtering of hundreds of thousands of templates, perform signal consistency tests and output an approximate sky map within tens of seconds of the merger of the gravitational wave passing through the detectors.
 
 The live search is distributed over 151 computing nodes and these are all connected through a message passing interface which tracks the individual search nodes. The main ranked node will receive messages from each of these nodes and distribute information and jobs to all the nodes. For example, when a node running a matched filter on H1 data finds a trigger and a node running a matched filter on L1 data finds a trigger, these triggers are sent back to the rank 0 node which then assigns another node to perform the coincidence tests as part of the ranking statistic to determine if this trigger was a real gravitational wave event.

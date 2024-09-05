@@ -369,13 +369,107 @@ The trigger will first be seen in detector 1, which will be seen as a highly sig
     \label{6:fig:outside_coinc_window}
 \end{figure}
 %
-% What is the broad problem?
+% What is the broad problem?    
 % What are some ways it manifests
 % How can we solve this problem
 %  Coinc Window - Fairhurst
 %  PhaseTD tuning for statistic
+%  Sample rate issue
 
-% plot of triggers outside light travel time + slop
+A problem that we have identified in the analysis of the results is valid candidates events being missed due to the coincident triggers falling outside of the allowed coincidence time window. The coincidence time window is a sum of the light-travel time and a computational timing error allowance. The two LIGO detectors are separated by a straight line through the Earth $3002$ kilometers long. Given the speed of light, c $= 300,000$ km/s, there is a $0.01$ window and the current addition for errors is $0.003$ seconds, giving a total allowed coincidence timing window of $0.013$ seconds. How then, is it possible for our completely valid coincident triggers to lie outside of this window?
+
+\subsubsection{\label{}Timing accuracy error}
+
+Firstly, as described in~\cite{Fairhurst:2010}, the accuracy of the candidate time in a detector can be determine by,
+%
+\begin{equation}
+    \sigma_{t} = \frac{1}{2\pi\rho\sigma_{f}}
+    \label{6:eqn:timing_acurracy}
+\end{equation}
+%
+where the timing accuracy, $\sigma_{t}$, is inversely propertional to the SNR, $\rho$, and the effective bandwidth of the source, $\sigma_{f}$ which is defined as
+%
+\begin{equation}
+    \sigma_{f}^2 = \left(\frac{4}{\rho^{2}} \int^{\infty}_{0} df \frac{f^{2}|h(f)|^{2}}{S(f)}\right) - \left(\frac{4}{\rho^{2}} \int^{\infty}_{0} df \frac{f|h(f)|^{2}}{S(f)}\right)^{2} .
+    \label{6:eqn:eff_bandiwdth}
+\end{equation}
+%
+As shown in Table 1. of~\cite{Fairhurst:2010}, the timing error for a binary neutron star system in an advanced LIGO configuration with a BNS range of $160$ Mpc is $0.46$ms. Negligible when compared to our light-travel time of $10$ms. We can perform an approximately calculate the timing accuracy of the early warning templates using equations~\ref{6:sec:duplicate-frequency-cands} \&~\ref{6:eqn:timing_acurracy}, where the gravitational wave strain term, $|h(f)|$, is assumed to be equal to the inspiral frequency evolution of a binary neutron star signal, $f^{-\frac{7}{6}}$. The estimated effective bandwidths and timing accuracy errors can be seen in table~\ref{6:tab:timing_errors}.
+%
+\begin{table}[ht]
+    \centering
+    \setlength{\tabcolsep}{4pt}
+    \rowcolors{3}{white}{lightgray}
+    \begin{tabular}{ccc}
+        \toprule
+        \textbf{Frequency [Hz]} & $\sigma_{f}$ [Hz] & $\sigma_{t}$ [ms] \\
+        \midrule
+        29 & 0.51 & 38.8 \\
+        32 & 0.57 & 35.1 \\
+        38 & 0.66 & 30.2 \\
+        44 & 0.74 & 27.0 \\
+        49 & 0.79 & 25.1 \\
+        56 & 0.86 & 23.1 \\
+        1024 & 2.98 & 6.7 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Caption text goes here}
+    \label{6:tab:timing_errors}
+\end{table}
+% 29.0 2.926429419242651 0.0067981710939864414
+% 32.0 3.0652543502184764 0.006490282897753312
+% 38.0 3.3184417674600493 0.005995093263822483
+% 44.0 3.5456408958946386 0.005610937054996698
+% 49.0 3.719223836011664 0.005349064418725812
+% 56.0 3.9428143692026034 0.005045727752714457
+% 1024.0 11.9828101451033 0.0016602422675132365
+%
+Using an SNR of $8$ (and a lower frequency of $17$ Hz) yields timing errors from $38.8$ to $23.1$ milliseconds for the early warning final frequency cutoffs, where higher frequencies have a smaller timing error. These values are greater than the light-travel time ($10$ms) and therefore need to be considered in the early warning search to ensure we are identifying coincidences.
+
+\subsubsection{\label{}Sampling accuracy}
+% PyCBC Live Full Bandwidth Sample Rate
+%  Why does it need a high sample rate
+% PyCBC Live Early Warning Sample Rate
+%  Why is it lower
+%   To capture the f_final in the nyquist
+%  Why isn't it even lower?
+%   You lose out on time and phase resolution
+%  How is this affecting our search
+%   Triggers in between two samples can be found outside the coincident time window
+
+The PyCBC Live Full Bandwidth uses a sample rate of $2048$Hz to capture binary neutron star signals which can merge even above the $1024$Hz Nyquist frequency with the greatest accumulated SNR. The PyCBC Live Early Warning search uses a sample rate of $256$Hz, giving a Nyquist frequency of $128$Hz. The highest final frequency cutoff templates are at $56$Hz so these can all be fully captured with a sample rate of $128$Hz. The sample rate is increased to $256$Hz to ensure we have a greater time resolution and phase accuracy, a sample rate of $128$Hz has a time between samples of $7.8$ms which is close to our allowed light-travel time.
+
+We have seen that the $256$Hz sample rate might still provide an issue with timing accuracy and the current allowed coincidence time window. With a time between samples of $3.9$ms a trigger in another detector $3$ samples later will be within the allowed window of $13$ms but $4$ samples which equal a time difference of $15.6$ms, outside the window. We have seen examples whereby increasing the sample rate of the early warning search will locate a coincidence within the time window where previously it was seen outside. Increasing the sample rate however, does increase the computational cost of the search with no increase in event SNR or new events provided.
+
+\subsubsection{\label{}Early warning tuned PhaseTD histogram}
+% Great, we've made the window bigger
+% What? It still won't work? Why not?
+% PhaseTD File
+%  What is it?
+%  How is it made?
+%  How is it tuned?
+%  Does it take into account time windows outside the 13ms? (no)
+
+By increasing the allowed coincidence time window we will allow the early warning search to make those initial coincident triggers which share the same template parameters and are physically possible (when accounting for timing accuracy error). However, we will face another problem where the coincident ranking statistic used by the early warning search will not consider these event to have a very low signal rate. The coincident ranking statistic used by the early warning search is \verb|phasetd| (phase-time delay) and is used to assess the coincidence likelihood between two triggers from different detectors.
+
+For a two detector coincidence the likelihood value is found by sampling from a pre-created \verb|phasetd| 3-dimensional histogram in amplitude, time and phase space. This file is created using by simulating gravitational wave signals from an isotropic distribution of sources. Each signal is assigned a random sky location (right ascension, declination and inclination) and polarization, then the response in each detector is calculated to determine the sensitivity to the signal in both detectors. From this response we can get the signal amplitudes, time delays and phases shifts for each detector. For the pair of detectors the time delay, phase differences and relative signal amplitudes are then binned into discrete bins which represent different combinations of amplitude, time and phase difference.
+
+The size of the bins is determined by the allowed uncertainties in timing, phase and SNR. Additionally there is a restriction in the allowed range of SNR ratios to avoid storing bins for extreme values. The bins are then weighted by the signal amplitude 
+
+
+
+Create a file containing the time, phase and amplitude correlations between two
+or more detectors for signals by doing a simple monte-carlo.
+
+Output is the relative amplitude, time, and phase as compared to a reference
+IFO. A separate calculation is done for each IFO as a possible reference.  The
+data is stored as two vectors : one vector gives the discrete integer bin
+corresponding to a particular location in 3*(Nifo-1)-dimensional
+amplitude/time/phase space, the other gives the weight assigned to that bin.
+To get the signal rate this weight should be scaled by the local sensitivity
+value and by the SNR of the event in the reference detector.
+
+The \verb|phasetd| file contain 
 
 \subsubsection{\label{6:sec:missing-cands}Missing candidates}
 %
