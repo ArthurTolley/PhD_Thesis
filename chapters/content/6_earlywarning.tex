@@ -404,27 +404,20 @@ As shown in Table 1. of~\cite{Fairhurst:2010}, the timing error for a binary neu
         \toprule
         \textbf{Frequency [Hz]} & $\sigma_{f}$ [Hz] & $\sigma_{t}$ [ms] \\
         \midrule
-        29 & 0.51 & 38.8 \\
-        32 & 0.57 & 35.1 \\
-        38 & 0.66 & 30.2 \\
-        44 & 0.74 & 27.0 \\
-        49 & 0.79 & 25.1 \\
-        56 & 0.86 & 23.1 \\
-        1024 & 2.98 & 6.7 \\
+        29 & 0.51 & 6.80 \\
+        32 & 0.57 & 6.49 \\
+        38 & 0.66 & 6.00 \\
+        44 & 0.74 & 5.61 \\
+        49 & 0.79 & 5.35 \\
+        56 & 0.86 & 5.05 \\
+        1024 & 2.98 & 1.66 \\
         \bottomrule
     \end{tabular}
     \caption{Caption text goes here}
     \label{6:tab:timing_errors}
 \end{table}
-% 29.0 2.926429419242651 0.0067981710939864414
-% 32.0 3.0652543502184764 0.006490282897753312
-% 38.0 3.3184417674600493 0.005995093263822483
-% 44.0 3.5456408958946386 0.005610937054996698
-% 49.0 3.719223836011664 0.005349064418725812
-% 56.0 3.9428143692026034 0.005045727752714457
-% 1024.0 11.9828101451033 0.0016602422675132365
 %
-Using an SNR of $8$ (and a lower frequency of $17$ Hz) yields timing errors from $38.8$ to $23.1$ milliseconds for the early warning final frequency cutoffs, where higher frequencies have a smaller timing error. These values are greater than the light-travel time ($10$ms) and therefore need to be considered in the early warning search to ensure we are identifying coincidences.
+Using an SNR of $8$ (and a lower frequency of $17$ Hz) yields timing errors from $6.80$ to $5.05$ milliseconds for the early warning final frequency cutoffs, where higher frequencies have a smaller timing error. These values are the same order of magnitude as the light-travel time ($10$ms) and therefore need to be considered in the early warning search to ensure we are identifying coincidences.
 
 \subsubsection{\label{}Sampling accuracy}
 % PyCBC Live Full Bandwidth Sample Rate
@@ -454,22 +447,11 @@ By increasing the allowed coincidence time window we will allow the early warnin
 
 For a two detector coincidence the likelihood value is found by sampling from a pre-created \verb|phasetd| 3-dimensional histogram in amplitude, time and phase space. This file is created using by simulating gravitational wave signals from an isotropic distribution of sources. Each signal is assigned a random sky location (right ascension, declination and inclination) and polarization, then the response in each detector is calculated to determine the sensitivity to the signal in both detectors. From this response we can get the signal amplitudes, time delays and phases shifts for each detector. For the pair of detectors the time delay, phase differences and relative signal amplitudes are then binned into discrete bins which represent different combinations of amplitude, time and phase difference.
 
-The size of the bins is determined by the allowed uncertainties in timing, phase and SNR. Additionally there is a restriction in the allowed range of SNR ratios to avoid storing bins for extreme values. The bins are then weighted by the signal amplitude 
+The size of the bins is determined by the allowed uncertainties in timing, phase and SNR. Additionally there is a restriction in the allowed range of SNR ratios to avoid storing bins for extreme values. After this, smoothing is performed between nearby bins and the final histogram is produced. Within the search, time difference, phase difference and amplitude ratios are then used to sample from this histogram to calculate the likelihood of the three parameter combination.
 
+Currently the allowed time window uncertainty is $1$ms which determines the bin size and while the time difference between two triggers is allowed to include these early warning trigger coincidences in our monte carlo simulation of of the astrophysical distribution of these time differences the early warning time difference bins will not be occupied due to these lying outside of the light-travel time. The uncertainty will need to be taken account explicitly in the time difference on both trigger times.
 
-
-Create a file containing the time, phase and amplitude correlations between two
-or more detectors for signals by doing a simple monte-carlo.
-
-Output is the relative amplitude, time, and phase as compared to a reference
-IFO. A separate calculation is done for each IFO as a possible reference.  The
-data is stored as two vectors : one vector gives the discrete integer bin
-corresponding to a particular location in 3*(Nifo-1)-dimensional
-amplitude/time/phase space, the other gives the weight assigned to that bin.
-To get the signal rate this weight should be scaled by the local sensitivity
-value and by the SNR of the event in the reference detector.
-
-The \verb|phasetd| file contain 
+Another improvement that can be made in the generation of the \verb|phasetd| statistic files is including the sample rate of the search as a parameter. For a monte carlo simulation our sample rate is as accurate as a \verb|float64| parameter can be. Whereas the timing difference between triggers in the PyCBC Live search will only take discrete values of the time difference dependent on the sample rate, for example, the early warning search has a sample rate of $256$Hz and therefore the time difference between samples is $0.00390625$ seconds or approximately $3.9$ milliseconds. Therefore our \verb|phasetd| file will only ever been sampled from using time difference that are n-multiples of this time between samples. We can create \verb|phasetd| files with bins in the time difference parameter space which represented the sample rate of the search and therefore can be sampled more accurately.
 
 \subsubsection{\label{6:sec:missing-cands}Missing candidates}
 %
@@ -484,121 +466,103 @@ The \verb|phasetd| file contain
 % - How often it happened
 % - Impact
 
-Injections which are missing frequencies are those that might seem to skip a frequency candidate, for example, progressing through from 32Hz to 38Hz, missing a 44Hz candidate and then finding a 49Hz and 56Hz candidate. We want to understand why the 44Hz candidate was missed. The smooth progression of frequency candidates could be used in the future as a measure of how real and event is, so to miss a candidate for a non-astrophysical reason might reduce our sensitivity.
+The most obvious indicator that the search has failed to find a coincidence due to the coincident trigger time difference falling outside the coincidence allowed timing window is that injections have `missing' events in the frequency evolution. We would expect to see a sequence of events for each injection when the starting frequency is not the greatest frequency truncation in the bank. For example, if we saw a real candidate event with a final frequency cutoff of $29$Hz then we would expect to find the $32$, $38$, $44$, $49$ and $56$Hz candidate events shortly following. If we fail to see the $32$Hz event but we still see the following events then we know that something has broken in the early warning search.
 
-There is a simple explanation for some events which is that the progression through to the higher frequencies might simple be too short for the search to identify a separate candidate. For the higher mass templates there might be few seconds between candidates. Others there is a clear problem and it is useful to understand why this has happened.
+We know that the $32$Hz triggers exist but they fall outside the allowed coincidence timing window and therefore a coincident event was never formed. The early warning search will output files containing all the single detector triggers found which we can use to identify the missing coincidence. Figure~\ref{6:fig:missing-freq-eg} shows an example of an injection which has been found with all but $1$ final frequency cutoff template. 
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/6_earlywarning/stories/missing_freqs_example.pdf}
+    \caption{Caption}
+    \label{6:fig:missing-freq-eg}
+\end{figure}
+%
+To verify the time difference problem we investigated the expected network SNRs for this injection at each final frequency cutoff in both a noiseless and expected noise regime (not performed using the PyCBC Live search). The values for these can be seen in table~\ref{6:tab:noise_snrs}.
+%
+\begin{table}[ht]
+    \centering
+    \setlength{\tabcolsep}{4pt}
+    \rowcolors{2}{white}{lightgray}
+    \begin{tabular}{ccc}
+        \toprule
+        \textbf{Final Frequency [Hz]} & \textbf{Noiseless SNR} & \textbf{Noisy SNR} \\
+        \midrule
+        29 & 16.43 & 15.38 \\
+        32 & 19.16 & 17.95 \\
+        38 & 24.00 & 21.50 \\
+        44 & 28.11 & 25.26 \\
+        49 & 31.04 & 27.94 \\
+        56 & 34.48 & 29.02 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Caption text goes here}
+    \label{6:tab:noise_snrs}
+\end{table}
+%
+We can clearly see that we are expecting to see a large network SNR for the $32$Hz case which isn't recovered by the PyCBC Live Early Warning search. Next we are able to re-run the early warning search using a template which perfectly describes the injection parameters and in this case we still fail to recover the candidate event but, we can look into the trigger files to identify the single trigger found by both searches with the same template above the SNR threshold. We find a H1 trigger with SNR $14.55$ and an L1 trigger with SNR $12.38$ (giving a network SNR of $19.11$) and when the time difference between triggers is calculated we get $0.015625$ seconds, greater than the currently allowed $0.013$ seconds. 
 
+We can then perform another search with a sample rate of $2048$Hz, which doesn't find a coincidence but has a smaller time difference of $0.0146$ seconds (still outside the window) proving that the time accuracy error is playing a part and it isn't simply a sampling inaccuracy. When performing a final search in which we expand the allowed coincidence timing window by $10$ms (this can be tuned in the future) we successfully recover all $6$ events for this injection.
+
+However, we still need to investigate how the \verb|phasetd| ranking statistic has responded to the highly unlikely time difference. We calculate the signal rate using
+%
+\begin{equation}
+    \log(r_s) = \frac{R - \rho_{H}^{2} + \rho_{L}^2}{2}
+\end{equation}
+%
+and when doing so recover a signal rate using the same \verb|phasetd| histogram as that used by the PyCBC Live search of $-24.70$. This is extremely low and therefore the signal is being considered as extremely unlikely but, the SNRs of the signal are so high such that this is cancelled out and the ranking statistic value found by the search overall is around $17.77$, quite significant. This points to issues surrounding the \verb|phasetd| histogram file that still needs to be fixed.
 
 \subsubsection{\label{6:sec:non-mono-snr}Non-monotonic SNR evolution}
-
-
 % - Example
 % - How often it happened
 % - Impact
 
-As a gravitational wave signal passes through the detectors we can match more and more of it to the gravitational wave template and can expect to see a higher and higher SNR. Therefore, for a specific gravitational wave signal we would expect an increasing SNR from each candidate corresponding to each final frequency in our template bank. We look at the network SNR from each candidate corresponding to a gravitational wave event and we can see if any consecutive candidates have a lower SNR from the previous candidate, an unexpected behaviour.
+Another manifestation of the timing accuracy error is the possibility for the missing frequency to be found but with a SNR not following a monotonic SNR increase across the entire injection event timeline. A demonstration of this can be seen in figure~\ref{6:fig:non-monotonic-snr} and an example of this happening for an injection in our early warning search can be seen in figure~\ref{6:fig:non_mono_eg}.
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/6_earlywarning/stories/non_mono_example.pdf}
+    \caption{Caption}
+    \label{6:fig:non_mono_eg}
+\end{figure}
 
-We find that 1398 injections have a non-monotonically increasing SNR at some point within their evolution. To prevent the effects of small noise fluctuations we compare the SNRs from the two candidates and assess whether there is a greater than 5\% drop in SNR. For example, if the 38Hz candidate has an SNR of 10, the 44Hz candidate must have an SNR of less than 9.5 to be counted as a non-monotonic injection.
+It can be seen that the $32$Hz has been found by the search for this injection but with a much lower SNR than expected and not following the monotonic SNR increase that we would expect. When investigating the triggers found we can see that the search has managed to find a low-significance trigger within the coincidence time window and has managed to form a coincidence with low SNR, similar to the low significance candidates described in section~\ref{6:sec:low-significance-cands} but where one trigger is actually real. Looking into the single detector trigger files we can once again find the coicident trigger pair that should've been made if the coincidence timing window was larger and when running the search over this injection with the larger coincidence time window we find all $6$ events for this injection with the expected SNR.
 
-To understand why these are happening, we have to look at the components that not only give us the SNR--the template and the data-- but also the ranking statistic, which might favour a slightly lower SNR template due to other properties of the noise. For example, the same template for the 38Hz and 44Hz candidates might give a monotonic increase in SNR but, a different template with a lower SNR for the 44Hz candidate might be more highly preferred event.
 
+% \section{\label{6:sec:potential-improvements}Potential Improvements}
 
+% While I am not including the improvements that are suggested here into the early warning search, due to time constraints, I will delve into some of the improvements that can be made and the positives and negatives of their effect upon the search.
 
+% \subsection{\label{6:subsec:ranking-statistic}Additions to the Ranking Statistic}
 
+% The ranking statistic, as mentioned in previous chapters, is the way in which we can evaluate the likelihood of a particular candidate being 'real'. Therefore, if we include more and more components into the ranking statistic, we can build up a more confident picture of what determines the realness of a candidate and whether we should share this candidate with the wider research community.
 
+% The current ranking statistic used by the early warning search is very very simple, in the single detector triggers it is a simple ranking of `newsnr' where the chi squared tests are used to determine if the correct amount of power is located in each bin of the template. For the coincident ranking statistic we used `phasetd' which is another simple check of phase and amplitude consistency between detectors in the time domain.
 
+% We have two careful consideration with regards to the ranking statistic. Number 1, computation time and avoiding introducing any lag into the early warning search. The early warning search has a stride length of one second, if any complicate computational steps are added to the ranking statistic we might risk delaying any detected early warning candidates and defeating the purpose of the search. Number 2, eliminating potential candidates before we send them out. No ranking statistic is perfect and the resulting quantitative analysis from the ranking statistic, the false alarm rate, is cut off at a human chosen number (typically one or two per year). Therefore, if we introduce more and more complicated components to the ranking statistic we might risk eliminating early warning candidates which don't meet the PyCBC threshold of a confident event but, other non-IGWN people might take that risk and perform their observations or analyses using our non-confident predictions. Therefore we might actually want to either keep our ranking statistic fairly simple, to not lose these rare events, or lower our threshold when using a complicated ranking statistic so that we still disperse these events but with a big asterisk that we do not think they're real and might fall below someone's threshold.
 
+% If we wanted to make some improvements to the ranking statistic we can consider including some early warning specific information which we would know at the time of the search. This is either historical information based on the previous results produced by the early warning search, something similar to the template fits used in offline and the full bandwidth live search, or maybe even an astrophysical analysis of what we expect to see based on a population model, something like the KDE statistic (I think??).
 
+% Real time information that could be used in the search pertains to the state of the detector at that very time, inclusion of iDQ and DQ, it could also include the detected candidates that have already been found and are being kept in a rolling buffer. We do expect that for a real gravitational wave signal that can be found in early warning, to see a cascade of events uploaded with subsequent frequencies getting higher and higher. We could check if any previous frequencies were uploaded, or in posterity whether any further frequencies were uploaded. If a candidate has been found first at 38Hz, does this mean we missed a 29Hz and a 32Hz signal or were these too quiet? Can we spin up a small job to do a deep dive on whether these lower frequencies are in-fact there? There are many small changes that can be made to the early warning search to iteratively improve upon it and make it more robust and confident in detecting these rare events.
 
+% \subsection{More Frequency Truncations per Template}
+% We currently have five frequency truncations per template in our bank. This is to prevent a massive amount of templates in the bank and is a good balance for shorter templates which might transition between frequency truncations faster than the search stride time when reaching higher frequencies.
 
+% We could produce a template bank with a number of different configurations and requirements:
+% - Greater number of frequency truncations for all templates
+% - Template dependent frequency truncations, longer duration templates will have more frequency truncations
+% - Equal truncations per template but sigma dependent spacing
+% - Time before merger spacing of templates, 1 template every 3/4/5 seconds or something. Or 8 templates per duration
 
+% \subsection{Great parameter distribution in template bank}
+% The distribution of template parameters is conservative in the early warning search. We only want to find and report on signals that have a potential electromagnetic counterpart however our template bank could be too conservative and by allowing a greater parameter distributions of templates we could discover some templates on the edge of the bank with a greater SNR or templates that previously we wouldn't have seen.
 
+% To test a larger template bank we would need to produce an injection set containing a larger number of signals that we might consider EM bright, recent literature has highlighted previously unknown signals that could have EM counterparts~SOURCE SOURCE SOURCE.
 
+% \subsection{Adding Spins to the Template Bank}
+% Currently the template bank is limited to aligned 0 spin templates. We tested the search with an injection set of slightly spinning templates and this spin will not be seen by the early warning search. It is known that neutron stars have theoretical spins up to +-0.4 so there is a potential for us to be missing spinning neutron star signals and therefore precessing signals in our search. While precessing signals are more difficult to see due to difficulties in including the many more parameters requires this search is very light weight currently and more computing power could be added to balance out the lag increase from introducing more complicated template banks to the search.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{\label{6:sec:potential-improvements}Potential Improvements}
-
-While I am not including the improvements that are suggested here into the early warning search, due to time constraints, I will delve into some of the improvements that can be made and the positives and negatives of their effect upon the search.
-
-\subsection{\label{6:subsec:ranking-statistic}Additions to the Ranking Statistic}
-
-The ranking statistic, as mentioned in previous chapters, is the way in which we can evaluate the likelihood of a particular candidate being 'real'. Therefore, if we include more and more components into the ranking statistic, we can build up a more confident picture of what determines the realness of a candidate and whether we should share this candidate with the wider research community.
-
-The current ranking statistic used by the early warning search is very very simple, in the single detector triggers it is a simple ranking of `newsnr' where the chi squared tests are used to determine if the correct amount of power is located in each bin of the template. For the coincident ranking statistic we used `phasetd' which is another simple check of phase and amplitude consistency between detectors in the time domain.
-
-We have two careful consideration with regards to the ranking statistic. Number 1, computation time and avoiding introducing any lag into the early warning search. The early warning search has a stride length of one second, if any complicate computational steps are added to the ranking statistic we might risk delaying any detected early warning candidates and defeating the purpose of the search. Number 2, eliminating potential candidates before we send them out. No ranking statistic is perfect and the resulting quantitative analysis from the ranking statistic, the false alarm rate, is cut off at a human chosen number (typically one or two per year). Therefore, if we introduce more and more complicated components to the ranking statistic we might risk eliminating early warning candidates which don't meet the PyCBC threshold of a confident event but, other non-IGWN people might take that risk and perform their observations or analyses using our non-confident predictions. Therefore we might actually want to either keep our ranking statistic fairly simple, to not lose these rare events, or lower our threshold when using a complicated ranking statistic so that we still disperse these events but with a big asterisk that we do not think they're real and might fall below someone's threshold.
-
-If we wanted to make some improvements to the ranking statistic we can consider including some early warning specific information which we would know at the time of the search. This is either historical information based on the previous results produced by the early warning search, something similar to the template fits used in offline and the full bandwidth live search, or maybe even an astrophysical analysis of what we expect to see based on a population model, something like the KDE statistic (I think??).
-
-Real time information that could be used in the search pertains to the state of the detector at that very time, inclusion of iDQ and DQ, it could also include the detected candidates that have already been found and are being kept in a rolling buffer. We do expect that for a real gravitational wave signal that can be found in early warning, to see a cascade of events uploaded with subsequent frequencies getting higher and higher. We could check if any previous frequencies were uploaded, or in posterity whether any further frequencies were uploaded. If a candidate has been found first at 38Hz, does this mean we missed a 29Hz and a 32Hz signal or were these too quiet? Can we spin up a small job to do a deep dive on whether these lower frequencies are in-fact there? There are many small changes that can be made to the early warning search to iteratively improve upon it and make it more robust and confident in detecting these rare events.
-
-\subsection{More Frequency Truncations per Template}
-We currently have five frequency truncations per template in our bank. This is to prevent a massive amount of templates in the bank and is a good balance for shorter templates which might transition between frequency truncations faster than the search stride time when reaching higher frequencies.
-
-We could produce a template bank with a number of different configurations and requirements:
-- Greater number of frequency truncations for all templates
-- Template dependent frequency truncations, longer duration templates will have more frequency truncations
-- Equal truncations per template but sigma dependent spacing
-- Time before merger spacing of templates, 1 template every 3/4/5 seconds or something. Or 8 templates per duration
-
-\subsection{Great parameter distribution in template bank}
-The distribution of template parameters is conservative in the early warning search. We only want to find and report on signals that have a potential electromagnetic counterpart however our template bank could be too conservative and by allowing a greater parameter distributions of templates we could discover some templates on the edge of the bank with a greater SNR or templates that previously we wouldn't have seen.
-
-To test a larger template bank we would need to produce an injection set containing a larger number of signals that we might consider EM bright, recent literature has highlighted previously unknown signals that could have EM counterparts~SOURCE SOURCE SOURCE.
-
-\subsection{Adding Spins to the Template Bank}
-Currently the template bank is limited to aligned 0 spin templates. We tested the search with an injection set of slightly spinning templates and this spin will not be seen by the early warning search. It is known that neutron stars have theoretical spins up to +-0.4 so there is a potential for us to be missing spinning neutron star signals and therefore precessing signals in our search. While precessing signals are more difficult to see due to difficulties in including the many more parameters requires this search is very light weight currently and more computing power could be added to balance out the lag increase from introducing more complicated template banks to the search.
-
-\subsection{Approximants with greater physics}
-Due to the small number of templates and them being only generated once for the live search we might be able to use a more expensive template model which includes physics which can capture some unique properties of low mass signals like tidal deformation or orbital eccentricity, using a better equation of state, higher order modes or high order PN terms.
+% \subsection{Approximants with greater physics}
+% Due to the small number of templates and them being only generated once for the live search we might be able to use a more expensive template model which includes physics which can capture some unique properties of low mass signals like tidal deformation or orbital eccentricity, using a better equation of state, higher order modes or high order PN terms.
 
 
 
@@ -606,7 +570,7 @@ Due to the small number of templates and them being only generated once for the 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\section*{Appendix}
 \section{Problems Faced when producing Injection Data}
 
 One of the problems experienced while doing the data analysis of this project is an issue caused by the method of creating the data initially. The PyCBC function used was \emph{pycbc\_condition\_strain} which takes an input for the power spectrum density of the noise you with to simulate. We used an analytical PSD (NAME, REF, CITE) which produced discontinuities at the boundaries between our data segments and therefore negative effects on the matched filtering being performed by the live search. An example of one of these discontinuities and an injection missing some candidates can be seen in figure~REMOVED.
@@ -632,10 +596,4 @@ The early warning search is heavily optimized to the point it runs on a single d
 The search can suffer heavily from other non-PyCBC processes such as file storage, data frame delivery or GraceDB uploads. These can be mitigated slightly with reserved local storage on the dedicated machine or subprocess multiprocessing for the GraceDB uploads so the search isn't waiting on GraceDB to continue processing, especially at times where multiple events are being uploaded for a single signal and across multiple searches from other pipelines.
 
 Another consideration and computational limitation is the limit in introducing new computationally complex processes to the search that might introduce lag to individual processes. Potential changes to the ranking statistic could be challenging to implement without slowing down individual processes or the coincidence rank 0 process. With a data stride of one second we need to be sure that the data processing for the current second is completed before the next second of data arrives or we will slowly build up a debt of data which the search can never get on top of.
-
-\subsection{Physical Limitations}
-
-The template bank does not include any spins on the templates thereby neglecting any effects on the waveform or from precession, however, it is unlikely to see precession at such low frequencies due to the effect becoming more pronounced over increasing numbers of orbits.
-
-Electromagnetically bright events are very rare in the LVK regime, as of May 2024 only (NUMBER) out of (TOTAL NUMBER) events are within our template bank range, and of those only (NUMBER) have been observed with electromagnetic counterparts.
 
