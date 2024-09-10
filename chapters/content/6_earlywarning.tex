@@ -1,173 +1,147 @@
-\section{The Motivation of Multi-Messenger Astronomy}
+The previous chapters in this thesis have described in detail the capabilities of the search pipelines when searching for gravitational waves. The detection of gravitational waves alone reveals plentiful information about previously hard to detect or undetectable astrophysical events. In this chapter we will discuss how gravitational wave astronomy can be paired with traditional electromagnetic astronomy to understand more about events that can be jointly observed in both regimes. We will discuss how we can perform an optimised search for gravitational wave signals to discover them prior to merger and how the current search has problems that need to be fixed.
 
-The previous five chapters of this thesis have demonstrated the capabilities of the gravitational wave detectors and searches and how the field of gravitational wave astronomy has observed events which had previously never been seen. This chapter will cover how gravitational wave astronomy can be paired with traditional electromagnetic astronomy which has been the foundation of astronomy for thousands of years. There are specific events which can be observed with both gravitational waves and electromagnetic radiation, these are some of the most energetic events in our Universe such as the supernova of nearby stars and the kilonova from the merger of two neutron stars. An astrophysical event whose gravitational wave and electromagnetic emission has been detected is called a multi-messenger event.
+In section~\ref{6:sec:multi-messenger-astronomy} we discuss the joint detection of astrophysical events with both gravitational wave and electromagnetic observatories, in section~\ref{6:sec:gw170817} we highlight the only multi-messenger event seen thus far and the timeline of observations. The PyCBC Live early warning search is described in section~\ref{6:sec:early-warning-search} with the template bank construction in section~\ref{6:sec:early-warning-template-bank} and how sky localisation for events is obtained in section~\ref{6:sec:event-localisation}. Section~\ref{6:sec:gw170817-in-ew} uses GW1701817 as an example to demonstrate the capabilities of the early warning search and in section~\ref{6:sec:injection-tests} we describe a full injection set test performed using the early warning search to identify any problems and the results of this search. Finally in section~\ref{6:sec:identified-problems} we discuss the problems found when testing the early warning search, the cause of the problems and the potential solutions to these problems.
 
-Multi-messenger astronomy combines the information produced by the independent observations of the same event to understand more about the event itself. The Hubble constant is a measurement of the rate of expansion of the Universe and can be determine from electromagnetic radiation in two ways: from large scale cosmological measurements of the cosmic microwave background and, by using the astrophysical standard candle Cepheid variable stars. Gravitational waves can be used as another measurement of the Hubble constant.
+\section{\label{6:sec:multi-messenger-astronomy}Multi-messenger astronomy}
 
-The Hubble constant can be calculated using the very simple relation,
+The PyCBC gravitational wave search pipeline searches for gravitational wave signals from the merger of two compact objects~\cite{PyCBC:2016}. Black holes do not emit electromagnetic radiation and therefore the merger of two black holes can currently only be directly observed with gravitational wave detectors~\cite{Ghez:2000}. Neutron stars, on the other hand, are electromagnetically bright themselves and therefore the merger of two neutron stars will produce a kilonova~\cite{Kilonovae:2017}. Kilonovae emit a broad range of electromagnetic radiation across the spectrum~\cite{kilonova_lightcurve:2017} which can be observed with many of the ground and space-based electromagnetic observatories we have on Earth. The combination of gravitational wave and electromagnetic emissions allows us to understand more about these events than either observation could provide alone~\cite{multi_mess_astro:2019}. Astrophysical events which have been observed with both gravitational and electromagnetic waves are called multi-messenger events.
+
+One such quantity that can be measured from observing kilonovae with both gravitational waves and electromagnetic radiation is the Hubble constant~\cite{Schutz:1986}, the measured rate of expansion of the Universe~\cite{hubble:1929}. The Hubble constant is currently determined across two distance scales using purely electromagnetic observations: firstly, the large scale cosmological measurements using the cosmic microwave background~\cite{WMAP_H0:2003} and baryon acoustic oscillations~\cite{BAO_H0:2009} and secondly, the local Universe scale using the astrophysical standard candle Cepheid variable stars~\cite{Cepheids_H0:2001} and type Ia supernovae~\cite{TypeIa_H0:1998}. The Hubble constant values obtained at the different scales do not agree~\cite{H0_tension:2020} so by combining the observation of binary neutron star signals using both gravitational wave and electromagnetic observatories we can provide an independent measurement of the Hubble constant to break this tension.
+
+The Hubble constant can be calculated using Hubble's law~\cite{hubble:1929},
 %
 \begin{equation}
-    cz = H_{0} D_{L}, 
+    H_{0} = c \frac{z}{D_{L}}, 
+    \label{6:eq:hubbles-law}
 \end{equation}
 %
-where $c$ is the speed of light, $z$ is redshift, $H_{0}$ is the Hubble constant and $D_{L}$ is the luminosity distance. We can take a gravitational wave event, such as a binary neutron star merger, and as long as we know the redshift and the luminosity distance we can calculate the Hubble constant.
+where $H_{0}$ is the Hubble constant, $c$ is the speed of light, $z$ is the source event's redshift, and $D_{L}$ is the source event's luminosity distance. Therefore, if we know both the event's redshift and luminosity distance we can calculate the Hubble constant.
 
-The luminosity distance of a gravitational wave is proportional to the amplitude of the strain,
-%
+The luminosity distance of a gravitational wave event is inversely proportional to the amplitude of the gravitational wave strain~\cite{Schutz:1986},%
 \begin{equation}
     h(t) \propto \frac{1}{D_{L}} , 
 \end{equation}
 %
-which is obtained through gravitational wave searches and parameter estimation. The strain amplitude does have a degeneracy with the inclination angle of the binary neutron star system,
+which is obtained via gravitational wave searches and parameter estimation. The gravitational wave strain amplitude does have a degeneracy with the inclination angle, $\iota$, of the binary neutron star system which is described as the angle between the line of sight to the observer and the orbital angular momentum of the source~\cite{inclin_degen_2:2019}. The amplitude of a source that is `edge-on' will have an inclination angle of $90^{\circ}$ and is minimal whereas a source that is `face-on' will have an inclination angle of $0^{\circ}$ and the gravitational wave amplitude will be maximised.
+
+The gravitational wave strain dependence on inclination angle manifests differently in the two gravitational wave polarisations and can be simply described as~\cite{inclin_degen:2018},
+%
+\begin{eqnarray}
+    h_{+} \propto \left(1+\cos^{2}\iota\right), \\
+    h_{x} \propto \cos\iota .
+    \label{6:eqn:inclin_polarisations}
+\end{eqnarray}
+%
+It can be seen from equation~\ref{6:eqn:inclin_polarisations} that an edge-on system ($\iota = 90^{\circ}$) will produce a signal entirely in the $h_{+}$ polarisation but an face-on system will produce a mixed signal with contributions from both $h_{+}$ and $h_{x}$. The inclination angle degeneracy could be broken if we were able to measure $h_{+}$ and $h_{x}$ independently but the individual gravitational wave detectors are sensitive only to a linear combination of the polarisations~\cite{aLIGO:2015}. Multiple gravitational wave detectors with different orientations will be sensitive to different linear combinations of $h_{+}$ and $h_{x}$ and are therefore required to break this degeneracy and fully reconstruct the source orientation~\cite{inclin_degen_2:2019}.
+
+To measure the redshift of the event using the gravitational wave signal we can look to the chirp rate of the system,
 %
 \begin{equation}
-    h(t) \propto \sqrt{(1+\cos^{2}\iota^){2} + (2\cos\iota)^{2}},
+    \frac{df}{dt} = \frac{96}{5} \pi^{8/3} \left(\frac{G\mathcal{M}}{c^{3}}\right)^{5/3} f^{11/3},
+    \label{6:eq:chirp_rate}
 \end{equation}
 %
-which is the angle between the line of sight to the observer and the orbital angular momentum of the source, affecting both the gravitational wave polarization and the amplitude. This means a source than is closer but edge-on, $\iota = 90^{\circ}$, can produce a similar amplitude to a source further away but face-on, $\iota = 0^{\circ}$. The inclination angle is very difficult to measure with the current detectors.
-
-The redshift of a gravitational wave signal also has a degeneracy with the chirp mass of the source,
+the rate of change of the gravitational wave frequency is easy to measure and will give us the chirp mass of the system,
 %
 \begin{equation}
-\mathcal{M} = \frac{(m_1 m_2)^{\frac{3}{5}}}{(m_1 + m_2)^{\frac{1}{5}}}.
+    \mathcal{M} = \frac{(m_1 m_2)^{\frac{3}{5}}}{(m_1 + m_2)^{\frac{1}{5}}}.
+    \label{6:eq:mchirp}
 \end{equation}
 %
-The frequency evolution of the signal is dependent on the chirp mass,
+which depends on the two masses of the system, $m_{1}$ and $m_{2}$. However, the observed $\mathcal{M}$ is redshift dependent,
 %
 \begin{equation}
-f(t) \propto \mathcal{M}^{\frac{5}{8}}t^{-\frac{3}{8}},
+    \mathcal{M}_{obs} = \mathcal{M}_{source}(1 + z), 
+    \label{6:eq:mchirp_obs}
 \end{equation}
-%
-which is directly measured from the gravitational wave signal but will undergo redshifting as it travels to the detectors. Therefore we would require a measurement of the Hubble constant in order to determine the correct amount of redshifting happening to the signal. Using an accompanying electromagnetic emission from an event, a kilonova from a binary neutron star system, we can locate the host galaxy of the source and therefore the redshift for the source.
+and $\mathcal{M}_{obs}$ is scaled by the redshift where events with larger redshifts will appear with larger observed chirp masses than their source chirp mass, $\mathcal{M}_{source}$. We would require a measurement of the Hubble constant to determine the redshift using the luminosity distance and we reach a circular argument.
 
-We have a luminosity distance measured by the gravitational wave signal and a redshift measured by the electromagnetic observation and we can make a new estimation of the Hubble constant. Electromagnetically bright gravitational wave sources can be used as another standard siren for measuring the Hubble constant, highlighting the importance of observing multi-messenger events.
+We can look at other ways to measure the redshift of the event without using the gravitational wave signal. The primary candidate is an electromagnetic emission from the event, for example, a kilonova from a binary neutron star system. Using the electromagnetic emission we can locate the host galaxy of the source and find the redshift. We will then have a luminosity distance, measured by the gravitational wave signal, and a redshift, measured by the electromagnetic observation, and using equation~\ref{6:eq:hubbles-law} we can calculate the Hubble constant . This combination of event information from two separate sources of information for the same event means we can use electromagnetically bright gravitational wave sources as another standard siren for measuring the Hubble constant, highlighting the importance of observing multi-messenger events.
 
-\section{GW170817}
+\section{\label{6:sec:gw170817}GW170817: The only multi-messenger event}
 
-Multi-messenger events are seen via a gravitational wave signal and then a multitude electromagnetic signals from across the electromagnetic spectrum. We have observatories around the globe and in space which span this entire spectrum and can observe counterparts to our gravitational wave signal in all of the different frequency ranges: from high frequency gamma rays to long wavelength radio waves. The gravitational wave emissions of a merger event are seen before any optical emissions due to the inspiral of the binary system emitting detectable gravitational waves prior to the merger.
+We have described multi-messenger events as those that have been seen with a gravitational wave and an electromagnetic signal, in reality the event will broadcast information across the electromagnetic spectrum at varying timescales so we might see a single gravitational wave signal but multiple electromagnetic signals. We have observatories around the globe and in space which span this entire spectrum and can observe counterparts to our gravitational wave signal in all of the different frequency ranges: from high frequency gamma rays to long wavelength radio waves. 
 
-GW170817~\cite{GW170817:2017} is the first and only multi-messenger event observed, the Q-scans for the three detectors online at the time of the event can be seen in figure~\ref{6:fig:gw170817_qscan} and the GCN circular can be found at: \href{https://gcn.gsfc.nasa.gov/other/G298048.gcn3}{https://gcn.gsfc.nasa.gov/other/G298048.gcn3}. On the 17th August 2017 at precisely 12:41:04 UTC the gravitational waves from the merger of a binary neutron star system were seen by LVK detectors. Only $1.7$ seconds later a gamma-ray burst was seen by Fermi~\cite{Fermi:2022, Fermi_GW170817:2017} and INTEGRAL~\cite{INTEGRAL:2003, INTEGRAL_GW170817:2017}. The kilonova emissions were seen next, visual light by the Hubble Space Telescope (HST)~\cite{HST:2000, HST_GW170817:2021} at 11 hours, infrared by HST, VISTA~\cite{VISTA:2015, VISTA_GW170817:2017} and Spitzer~\cite{Spitzer:2004, Spitzer_GW170817:2018} at 12 hours and UV by Swift's UVOT~\cite{Swift:2004, Swift_GW170817:2017} at 15.3 hours post-merger. The final frequencies to be seen were X-rays by Chandra~\cite{Chandra_GW170817:2017} at 9 days post-merger and radio waves by VLA~\cite{VLA:2019, VLA_GW170817:2017} at 16 days post-merger.
+GW170817~\cite{GW170817:2017} is the first and only multi-messenger event we have observed, the Q-scans depicting the gravitational wave signal found by the three detectors online at the time of the event can be seen in figure~\ref{6:fig:gw170817_qscan} and the GCN circular~\cite{gcn_circulars:2024} (rapid astronomical bulletins submitted by and distributed to the global physics community) can be found at: \href{https://gcn.gsfc.nasa.gov/other/G298048.gcn3}{https://gcn.gsfc.nasa.gov/other/G298048.gcn3}. On the 17th August 2017 at precisely 12:41:04 UTC the gravitational waves from the merger of a binary neutron star system were seen by LVK detectors. Only $1.7$ seconds later a gamma-ray burst (GRB 170817A~\cite{gw170817_joint:2017}) was seen by Fermi~\cite{Fermi:2022, Fermi_GW170817:2017} and INTEGRAL~\cite{INTEGRAL:2003, INTEGRAL_GW170817:2017}. The kilonova emissions were seen next, visual light by the Hubble Space Telescope (HST)~\cite{HST:2000, HST_GW170817:2021} at 11 hours, infrared by HST, VISTA~\cite{VISTA:2015, VISTA_GW170817:2017} and Spitzer~\cite{Spitzer:2004, Spitzer_GW170817:2018} at 12 hours and UV by Swift's UVOT~\cite{Swift:2004, Swift_GW170817:2017} at 15.3 hours post-merger. The final electromagnetic frequencies to be seen were X-rays by Chandra~\cite{Chandra_GW170817:2017} at 9 days post-merger and radio waves by VLA~\cite{VLA:2019, VLA_GW170817:2017} at 16 days post-merger.
 %
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{images/6_earlywarning/gw170817/GW170817_qscan.pdf}
-    \caption{The three detector (LIGO-Hanford (top), LIGO-Livingston (middle) and Virgo (bottom)) time-frequency images (Q-scan~\cite{qscan:2004} showing data containing the first binary neutron star gravitational wave event, GW170817~\cite{GW170817:2017}, with times shown relative to 17th August 2017 12:41:04 UTC. The detector amplitudes are individually normalized for that detector's amplitude spectral density. The glitch observed in the LIGO-Livingston detector has been subtracted, the technique and results when doing so are presented in section IV of~\cite{GW170817:2017} and this figure is taken directly from figure 1 in~\cite{GW170817:2017}.}
+    \caption{The three detector (LIGO-Hanford (top), LIGO-Livingston (middle) and Virgo (bottom)) time-frequency images (Q-scan~\cite{qscan:2004} showing data containing the first binary neutron star gravitational wave event, GW170817~\cite{GW170817:2017}, with times shown relative to 17th August 2017 12:41:04 UTC. The detector amplitudes are individually normalised for that detector's amplitude spectral density. The glitch observed in the LIGO-Livingston detector has been subtracted, the technique and results when doing so are presented in section IV of~\cite{GW170817:2017} and this figure is taken directly from figure 1 in~\cite{GW170817:2017}.}
     \label{6:fig:gw170817_qscan}
 \end{figure}
-
-Analysing GW170817's gravitational wave signal and electromagnetic emissions reveal a binary neutron star system located in the Hydra constellation belonging to the galaxy NGC 4993~\cite{NGC4993:1998}. From these measurements we infer a Hubble constant from $62$ to $107$ $km s^{-1} Mpc^{-1}$~\cite{GW170817_H0:2017}, not accurate enough to break the previous cosmological-astrophysical Hubble constant measurement tension. As we observe more electromagnetically bright events from which we can measure the luminosity distance we will be able to constrain the measured value of the Hubble constant.
-
-\section{GW170817 in Early Warning}
-
-Each electromagnetic frequency has different timing windows in which their telescopes can be pointed to observe the event. Fermi detected GW170817 $1.7$ seconds after the merger and is capable of observing the whole sky with the exception of the region occluded by the Earth~\cite{Fermi:2022}, therefore, there is a portion of the sky it cannot view, meaning the initial confirmation of a multi-messenger event could be missed for a future electromagnetically bright event.
-
-The gravitational wave signal from GW170817 was present in the LVK detectable frequency range for $60$ seconds, pre-merger had even occurred. If we detect events as soon as they appear then we can alert the international scientific community that a gravitational wave event was going to happen so they can be prepared. While $60$ seconds of warning might not be enough for Fermi to slew to a different part of the sky, as we improve our detectors we can increase the gap between detection and merger.
-
-Sky maps are used to indicate the area on the sky which contains the most likely source location of the gravitational wave signal. We can improve the sky location with: more detectors at greater geographical distances and with different orientations improves triangulation and more sensitive detectors lead to better SNRs. Other things may also affect the sky localisation such as: the sky position, we are more sensitive to some parts of the sky; the antenna pattern of the detectors, the response of the detector depends on the relative angle of the incoming signal which changes as the Earth rotates. A better sky localisation leads to a more constrained, smaller area sky map.
-
-GW170817 was seen by gravitational wave searches and the initial alert to astronomers was sent $27$ minutes after merger time. The LIGO-Livingston data contained a nasty glitch which had to be removed before a sky map could be made, leading to a sky map latency of $5$ hours and $14$ minutes. The Q-scan containing the glitch can be seen in figure~\ref{6:fig:gw170817_glitch}~\cite{GW170817:2017} and the original event was uploaded to GraceDB (the Gravitational Wave Candidate Event Database) and can be seen at on this web page: \href{https://gracedb.ligo.org/events/G298048}{https://gracedb.ligo.org/events/G298048}.
-%
-\begin{figure}
-    \centering
-    \includegraphics[width=1.0\linewidth]{images/6_earlywarning/gw170817/GW170817_glitch_subtraction.pdf}
-    \caption{The Q-scan of the LIGO-Livingston data containing GW170817, with a very loud wide bandwidth glitch present (top). The glitch was initially subtracted from the data using a windowing function to reduce the amplitude of the glitch to $0$, this windowing function can be seen as a grey line in the bottom figure. The glitch was also modelled using Bayeswave~\cite{BayesWave:2015} and subtracted from the data to preserve the gravitational wave signal power found beneath the glitch, this glitch model (blue line) can be seen overlapping the strain data (orange line) in the bottom figure. This figure has been taken from~\cite{GW170817:2017}.}
-    \label{6:fig:gw170817_glitch}
-\end{figure}
 %
 
-We now have more robust and well tested search pipelines which are capable of finding gravitational wave events with a maximum latency of $20$ seconds post-merger~\cite{PyCBC_Live:2018}, with the ability to rapidly make sky maps using BAYESTAR~\cite{BAYESTAR:2016} and have the ability to auto-gate any loud glitches in the data. Assuming the BAYESTAR sky map is good enough and there are enough detectors to effectively cover the whole sky map (we have instruments such as GOTO which are used specifically for gravitational wave event followup~\cite{GOTO:2020}), gamma-ray bursts can arrive less than two seconds after the gravitational wave merger. This is not nearly enough time to produce a sky map or relocate a telescope. As an example, the PyCBC Live full-bandwidth gravitational wave search has a maximum latency between detection and upload to GraceDB of $20$ seconds, as shown by figure~\ref{6:fig:latency_plot}.
+Analysing GW170817's gravitational wave signal and electromagnetic emissions reveal a binary neutron star system located in the Hydra constellation belonging to the galaxy NGC 4993~\cite{NGC4993:1998}. Using these signals we infer a Hubble constant $H_0 = 70.0^{+12.0}_{-8.0} \, \text{km} \, \text{s}^{-1} \,\text{Mpc}^{-1}$~\cite{GW170817_H0:2017} which is consistent with both the measured cosmological value for $H_0$ ($67.74 \pm0.46 \, \text{km} \, \text{s}^{-1} \,\text{Mpc}^{-1}$~\cite{Planck_H0:2015}) and the astrophysical value for $H_0$ ($73.24 \pm1.74 \, \text{km} \, \text{s}^{-1} \,\text{Mpc}^{-1}$~\cite{Riess_H0:2016}) but, it is not accurate enough to break the tension between both values and to constrain the value of the Hubble constant further we need to observe many more electromagnetically bright events~\cite{Palmese:2021}. Using GW170817 we were able to determine other physical properties such as the speed of gravity~\cite{Harry_speed_of_gravity:2022, Baker_speed_of_gravity:2022}.
+
+Using the electromagnetically bright multi-messenger events to constrain the measurement of the Hubble constant is straight forward. We are also able to use `dark siren' events, which have no electromagnetic counterpart and so to measure the value of the Hubble constant we must use galaxy catalogues to locate the host galaxy of the gravitational wave signal to obtain a redshift measurement. This is not discussed further in this chapter, for more information on dark sirens please look to~\cite{DES:2019, Dalang_dark_sirens:2023}
+
+\section{\label{6:sec:early-warning-search}Detecting gravitational wave events pre-merger}
+
+Gravitational wave signals from low-mass sources merge at a frequencies above the sensitive frequency band of the LIGO gravitational wave detectors, therefore they are found at the Nyquist frequency of the LIGO detectors, ${\sim}1024 \, \text{Hz}$. The lower sensitive frequency of the LIGO detectors is ${\sim}20 \, \text{Hz}$ meaning the gravitational wave signal can exist in the sensitive band for potentially hundreds of seconds before it is identified by the gravitational wave search pipelines.
+
+This presents an opportunity to detect the gravitational wave signal pre-merger, in the inspiral regime of the system. The electromagnetic counterpart to the gravitational wave signal all occurred post-merger, therefore by disseminating information about an on-going gravitational wave event prior to the merger we are able to give enough warning to electromagnetic observatories to slew their telescopes to the approximation region on the sky in which we will indicate a gravitational wave event will occur. Providing this warning pre-merger is commonly referred to as `early warning'. This section details the methodologies used in the PyCBC Live early warning search to achieve the detection of electromagnetically bright gravitational wave signals pre-merger.
+
+Even with an accurate sky map and dedicated electromagnetic telescopes (for example, GOTO is used for gravitational wave event followup~\cite{GOTO:2020}), the gamma-ray burst counterparts can arrive less than two seconds after merger, not giving us enough time to identify the signal, produce a sky map and slew any telescopes to the correct sky location.
+
+\subsection{\label{6:sec:pycbc-ew-search}The PyCBC Live early warning search}
+
+PyCBC Live currently has two active configurations running on gravitational wave data in real time: the full-bandwidth search aims to identify all gravitational wave signals in the data in low-latency; the early warning search aims to identify potentially and circulate electromagnetically bright signals prior to their merger.
+
+The PyCBC Live full bandwidth and early warning searches are very similar due to their use of the same infrastructure and code with a few key changes to enable as little latency between observable signal and circulation. The full bandwidth search uses an analysis stride of eight seconds, meaning new data is loaded and analysed every eight seconds, while the early warning search has an analysis stride of only one second.
+
+We use two terms when referring to search detection times: latency refers to time taken by the search to identify a gravitational wave template and produce a gravitational wave event; and warning refers to the time prior to the gravitational wave signal's merger that the event was identified. Figure~\ref{6:fig:latency_plot} shows the full bandwidth search which searches for complete templates and has a minimum and maximum latency of $12$ to $20$ seconds respectively with no possibility to observe the event pre-merger. The early warning search searches for templates that end pre-merger with minimum latency of $2.5$ seconds and maximum latency of $3.5$ seconds.
 %
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/6_earlywarning/gw170817/latency_plot.pdf}
-    \caption{}
+    \caption{An illustration of the detection latency between template end and event upload to GraceDB~\cite{ligo_gracedb:2024}. The top half of the plot pertains to the PyCBC Live Full Bandwidth search and indicates that the search has a maximum latency of $20$ seconds, the bottom half describes the PyCBC Live Early Warning search which has a maximum latency of $3.5$ seconds. From the end of the gravitational wave template the search must wait for the current analysis stride to end, another period of data must then be waited on (overwhitening and data conditioning) and then the search analyses the previous analysis stride during the next analysis stride.}
     \label{6:fig:latency_plot}
 \end{figure}
 %
-An early warning search will search for pre-merger gravitational wave signals. When one has been found it can estimate the time of coalescence, produce a sky map, and send out an alert to the international astronomy community to be prepared for an incoming gravitational wave merger. The details of the PyCBC Live early warning search will be covered in this chapter.
+The early warning search is able to detect signal prior to the merger of the gravitational wave and can give warning time whereas the full bandwidth search cannot.
 
-We can demonstrate the early warning search's efficacy on GW170817. Table~\ref{6:tab:gw170817_early_warning} displays a selection of frequencies alongside the network SNR of the early warning search in both the original data and a representation of the current detector data, also shown is the time pre-merger (latency) at which GW170817 will reach the specified frequency. It can be clearly seen that the SNR of the early warning search hovers around the network SNR threshold of $6$ until the $56$Hz frequency is reach, it is at this point that we can more confidently say that GW170817 would've been seen in early warning, $12$ seconds prior to the merger. When we inject a GW170817-like signal into O4 data we can see very large SNRs in all of the frequencies and the earliest we could observe an early warning signal from GW170817 would be $67$ second prior to the merger.
-%
-\begin{table}[ht]
-    \centering
-    \setlength{\tabcolsep}{4pt}
-    \rowcolors{4}{white}{lightgray}
-    \begin{tabular}{cccc}
-        \toprule
-        & \multicolumn{2}{c}{\textbf{Network SNR}} & \\
-        \cmidrule(lr){1-4}
-        \textbf{Final Frequency [Hz]} & \textbf{Original Data} & \textbf{O4 Injection} & \textbf{Time Pre-Merger [s]} \\
-        \midrule
-        29 & 6.19 & 13.26 & 67 \\
-        32 & 5.76 & 18.58 & 52 \\
-        38 & 6.11 & 21.96 & 33 \\
-        44 & 6.25 & 25.87 & 22 \\
-        49 & 6.19 & 24.42 & 17 \\
-        56 & 7.04 & 35.24 & 12 \\
-        \bottomrule
-    \end{tabular}
-    \caption{Caption text goes here}
-    \label{6:tab:gw170817_early_warning}
-\end{table}
-%
-By implementing an early warning search in PyCBC Live we are capable of identifying gravitational signals before merger. This will aid in localising potentially electromagnetically bright gravitational wave signals and inform telescopes of all frequency ranges around the globe and in space to capture as much of the electromagnetic counterpart as possible, enabling greater quality multi-messenger astronomy.
+The inspiral regime of the gravitational wave signal is such that the frequency of the signal is monotonically increasing over time, to identify signals pre-merger the early warning search truncates the full gravitational wave template at discrete frequency cutoffs and searches for these frequency truncated gravitational wave templates. When a significant amount of SNR has been accumulated in the inspiral region the search will find the associated signal and predict the time of merger.
 
-\section{Early Warning Search}
+\subsection{\label{6:sec:early-warning-template-bank}Frequency truncated template bank}
 
-PyCBC Live has two currently active configurations running on real gravitational wave data in real time: the full-bandwidth search aims to identify all gravitational wave signals in the data in low-latency; the early warning search aims to identify potentially electromagnetically bright signals prior to their merger.
+The template bank used by the PyCBC Live early warning search is composed of frequency truncated templates. The bank contains six different frequency ctuoffs at: $29$, $32$, $38$, $44$, $49$ and $56 \, \text{Hz}$, these frequencies correspond to approximately $60$, $46$, $29$, $20$, $15$ and $10$ seconds before merger for a $1.4 \, \text{M$_\odot$}$\text{--}$1.4\, \text{M$_\odot$}$ binary neutron star signal and are shared between all the early warning pipelines: PyCBC Live~\cite{PyCBC_earlywarning:2020}, GstLAL~\cite{GstLAL:2020}, MBTA~\cite{MBTA:2021} and, SPIIR~\cite{SPIIR:2020}.
 
-The PyCBC Live full bandwidth and early warning searches use the same infrastructure and code. The full bandwidth search uses a data stride of eight seconds, meaning new data is loaded every eight seconds, while the early warning search has a data stride of one second. As shown in on the top of figure~\ref{6:fig:latency_plot} the full bandwidth search has a minimum and maximum latency of 12 and 20 seconds respectively between gravitational wave merger and PyCBC Live detection, the corresponding figure for the early warning search is shown on the bottom of figure~\ref{6:fig:latency_plot}, where we can see that we have a minimum latency between initial gravitational wave detection of 2.5 seconds and a maximum latency of 3.5 seconds but between initial detection of the lowest frequency being searched for.
+The PyCBC Live early warning template bank is constructed by generating six separate template banks (one for each frequency cutoff) using the standard geometric placement algorithm~\cite{Brown:2012} with a minimal match between templates of $0.97$; all six individual banks are then combined into one. The template parameters of the bank are chosen to represent potentially electromagnetically bright signals, these are produced by the merger of low mass binary neutron star or neutron star black hole systems. The masses of the two systems are limited between $1\text{--}3 \, \text{M$_\odot$}$, with no spins. The PSD used to generate the template bank is \verb|aLIGO140MpcT1800545| which is a representative PSD of the Advanced LIGO design curve that includes estimates for the main fundamental noises of the interferometer, in particular: seismic noise, thermal noise and quantum noise~\cite{aLIGO_design_curve:2018} with a binary neutron star range of $140 \, \text{Mpc}$~\cite{ligo_prospects:2016}.
 
-The clear difference between the two searches is the ability for the early warning search to detect gravitational wave signals prior to merger using templates which have been truncated a specific frequencies. When a significant amount of SNR has been accumulated in the inspiral region we can detect the signal and predict the time of merger, and with multiple templates for the same signal at different final frequencies we can build up a signal and report multiple events for the same gravitational wave signal. We are even able to make preliminary sky maps from these frequency truncated events, with the sky map becoming more and more accurate as more SNR is accumulated in higher final frequency events.
-
-\section{Template Bank}
-
-The PyCBC Live early warning search uses a frequency truncated template bank to search for gravitational wave signals prior to merger. The full bandwidth gravitational wave templates are generated with the \verb|TaylorF2| waveform model which models the inspiral region of the signals and is unable to accurately model the merger phase, this is acceptable because these low mass signals merge above the upper frequency band of detector sensitivity. The frequency evolution of the inspiral region of \verb|TaylorF2| waveforms is monotonic in time, meaning a specific time before merger corresponds directly to a particular frequency to truncate to. Therefore to observe a template $30$ seconds pre-merger, we can map that directly to a frequency and trunacate the template at that frequency. This is even easier when we consider that \verb|TaylorF2| waveforms are frequency domain so no conversion between time and frequency is required.
-
-The current bank we use has truncated frequencies of \verb|29, 32, 38, 44, 49, 56| which match the grid of frequencies used by the other early warning searches of the pipelines: GstLAL~\cite{GstLAL:2020}, MBTA~\cite{MBTA:2021} and SPIIR~\cite{SPIIR:2020}. These templates correspond to roughly \verb|60, 46, 29, 20, 15, 10| seconds before merger for a $1.4M_\odot$-$1.4M_\odot$ BNS signal. The bank is constructed by generating a template bank using the standard geometric placement algorithm~\cite{Brown:2012} and a minimal match of $0.97$ for each frequency cutoff and then combining the six template banks into one.
-
-The template parameters themselves are chosen to represent potentially electromagnetically bright, low mass BNS or NSBH systems. This means that a single full bandwidth signal isn't simply generated and split into six frequency truncated templates and in fact a full bandwidth template might not have six frequency truncated templates that exactly match but they are covered by a nearby template with a minimum match of $0.97$. The masses of the two systems are limited between $1-3 M_\odot$, with no spins. The PSD used to generate the template bank is \verb|aLIGO140MpcT1800044| which is a representative PSD of the Advanced LIGO design curve that includes estimates for the main fundamental noises of the interferometer, in particular: seismic noise, thermal noise and quantum noise~\cite{aLIGO_design_curve:2018}. Using this PSD as our noise model will mean the data contains no non-Gaussian noise artefacts.
-
-The complete early warning template bank is $9180$ templates, making for a very light weight search computationally when compared to the ~$700,000$ templates being used in the full bandwidth PyCBC Live search. Not only are there a smaller number of templates in the template bank, the templates themselves are shorter in duration when compared to their full bandwidth counterparts in the full bandwidth template bank.
+The early warning template bank is $9180$ templates, making for a very light weight search when compared to the ${\sim}700,000$ templates being used in the full bandwidth PyCBC Live search. Not only are there fewer templates in the bank, the templates themselves are shorter in duration when compared to their full bandwidth counterparts in the full bandwidth template bank (but still quite long).
 %
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/6_earlywarning/search/template_bank_duration_mchirp.pdf}
-    \caption{Template duration versus Chirp mass, $\mathcal{M}$, for different final frequency cuts in the early warning template bank. Each curve corresponding to a different final frequency, $f_{final}$, (ranging from 29 Hz to 56 Hz). The chirp mass is calculated from the component masses of the binary system, and the template duration is from $17$ Hz to $f_{final}$ Hz).}
+    \caption{Template duration versus chirp mass, $\mathcal{M}$, for different frequency cutoffs in the early warning template bank. Each curve corresponding to a different frequency cutoff, $f_{final}$, ($29\text{--}56  \, \text{Hz}$). The chirp mass is calculated from the component masses of the binary system, and the template duration is calculated between the lower frequency, $17 \, \text{Hz}$ and the frequency cutoff, $f_{final} \, \text{Hz}$.}
     \label{6:fig:tb_duration_mchirp}
 \end{figure}
 %
-The duration of templates at each final frequency cutoff can be seen in figure~\ref{6:fig:tb_duration_mchirp} as a function of the chirp mass, $\mathcal{M}$, of the template. It can be seen that higher $\mathcal{M}$ templates have shorter durations and templates with lower final frequency cutoffs also have lower durations when compared to templates with the same $\mathcal{M}$ but a higher final frequency.
+The duration of templates at each final frequency cutoff can be seen in figure~\ref{6:fig:tb_duration_mchirp} as a function of the chirp mass, $\mathcal{M}$, of the template. It can be seen that higher $\mathcal{M}$ templates have shorter duration and templates with a lower frequency cutoff also have shorter duration when compared to templates with the same $\mathcal{M}$ but a higher frequency cutoff.
 
-\section{Event Localisation}
+\subsection{\label{6:sec:event-localisation}Determining event sky locations}
 
 % (BRILLIANT PAGE FOR THIS https://emfollow.docs.ligo.org/userguide/early\_warning.html)
 
-We have previously mentioned the ability for the early warning search to provide a preliminary sky map of an event to aid in localisation pre-merger when passing information to the wider scientific community for followup in the multi-messenger regime. To demonstrate the sky map localisation as the signal progresses through our template bank we can perform a test using a representative $1.4M_\odot$-$1.4M_\odot$ BNS signal at a random point on the sky, and a few different distances, and evaluate the sky maps produced by BAYESTAR.
+We call a gravitational wave candidate obtained by the early warning search an `event'. These events have information about the gravitational wave parameters and make a prediction of the time of coalescence of the gravitational wave signal. Identifying the sky location of the event is critical for multi-messenger astronomy. With a sky location the gravitational wave observatories are able to tell electromagnetic observatories where to slew their telescopes to see the event prior to merger, to have the best chance of seeing electromagnetic counterparts as possible.
 
+The two parameters which describe the sky location are the right ascension and declination and the easiest way to measure these parameters are with time-of-arrival triangulation, measuring the time differences between time of arrivals at different detectors. The greater number of gravitational wave detectors in the network lead to more accurate sky location triangulation. Figure~\ref{6:fig:gw170817_skymap} shows the sky map created for GW170817~\cite{gw170817_skymap:2017} with the source location identified by the LIGO-Hanford and LIGO-Livingston detectors shown in the green dashed contour (representing the 90\% confidence interval). Two detectors are limited to a ring on the sky but the detector quadrupolar sensitivity pattern of the antenna response will favour particular sky locations where the detector is more sensitive to gravitational waves coming from certain angles. We can also use amplitude differences between the signal strength measured by each detector to determine the gravitational wave polarisation which localizes sky location even further, giving not a ring but a broken ring on the sky map.
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/6_earlywarning/gw170817/GW170817_skymap.pdf}
+    \caption{The localisation of GW170817 and associated electromagnetic counterpart. The rapid LIGO localisation is indicated by the green dashed contour, and the LIGO \& Virgo localisation by solid green. Fermi~\cite{Fermi:2022} is shown in orange, and the Interplanetary Network triangulation from Fermi and INTEGRAL~\cite{INTEGRAL:2003} in blue. This figure is taken directly from~\cite{gw170817_skymap:2017}}
+    \label{6:fig:gw170817_skymap}
+\end{figure}
+%
 
-%%%% REWRITE ALL OF THIS
-We produce the $1.4M_\odot$-$1.4M_\odot$ BNS signal and scale the distance so that it will be seen with a full-bandwidth SNRs of: $10$, $20$, $30$. Then we search for these signals with the early warning search and for each candidate produced by the search we look at the sky map and the number of \verb|degrees|$^2$ in the 50\% credible area to see how the signal becomes more localised as more of the signal is being seen. We plot injection as a star on the sky maps and the $50\%$ confidence interval contours are plotted for each final frequency event belonging to the same injection on the same sky map, these can be seen in figure~\ref{fig:ew_10SNR_multiple} for the 10 SNR injection, figure~\ref{fig:ew_20SNR_multiple} for the 20 SNR injection and, figure~\ref{fig:ew_30SNR_multiple} for the 30 SNR injection. A table has also been produced containing the sky localisation area for each final frequency event for each of the injections, table~\ref{tab:ew_inj_skymaps}.
-% Keep only the example sky map for 30 SNR but keep the others in the table
-%
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=\textwidth]{images/6_earlywarning/localisation/10SNR_multiple.png}
-%     \caption{}
-%     \label{fig:ew_10SNR_multiple}
-% \end{figure}
-%
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=\textwidth]{images/6_earlywarning/localisation/20SNR_multiple.png}
-%     \caption{}
-%     \label{fig:ew_20SNR_multiple}
-% \end{figure}
+A greater number of detectors observing the event will produce more accurate sky locations; adding a third detector to the network (like Virgo~\cite{aVirgo:2015}) is required for a point sky location. BAYESTAR~\cite{BAYESTAR:2016} is a tool for providing accurate sky maps from gravitational wave events in as little as a few seconds. As a gravitational wave signal is observed by templates with higher and higher frequency cutoffs the sky map will become more accurate due to the increase in accumulated SNR. To demonstrate the improving sky map localisation as the signal progresses through our template bank we can produce the sky maps found by the early warning search when looking for a $1.4 \, \text{M$_\odot$}\text{--}1.4 \, \text{M$_\odot$}$ binary neutron star injection at a random point on the sky. The gravitational wave injection is placed at a distance such that the full bandwidth SNR of the signal is $30$. Figure~\ref{6:fig:ew_30SNR_multiple} shows the sky map displaying the 90\% confidence interval contours for every frequency cutoff in the template bank as well as the full bandwidth sky map, the sky location of the injection can be seen as a star on the sky map. In the legend of the figure you can see the decreasing sky localisation area as frequency cutoff increases.
 %
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/6_earlywarning/localisation/30SNR_multiple.pdf}
-    \caption{The gravitational wave sky localisation probability map (sky map) corresponding to a $1.4$M$_{\odot}$-$1.4$M$_{\odot}$ binary neutron star signal with a full-bandwidth (upper frequency cutoff $= 1024$Hz) signal-to-noise ratio of $30$. The successive $90\%$ confidence interval sky map contours for final frequency cutoffs from $29-56$Hz are shown where it can be seen that a higher final frequency cutoff leads to a more constrained sky map.}
+    \caption{The gravitational wave sky localisation probability map (sky map) corresponding to a $1.4 \, \text{M$_\odot$}\text{--}1.4 \, \text{M$_\odot$}$ binary neutron star signal with a full-bandwidth (upper frequency cutoff $= 1024 \, \text{Hz}$) signal-to-noise ratio of $30$. The successive $90\%$ confidence interval sky map contours for frequency cutoffs from $29\text{--}56 \, \text{Hz}$ are shown where it can be seen that a higher frequency cutoff leads to a more accurate sky map.}
     \label{6:fig:ew_30SNR_multiple}
 \end{figure}
 %
@@ -177,9 +151,9 @@ We produce the $1.4M_\odot$-$1.4M_\odot$ BNS signal and scale the distance so th
     \rowcolors{4}{white}{lightgray}
     \begin{tabular}{cccc}
         \toprule
-        \textbf{Final SNR} & \textbf{10} & \textbf{20} & \textbf{30 (Fig.~\ref{6:fig:ew_30SNR_multiple})} \\
+        \textbf{Full SNR} & \textbf{10} & \textbf{20} & \textbf{30 (Fig.~\ref{6:fig:ew_30SNR_multiple})} \\
         \midrule
-        \textbf{Frequency [Hz]} & \multicolumn{3}{c}{\textbf{Localization accuracy [deg$^{2}$] (90\% credible area) }} \\
+        \textbf{Frequency [Hz]} & \multicolumn{3}{c}{\textbf{Localisation area [deg$^{2}$] (90\% credible area) }} \\
         \cmidrule(lr){2-4}
         29 & Not Found & 26,583 & 16,166 \\
         32 & Not Found & 22,464 & 14,072 \\
@@ -190,21 +164,64 @@ We produce the $1.4M_\odot$-$1.4M_\odot$ BNS signal and scale the distance so th
         1024 & 1,908 & 300 & 149 \\
         \bottomrule
     \end{tabular}
-    \caption{Caption text goes here}
+    \caption{The sky localisation areas found by BAYESTAR~\cite{BAYESTAR:2016} for three different gravitational wave injections injected at the same sky location but with different distances so as their full bandwidth signal-to-noise ratio to be equal to the `Full SNR'. The sky localisation 90\% confidence interval is shown for the six frequency cutoffs found in the PyCBC Live early warning template bank~\cite{PyCBC_earlywarning:2020} as well as the sky localisation area for the full bandwidth ($1024 \, \text{Hz}$) event. Events which weren't found above the PyCBC Live early warning search signal-to-noise ratio threshold for a frequency cutoff have no sky localisation and have been given a value of `Not Found' in the table.}
+    \label{6:tab:skymap_early_warning}
+\end{table}
+%
+
+We can do the same for an injection placed at a distance such that the full bandwidth SNR is $10$ and $20$ and display the sky localisation areas at the different frequency cutoffs in table~\ref{6:tab:skymap_early_warning}. The $10$ SNR injection was not seen by the early warning search for frequency cutoffs $29$ and $32 \, \text{Hz}$, this is due to an event not being found above the search's SNR threshold. It is clear that a larger frequency cutoff leads to a more accurate sky localisation.
+
+\section{\label{6:sec:gw170817-in-ew}Detecting GW170817 in early warning}
+
+Each electromagnetic frequency band has different timing windows in which their telescopes can be slewed to observe the event. GRB 170817A was seen by Fermi $1.7$ seconds after GW170817 was seen by LVK, while Fermi is capable of observing the whole sky there is the region occluded by the Earth~\cite{Fermi:2022} it cannot view. Therefore, future multi-messenger events might miss the GRB counterpart which is the soonest confirmation of a multi-messenger event, it is even more important that gravitational wave observatories provide as much warning for an event to allow other telescopes to be in position for detecting electromagnetic counterparts. The gravitational wave signal from GW170817 would have been detected by a $29 \, \text{Hz}$ template $67$ seconds pre-merger, that is $67$ seconds warning we can provide to electromagnetic observatories.
+
+GW170817 was seen by gravitational wave searches and the initial GCN circular was distributed $27$ minutes after merger time. The LIGO-Livingston data contained a very loud glitch which had to be removed before a sky map could be made, leading to a sky map latency of $5$ hours and $14$ minutes. The Q-scan containing the glitch can be seen in figure~\ref{6:fig:gw170817_glitch}~\cite{GW170817:2017}. The original event was uploaded to GraceDB (the Gravitational Wave Candidate Event Database~\cite{ligo_gracedb:2024}) and can be seen at on this web page: \href{https://gracedb.ligo.org/events/G298048}{https://gracedb.ligo.org/events/G298048}.
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/6_earlywarning/gw170817/GW170817_glitch_subtraction.pdf}
+    \caption{The Q-scan~\cite{qscan:2004} of the LIGO-Livingston data containing GW170817~\cite{GW170817:2017}, with a very loud wide bandwidth glitch present (top). The glitch was initially subtracted from the data using a windowing function to reduce the amplitude of the data containing the glitch to $0$, this windowing function can be seen as a grey line in the bottom figure. The glitch was also modelled using Bayeswave~\cite{BayesWave:2015} and subtracted from the data to preserve the gravitational wave signal power found beneath the glitch, this glitch model (blue line) can be seen overlapping the strain data (orange line) in the bottom figure. This figure has been taken from~\cite{GW170817:2017}.}
+    \label{6:fig:gw170817_glitch}
+\end{figure}
+%
+In the fourth observing run we now have well tested and robust search pipelines for gravitational waves and as previously stated, we expect a maximum latency of $20$ seconds post-merger~\cite{PyCBC_Live:2018}, glitches can be auto-gated and BAYESTAR~\cite{BAYESTAR:2016} can produce sky maps in a few seconds.
+
+We can demonstrate the early warning search's efficacy on GW170817. Table~\ref{6:tab:gw170817_early_warning} displays the template bank cutoff frequencies alongside the network SNR of the early warning search searching for GW170817 in the original data and a GW170817-like injection in a representation of the current detector data, also shown is the time pre-merger (warning) at which GW170817 will reach the specified frequency. It can be clearly seen that the SNR of the early warning search hovers around the network SNR threshold of $6$ until the $56$Hz frequency is reach, it is at this point that we can more confidently say that GW170817 would've been seen in early warning, $12$ seconds prior to the merger. The GW170817-like injection into O4 data has very large SNRs in all of the frequencies and we would've observed the $29 \, \text{Hz}$ template with a $67$ second warning.
+%
+\begin{table}[ht]
+    \centering
+    \setlength{\tabcolsep}{4pt}
+    \rowcolors{4}{white}{lightgray}
+    \begin{tabular}{cccc}
+        \toprule
+        \multicolumn{1}{c}{\textbf{Frequency}} & \multicolumn{2}{c}{\textbf{Network SNR}} & \multicolumn{1}{c}{\textbf{Warning}} \\
+        \cmidrule(lr){1-4}
+        \textbf{Cutoff [Hz]} & \textbf{Original Data} & \textbf{O4 Injection} & \textbf{Time [s]} \\
+        \midrule
+        29 & 6.19 & 13.26 & 67 \\
+        32 & 5.76 & 18.58 & 52 \\
+        38 & 6.11 & 21.96 & 33 \\
+        44 & 6.25 & 25.87 & 22 \\
+        49 & 6.19 & 24.42 & 17 \\
+        56 & 7.04 & 35.24 & 12 \\
+        \bottomrule
+    \end{tabular}
+    \caption{The signal-to-noise ratio values for the gravitational wave events with corresponding frequency cutoff found by the PyCBC Live early warning search when searching over the data which contains GW170817~\cite{GW170817:2017} (Original Data) and data which contains a GW170817-like injection into representative data from the fourth observing run (O4 Injection). Also shown is the time before merger in which the event was found (Warning Time).}
     \label{6:tab:gw170817_early_warning}
 \end{table}
 %
-It is the case, especially for the low SNR signal, that the injection at every final frequency cutoff. Figure~\ref{fig:ew_10SNR_multiple} is missing the \verb|29, 32| and \verb|38| Hz events. It is very clear to see in table~\ref{tab:ew_inj_skymaps} that a higher SNR directly translates to a better sky localisation. The 30 SNR injection has been constrained sky maps at all frequencies.
+By implementing an early warning search in PyCBC Live we are capable of identifying gravitational signals before merger. This will aid in localising potentially electromagnetically bright gravitational wave signals and inform telescopes of all frequency ranges to capture as much of the electromagnetic counterpart as possible, enabling greater quality multi-messenger astronomy.
 
-DESCRIBE THE SKY MAPS AND THE CONTOUR INTERVALS. 50\% REFERS TO THE SMALLEST AREA ON THE SKY, MINIMIZED. FIND OUT HOW THIS IS DONE. 
 
-\section{Injection Runs in Offline}
+\section{\label{6:sec:injection-tests}Testing the early warning search}
 
-To investigate the efficacy of the early warning search I performed an injection campaign very similar to the injection campaigns done in the previous chapters~\ref{chapter:4-archenemy} and~\ref{chapter:5-pycbc-live}. To test the early warning search the injection set was custom generated to include exclusively signals that should be seen by the early warning search, instead of the injection sets used in the third observing run~\cite{gwtc3:2023}.
+To test the capabilities of the early warning search an injection campaign was performed, similar to the injection campaigns performed in the previous chapters~\ref{chapter:4-archenemy} and~\ref{chapter:5-pycbc-live}. The injection set used in this test was custom generated for the early warning search, containing exclusively signals that should be seen by the early warning search.
 
-\subsection{Injection Set \& Data}
+The intention of this test is to identify any problems with the early warning search as it is current configured. The injections have parameters which should be covered by the template bank but, the full bandwidth SNR of the injection might still be such that it will not be seen by the early warning search.
 
-The injection set contains 32,604 unique injections placed every $\sim100$ seconds, encompassing 3,456,000 seconds or exactly 40 days worth of data. The parameters which vary by injection and the ranges in which they vary can be seen in table~\ref{6:tab:ew_inj_params}.
+\subsection{\label{6:sec:injection-set}The distribution of injection parameters}
+
+The injection set contains $32,604$ unique injections placed every ${\sim}100$ seconds, encompassing $3,456,000$ seconds or exactly $40$ days worth of data. The parameters which vary by injection and the ranges in which they vary can be seen in table~\ref{6:tab:ew_inj_params}.
 %
 \begin{table}[ht]
     \centering
@@ -217,33 +234,33 @@ The injection set contains 32,604 unique injections placed every $\sim100$ secon
         \cmidrule(lr){1-3}
         \textbf{Parameter} & \textbf{Value Range} & \textbf{Prior Distribution} \\
         \midrule
-        Primary Mass, $m_1$ & 1.0 - 3.0 [$M_{\odot}$] & uniform \\
-        Secondary Mass, $m_2$ & 1.0 - 3.0 [$M_{\odot}$] & uniform \\
-        Primary Spin z-component, $spin1z$ & -0.05 - 0.05 & uniform \\
-        Secondary Spin z-component, $spin2z$ & -0.05 - 0.05 & uniform \\
-        Distance, $r$ & 10 - 1000 [$Mpc$] & uniform radius \\
-        Phase, $\phi_{c}$ & - & uniform angle \\
-        Inclination, $\iota$ & - & sin angle \\
-        Polarization, $\psi$ & - & uniform angle \\
-        Right Ascension, $\alpha$ & - & uniform sky \\
-        Declination, $\delta$ & - & uniform sky \\
+        Primary Mass, $m_1$ & $1.0\text{--}3.0$ [$\text{M$_{\odot}$}$] & uniform \\
+        Secondary Mass, $m_2$ & $1.0\text{--}3.0$ [$\text{M$_{\odot}$}$] & uniform \\
+        Primary Spin z-component, $spin1z$ & $-0.05\text{--}0.05$ & uniform \\
+        Secondary Spin z-component, $spin2z$ & $-0.05\text{--}0.05$ & uniform \\
+        Distance, $r$ & $10\text{--}1000$ [$\text{Mpc}$] & uniform radius \\
+        Phase, $\phi_{c}$ & $0\text{--}2\pi$ & uniform angle \\
+        Inclination, $\iota$ & $0\text{--}\pi$ & $\sin$ angle \\
+        Polarisation, $\psi$ & $0\text{--}2\pi$ & uniform angle \\
+        Right Ascension, $\alpha$ & $0\text{--}2\pi$ & uniform sky \\
+        Declination, $\delta$ & $-\frac{\pi}{2}\text{--}\frac{\pi}{2}$ & uniform sky \\
         \bottomrule
         \multicolumn{3}{c}{\textbf{Static Parameters}} \\
         \cmidrule(lr){1-3}
         \textbf{Parameter} & \textbf{Value} & \textbf{} \\
         \midrule
-        Waveform Approximant & IMRPhenomXAS & \\
-        Lower Frequency, $f_{lower}$ & 17 [$Hz$] & \\
-        Reference Frequency, $f_{ref}$ & 17 [$Hz$] & \\
+        Waveform Approximant & IMRPhenomXAS~\cite{IMRPhenomXAS:2020} & \\
+        Lower Frequency, $f_{lower}$ & 17 [$\text{Hz}$] & \\
+        Reference Frequency, $f_{ref}$ & 17 [$\text{Hz}$] & \\
         \bottomrule
     \end{tabular}
-    \caption{Caption text goes here}
+    \caption{The parameters used to create the injection set used to test the PyCBC Live early warning search. Variable parameters will be assigned a random value within in the value range distributed across all injections according to the prior distribution. Static parameters are the same for all injections in the injection set. Created using PyCBC~\cite{PyCBC_package:2021}.}
     \label{6:tab:ew_inj_params}
 \end{table}
 %
-These injections are made into simulated noise with no non-Gaussian artefacts or non-stationarity and a constant PSD. The distances generated for each injection are re-scaled after the initial injection set has been created to ensure a uniform SNR distribution of the signals between $12$ and $60$. Therefore the distances might not be exactly uniform in radius and the injection set should be thought to be distributed uniformly in SNR instead.
+These injections are made into simulated coloured noise therefore, no non-Gaussian artefacts exist in the data. The distances generated for each injection are re-scaled after the initial injection set has been created to ensure a uniform SNR distribution of the signals between $12$ and $60$. Therefore the distances might not be exactly uniform in radius and the injection set should be thought to be distributed uniformly in SNR instead.
 
-\subsection{Results}
+\subsection{\label{6:sec:results}Results of the early warning injection test}
 
 % TO ADD:
 % - Basic stats about results
@@ -253,21 +270,24 @@ These injections are made into simulated noise with no non-Gaussian artefacts or
 % - SNR distributions for candidates for frequencies
 % - 
 
-Each injection has the potential to be seen by six different templates and therefore we might expect to see exactly six times the number of injections in the data. However, for the very low final frequency templates in the bank (29Hz) these would require at least 4 (DOUBLE CHECK) SNR (the SNR threshold for detection) to be accumulated in a very small frequency window, which is very unlikely for the 12 SNR injections but possible for our 60 SNR injections. (CHECK THIS TO SEE WHAT THEY ACTUALLY FOLLOW, MINIMUM SNR FOR 29Hz DETECTION)
+The parameters of the injection set are chosen such that each injection, if loud enough, can be seen by a template in the early warning search template bank with a minimal match of $0.97$. Each injection can be seen by up to six templates at different frequency cutoffs and with $32,604$ injections in the injection set we could expect a maximum of $195,624$ candidate events in the results. In reality, the lower frequency cutoff templates are likely to not be found for low SNR injections.
 
-Another reduction in the number of candidates found will be caused by a very short time gap between final frequencies 49Hz and 56Hz. The evolution of the gravitational wave signals inspiral increases over time and therefore these two frequencies might be found within a stride and therefore one will be skipped. These two effects will cause a reduction in the total number of candidates seen by this injection test.
-
-The total number of candidates found for all injections is (NUMBER). 
-
-PyCBC Live outputs the candidates found during the search and outputs the time of coalescence of the non-truncated template. Therefore, even if a 29Hz template finishes many seconds before time of coalescence of the gravitational wave signal, we can collect all of the candidates associated with an injection by comparing injection time and time of coalescence of candidates. We look for candidates with a time of coalescence within +-0.5 seconds of the injection time, this ensures that we are looking for candidates which have all been predicted to end in the same search stride.
-
-Figure~(REF) shows a histogram of the number of candidates found per injection. (INSERT THE FIGURE)
+We create and run the early warning search on the $40$ days of data containing the injections for both LIGO-Hanford and LIGO-Livingston to find two-detector coincidences. This is consistent with the PyCBC Live early warning search which currently doesn't use Virgo data in the search. The total number of candidates found for all injections is $174,077$, figure~\ref{6:fig:cand_hist} shows a histogram of the number of candidates found per injection.
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/6_earlywarning/results/count_histogram.pdf}
+    \caption{A histogram showing the number of injections (Count) found with varying numbers of candidate events (Number of Candidates) by the PyCBC Live early warning search. The exact number of counts is displayed on top of the histogram bars.}
+    \label{6:fig:cand_hist}
+\end{figure}
+%
+The histogram shows us a large number of injections which have been found with greater than six candidates, suggesting a problem with the search caused by one or multiple frequency cutoffs being found more than once by the search, the scale of this problem is difficult to see simply from these counts unless the injection is loud enough to be found with all six of the frequencies. Duplicate events for the same frequency cutoff is one of the problems we have identified during this injection study and we will discuss the cause of this problem in the next section, we even have two very rare cases where a duplicate frequency was seen in every single frequency cutoff.
 
 \section{\label{6:sec:identified-problems}False alarms, missed injections and other problems}
 
-Previous injection tests in this thesis were performed to measure sensitivity increases from significant changes to the gravitational wave search pipelines. The injection test performed on the PyCBC Live Early Warning search was not intended to measure sensitivity increase but to identify problems that might occur with the search that can only be seen by a large number of injections in testing. Performing this injection test will help us identify, investigate and solve problems to the Early Warning search prior to them occurring during the live operation of the Early Warning search where we might miss a real event.
+Previous injection tests in this thesis were performed to measure sensitivity increases due to significant changes to the gravitational wave search pipelines. The injection test performed on the PyCBC Live early warning search was not intended to measure sensitivity increase but to identify problems that might occur with the search that can only be seen by a large number of injections in testing. Performing this injection test will help us identify, investigate and solve problems to the early warning search.
 
-In this section we will identify problems discovered during the Early Warning injection test. These problems are their impact on the search results will be described and the source of the problem (where identified) will be detailed. Where possible the solution to these problems will also be discussed.
+In this section we will identify problems discovered during the injection test. These problems and their impact on the search results will be described and the source of the problem (where identified) will be detailed. Where possible the solution to these problems will also be discussed.
 
 \subsection{\label{6:sec:false-alarms}False-alarm events}
 
@@ -280,26 +300,17 @@ We can identify false-alarm events in our results by locating candidates which a
 \begin{figure}
        \centering
     \includegraphics[width=\textwidth]{images/6_earlywarning/identified-problems/low_sig_cands.pdf}
-    \caption{}
+    \caption{An illustration of a coincident candidate being found by the alignment of Gaussian noise triggers in two detectors. The crosses represent the single detector triggers identified by the gravitational wave search, triggers found above the SNR threshold can be considered a single detector trigger. Coincident triggers have to lie inside the allowed coincidence window, shows by the grey dashed lines around the L1 trigger.}
     \label{6:fig:low_significance_candidates}
 \end{figure}
 %
 The injection set used in this search was made using a PSD representative of the advanced LIGO noise curve~\cite{aLIGO_design_curve:2018} and therefore is coloured Gaussian noise, not containing any non-Gaussian noise transients. This means that when we identify a false-alarm candidate it has been caused by Gaussian noise triggers aligning in between the two detectors and finding a coincidence, a demonstration of this can be seen in figure~\ref{6:fig:low_significance_candidates}.
 
-In the early warning search we have a lower SNR threshold on single detector triggers of $4.5$.
+The simplest way to identify injections with low significance candidates is to look for injections with single candidates that have frequency cutoffs not equal to the highest cutoff in the template bank ($56 \, \text{Hz}$). In this scenario there are no accompanying higher frequency cutoff candidates and therefore the single event must be due to a random coincidence. Of the ${\sim}32,000$ injections, we observed $99$ with candidates caused purely by the coincidence in Gaussian noise triggers in the two detectors, approximately $0.3\%$ injections.
 
-We allow a false-alarm rate of X for the early warning search, therefore, for $40$ days of data we might expect to see Y number of false-alarms.
+With more time to dedicate towards investigating the injections found by random noise we could look at the parameters of the candidates and compare them to the injection to see if they match. If they do not, it is likely that the candidate was found due to random noise.
 
-Here is the maths for calculating the actual likelihood for a false-alarm when dealing with a simple statistic of noise rate only, with quadsum.
-% - Example
-% - How often it happened
-% - Impact
-
-
-
-
-
-\subsection{\label{6:sec:duplicate-frequency-cands}Duplicate final frequency candidates found for one injection}
+\subsection{\label{6:sec:duplicate-frequency-cands}Finding duplicate frequency cutoff candidates}
 
 % Lay out the problem
 %  Injections seen with more than 6 events
@@ -308,11 +319,11 @@ Here is the maths for calculating the actual likelihood for a false-alarm when d
 %  Some frequencies are seen twice
 %  What?? How can that happen if the search picks the best coincidence in the second that corresponds to the final frequency truncation?
 
-The template bank used by the early warning search is a composite of six template banks. Each template bank contains templates which all end at the same final frequency cutoff and is different for each template bank. Therefore, the full template bank contains templates for six different final frequency cutoffs.
+The template bank used by the early warning search is a composite of six template banks. Each template bank contains templates which all end at the same frequency cutoff and is different for each template bank. Therefore, the full template bank contains templates for six different frequency cutoffs.
 
-The time before merger corresponding to each frequency cutoff is then injection specific and you would expect that when the early warning search reaches that time, it would record an event found by a template with the correct final frequency cutoff. This then places a maximum number of events found for each injection using the template bank at six events.
+The time before merger corresponding to each frequency cutoff is then injection specific and you would expect that when the early warning search reaches that time, it would record an event found by a template with the correct frequency cutoff. This then places a maximum number of events found for each injection using the template bank at six events.
 
-We have however, observed injections that have been seen with more than six candidate events. These candidates must have final frequency cutoffs equal to one of the six found in our template bank and therefore some frequency cutoffs have been found multiple times for an injection. This should not be possible as the time before merger for the frequency cutoff would correspond to a stride in the early warning search and only the best coincident event can be chosen by the early warning search as a candidate.
+We have however, observed injections that have been seen with more than six candidate events. These candidates must have frequency cutoffs equal to one of the six found in our template bank and therefore some frequency cutoffs have been found multiple times for an injection. This should not be possible as the time before merger for the frequency cutoff would correspond to a stride in the early warning search and only the best coincident event can be chosen by the early warning search as a candidate.
 
 \subsubsection{\label{6:sec:cands-across-bounds}Candidates straddling search boundaries}
 %  Well, some truncations are close to the boundary
@@ -322,19 +333,24 @@ We have however, observed injections that have been seen with more than six cand
 \begin{figure}
        \centering
     \includegraphics[width=\textwidth]{images/6_earlywarning/identified-problems/cands_across_bounds.pdf}
-    \caption{}
+    \caption{An illustration of two candidate events being found with the same frequency cutoff for a single injection. The red coincidence has lower single detector and coincidence SNR but both are above SNR threshold due to the frequency cutoff template ending very close to the analysis stride boundary, this event is uploaded as a candidate event. The green coincidence is the `proper' coincidence found after the frequency cutoff template has ended and it also uploaded after the first one, leading to two events with the same frequency cutoff being uploaded for one gravitational wave signal.}
     \label{6:fig:candidates_across_boundaries}
 \end{figure}
 %
 
-The early warning search operates on a single second stride, meaning every single second the template bank is matched filtered with the data to discover any gravitational wave events. It is possible that the pre-merger time corresponding to a final frequency cutoff will lie very near to the boundary between search strides. In this case the search will record an event found in the first stride and will then again record another event in the second stride with the same final frequency cutoff.
+The early warning search operates on a single second analysis stride, meaning every single second the template bank is matched filtered with the data to discover any gravitational wave events. It is possible that the pre-merger time corresponding to a frequency cutoff will lie very near to the boundary between search strides. In this case the search will record an event found in the first stride and will then again record another event in the second stride with the same frequency cutoff.
 
-Figure~\ref{6:fig:candidates_across_boundaries} is a demonstration of this possibility. Either event can have a higher SNR when compared to the other but the two scenarios can be treated differently to prevent some duplicate events being uploaded in the future. If the event found in the first stride has a higher SNR than the second stride we can prevent an upload of the second event (provided the template final frequencies are the same)---this is already done by the PyCBC Live Single Detector search~\cite{PyCBC_singles:2022}---but if the event found in the second stride has a higher SNR than the first then we will have to upload two events. We cannot delay uploading the first event.
+Figure~\ref{6:fig:candidates_across_boundaries} is a demonstration of this possibility. Either event can have a higher SNR when compared to the other but the two scenarios can be treated differently to prevent some duplicate events being uploaded in the future. If the event found in the first stride has a higher SNR than the second stride we can prevent an upload of the second event (provided the template frequency cutoff is the same)---this is already done by the PyCBC Live Single Detector search~\cite{PyCBC_singles:2022}---but if the event found in the second stride has a higher SNR than the first then we will have to upload two events. We cannot delay uploading the first event.
+
+We found that of the ${\sim}32,000$ injections $13,098$ ($40.17\%$) were affected by this issue, creating at least one extra candidate for a frequency cutoff. This is a massive portion of our injection test and informs us that this is very likely to happen in the future for a real event and therefore, if this does happen it should not be a reason to dismiss a real identification.
 
 % Maybe an example of this happening with a zoom in on the two duplicate frequencies in the track and trigger times, stride boundary time, event time, things like that
 % - Example
 % - How often it happened
 % - Impact
+
+% Total number of injections with duplicate frequencies: 13098
+% Fraction of total injections: 40.172984909827015
 
 
 
@@ -344,7 +360,7 @@ Figure~\ref{6:fig:candidates_across_boundaries} is a demonstration of this possi
 \begin{figure}
        \centering
     \includegraphics[width=\textwidth]{images/6_earlywarning/identified-problems/trigs_across_bounds.pdf}
-    \caption{}
+    \caption{An illustration of two coincident candidate events being uploaded for the same frequency cutoff. The L1 trigger for the coincidence arrives in the analysis stride and the H1 trigger arrives in the next analysis stride. The early warning search has found a low significance H1 trigger in the first analysis stride and made a low significance coincidence. When the second analysis stride is analysed the correct coincidence will be found and the same L1 trigger is uploaded again with another coincident trigger at the same frequency cutoff.}
     \label{6:fig:triggers_across_boundaries}
 \end{figure}
 %
@@ -365,7 +381,7 @@ The trigger will first be seen in detector 1, which will be seen as a highly sig
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/6_earlywarning/identified-problems/outside_coinc_window.pdf}
-    \caption{Caption}
+    \caption{An illustration of two single detector triggers being found outside the allowed coincidence time difference window. The current coincidence window shows the triggers falling outside the window and therefore the search does not form a coincidence. With the new proposed coincidence time window the coincidence would be found.}
     \label{6:fig:outside_coinc_window}
 \end{figure}
 %
@@ -378,7 +394,7 @@ The trigger will first be seen in detector 1, which will be seen as a highly sig
 
 A problem that we have identified in the analysis of the results is valid candidates events being missed due to the coincident triggers falling outside of the allowed coincidence time window. The coincidence time window is a sum of the light-travel time and a computational timing error allowance. The two LIGO detectors are separated by a straight line through the Earth $3002$ kilometers long. Given the speed of light, c $= 300,000$ km/s, there is a $0.01$ window and the current addition for errors is $0.003$ seconds, giving a total allowed coincidence timing window of $0.013$ seconds. How then, is it possible for our completely valid coincident triggers to lie outside of this window?
 
-\subsubsection{\label{}Timing accuracy error}
+\subsubsection{\label{6:sec:timing_error}Timing accuracy error}
 
 Firstly, as described in~\cite{Fairhurst:2010}, the accuracy of the candidate time in a detector can be determine by,
 %
@@ -387,14 +403,14 @@ Firstly, as described in~\cite{Fairhurst:2010}, the accuracy of the candidate ti
     \label{6:eqn:timing_acurracy}
 \end{equation}
 %
-where the timing accuracy, $\sigma_{t}$, is inversely propertional to the SNR, $\rho$, and the effective bandwidth of the source, $\sigma_{f}$ which is defined as
+where the timing accuracy, $\sigma_{t}$, is inversely proportional to the SNR, $\rho$, and the effective bandwidth of the source, $\sigma_{f}$ which is defined as
 %
 \begin{equation}
-    \sigma_{f}^2 = \left(\frac{4}{\rho^{2}} \int^{\infty}_{0} df \frac{f^{2}|h(f)|^{2}}{S(f)}\right) - \left(\frac{4}{\rho^{2}} \int^{\infty}_{0} df \frac{f|h(f)|^{2}}{S(f)}\right)^{2} .
+    \sigma_{f}^2 = \left(\int^{\infty}_{0} df \frac{f^{2}|\hat{h}(f)|^{2}}{S(f)}\right) - \left( \int^{\infty}_{0} df \frac{f|\hat{h}(f)|^{2}}{S(f)}\right)^{2} .
     \label{6:eqn:eff_bandiwdth}
 \end{equation}
 %
-As shown in Table 1. of~\cite{Fairhurst:2010}, the timing error for a binary neutron star system in an advanced LIGO configuration with a BNS range of $160$ Mpc is $0.46$ms. Negligible when compared to our light-travel time of $10$ms. We can perform an approximately calculate the timing accuracy of the early warning templates using equations~\ref{6:sec:duplicate-frequency-cands} \&~\ref{6:eqn:timing_acurracy}, where the gravitational wave strain term, $|h(f)|$, is assumed to be equal to the inspiral frequency evolution of a binary neutron star signal, $f^{-\frac{7}{6}}$. The estimated effective bandwidths and timing accuracy errors can be seen in table~\ref{6:tab:timing_errors}.
+where the waveform $\hat{h}$ is normalised such that $\int \frac{|\hat{h}(f)|^{2}}{S(f)}df = 1$; we use the same PSD to normalise that has been used throughout the injection study. As shown in Table 1. of~\cite{Fairhurst:2010}, the timing error for a binary neutron star system in an advanced LIGO configuration with a BNS range of $160$ Mpc is $0.46$ms. Negligible when compared to our light-travel time of $10$ms. We can approximately calculate the timing accuracy of the early warning templates using equations~\ref{6:eqn:timing_acurracy}\&~\ref{6:eqn:eff_bandiwdth}, where the gravitational wave strain term, $|h(f)|$, is assumed to be equal to the inspiral frequency evolution of a binary neutron star signal, $f^{-\frac{7}{6}}$. The estimated effective bandwidths and timing accuracy errors can be seen in table~\ref{6:tab:timing_errors}.
 %
 \begin{table}[ht]
     \centering
@@ -404,22 +420,22 @@ As shown in Table 1. of~\cite{Fairhurst:2010}, the timing error for a binary neu
         \toprule
         \textbf{Frequency [Hz]} & $\sigma_{f}$ [Hz] & $\sigma_{t}$ [ms] \\
         \midrule
-        29 & 0.51 & 6.80 \\
-        32 & 0.57 & 6.49 \\
-        38 & 0.66 & 6.00 \\
-        44 & 0.74 & 5.61 \\
-        49 & 0.79 & 5.35 \\
-        56 & 0.86 & 5.05 \\
-        1024 & 2.98 & 1.66 \\
+        29 & 3.38 & 5.89 \\
+        32 & 4.19 & 4.75 \\
+        38 & 5.79 & 3.44 \\
+        44 & 7.37 & 2.70 \\
+        49 & 8.68 & 2.29 \\
+        56 & 10.51 & 1.89 \\
+        1024 & 90.05 & 0.22 \\
         \bottomrule
     \end{tabular}
-    \caption{Caption text goes here}
+    \caption{The effective bandwidth, $\sigma_{f}$, and timing accuracy error, $\sigma_{t}$, for the frequency cutoffs (Frequency) found in the early warning template bank as well as the full bandwidth frequency ($1024 \, \text{Hz}$).}
     \label{6:tab:timing_errors}
 \end{table}
 %
-Using an SNR of $8$ (and a lower frequency of $17$ Hz) yields timing errors from $6.80$ to $5.05$ milliseconds for the early warning final frequency cutoffs, where higher frequencies have a smaller timing error. These values are the same order of magnitude as the light-travel time ($10$ms) and therefore need to be considered in the early warning search to ensure we are identifying coincidences.
+Using an SNR of $8$ (and a lower frequency of $17$ Hz) yields timing errors from $5.89$ to $1.89$ milliseconds for the early warning frequency cutoffs, where higher frequencies have smaller timing errors. The current allowed error is $3$ milliseconds therefore we do not expect to miss candidates from the $44$, $48$ and $56 \, \text{Hz}$ templates. The window does need to be widened to ensure we aren't missing $29$, $32$ and, $38 \, \text{Hz}$ frequency cutoff templates. This could be done on a template dependent basis, with a timing accuracy error dependent on the frequency cutoff. When we investigate the injections which have missing frequencies we get the following counts per frequency cutoff: $29 \, \text{Hz} = 0$ (We do not distinguished between missed and not found for the first frequency cutoff), $32 \, \text{Hz} = 288$, $38 \, \text{Hz} = 162$, $44 \, \text{Hz} = 132$, $49 \, \text{Hz} = 168$, $56 \, \text{Hz} = 140$, therefore the timing window needs to be widened for all frequency cutoffs.
 
-\subsubsection{\label{}Sampling accuracy}
+\subsubsection{\label{6:sec:sample_accuracy}Sampling accuracy}
 % PyCBC Live Full Bandwidth Sample Rate
 %  Why does it need a high sample rate
 % PyCBC Live Early Warning Sample Rate
@@ -430,11 +446,11 @@ Using an SNR of $8$ (and a lower frequency of $17$ Hz) yields timing errors from
 %  How is this affecting our search
 %   Triggers in between two samples can be found outside the coincident time window
 
-The PyCBC Live Full Bandwidth uses a sample rate of $2048$Hz to capture binary neutron star signals which can merge even above the $1024$Hz Nyquist frequency with the greatest accumulated SNR. The PyCBC Live Early Warning search uses a sample rate of $256$Hz, giving a Nyquist frequency of $128$Hz. The highest final frequency cutoff templates are at $56$Hz so these can all be fully captured with a sample rate of $128$Hz. The sample rate is increased to $256$Hz to ensure we have a greater time resolution and phase accuracy, a sample rate of $128$Hz has a time between samples of $7.8$ms which is close to our allowed light-travel time.
+The PyCBC Live Full Bandwidth search uses a sample rate of $2048$Hz to capture binary neutron star signals which can merge even above the $1024$Hz Nyquist frequency with the greatest accumulated SNR. The PyCBC Live Early Warning search uses a sample rate of $256$Hz, giving a Nyquist frequency of $128$Hz. The highest frequency cutoff templates are at $56$Hz so these can all be fully captured with a sample rate of $128$Hz. The sample rate is increased to $256$Hz to ensure we have a greater time resolution and phase accuracy, a sample rate of $128$Hz has a time between samples of $7.8$ms which is close to our allowed light-travel time.
 
-We have seen that the $256$Hz sample rate might still provide an issue with timing accuracy and the current allowed coincidence time window. With a time between samples of $3.9$ms a trigger in another detector $3$ samples later will be within the allowed window of $13$ms but $4$ samples which equal a time difference of $15.6$ms, outside the window. We have seen examples whereby increasing the sample rate of the early warning search will locate a coincidence within the time window where previously it was seen outside. Increasing the sample rate however, does increase the computational cost of the search with no increase in event SNR or new events provided.
+We have seen that the $256$Hz sample rate might still provide an issue with timing accuracy and the current allowed coincidence time window. With a time between samples of $3.9$ms a trigger in another detector $3$ samples later will be within the allowed window of $13$ms but being $4$ samples later equals a time difference of $15.6$ms; falling outside the window. We have seen cases whereby increasing the sample rate of the early warning search will locate a coincidence within the time window where previously it was seen outside. Increasing the sample rate however, does increase the computational cost of the search with no increase in event SNR or new events provided.
 
-\subsubsection{\label{}Early warning tuned PhaseTD histogram}
+\subsubsection{\label{6:sec:ew_phasetd}Early warning tuned PhaseTD histogram}
 % Great, we've made the window bigger
 % What? It still won't work? Why not?
 % PhaseTD File
@@ -443,22 +459,25 @@ We have seen that the $256$Hz sample rate might still provide an issue with timi
 %  How is it tuned?
 %  Does it take into account time windows outside the 13ms? (no)
 
-By increasing the allowed coincidence time window we will allow the early warning search to make those initial coincident triggers which share the same template parameters and are physically possible (when accounting for timing accuracy error). However, we will face another problem where the coincident ranking statistic used by the early warning search will not consider these event to have a very low signal rate. The coincident ranking statistic used by the early warning search is \verb|phasetd| (phase-time delay) and is used to assess the coincidence likelihood between two triggers from different detectors.
+By increasing the allowed coincidence time window we will allow the early warning search to make those initial coincident triggers which share the same template parameters and are physically possible (when accounting for timing accuracy error). However, we will face another problem where the coincident ranking statistic used by the early warning search will consider these events to have a very low signal rate. The coincident ranking statistic used by the early warning search is \verb|phasetd| (phase-time delay) and is used to assess the coincidence likelihood between two triggers from different detectors.
 
-For a two detector coincidence the likelihood value is found by sampling from a pre-created \verb|phasetd| 3-dimensional histogram in amplitude, time and phase space. This file is created using by simulating gravitational wave signals from an isotropic distribution of sources. Each signal is assigned a random sky location (right ascension, declination and inclination) and polarization, then the response in each detector is calculated to determine the sensitivity to the signal in both detectors. From this response we can get the signal amplitudes, time delays and phases shifts for each detector. For the pair of detectors the time delay, phase differences and relative signal amplitudes are then binned into discrete bins which represent different combinations of amplitude, time and phase difference.
+For a two detector coincidence the likelihood value is found by sampling from a pre-created \verb|phasetd| 3-dimensional histogram in amplitude, time and phase space. This file is created using by simulating gravitational wave signals from an isotropic distribution of sources. Each signal is assigned a random sky location (right ascension, declination and inclination) and polarisation, then the response in each detector is calculated to determine the sensitivity to the signal in both detectors. From this response we can get the signal amplitudes, time delays and phases shifts for each detector. For the pair of detectors the time delay, phase differences and relative signal amplitudes are then binned into discrete bins which represent different combinations of amplitude, time and phase difference.
 
 The size of the bins is determined by the allowed uncertainties in timing, phase and SNR. Additionally there is a restriction in the allowed range of SNR ratios to avoid storing bins for extreme values. After this, smoothing is performed between nearby bins and the final histogram is produced. Within the search, time difference, phase difference and amplitude ratios are then used to sample from this histogram to calculate the likelihood of the three parameter combination.
 
-Currently the allowed time window uncertainty is $1$ms which determines the bin size and while the time difference between two triggers is allowed to include these early warning trigger coincidences in our monte carlo simulation of of the astrophysical distribution of these time differences the early warning time difference bins will not be occupied due to these lying outside of the light-travel time. The uncertainty will need to be taken account explicitly in the time difference on both trigger times.
+Currently the allowed time window uncertainty is $1$ms which determines the bin size and while a large time difference between two triggers is allowed, 
 
-Another improvement that can be made in the generation of the \verb|phasetd| statistic files is including the sample rate of the search as a parameter. For a monte carlo simulation our sample rate is as accurate as a \verb|float64| parameter can be. Whereas the timing difference between triggers in the PyCBC Live search will only take discrete values of the time difference dependent on the sample rate, for example, the early warning search has a sample rate of $256$Hz and therefore the time difference between samples is $0.00390625$ seconds or approximately $3.9$ milliseconds. Therefore our \verb|phasetd| file will only ever been sampled from using time difference that are n-multiples of this time between samples. We can create \verb|phasetd| files with bins in the time difference parameter space which represented the sample rate of the search and therefore can be sampled more accurately.
+
+The allowed time window used when creating the histogram is currently $1$ms, this determines the bin size so with a large number of bins we can sample from the histogram with a large time difference value. However, the monte carlo simulation to create the histogram will not place any simulated injections in these bins due to not accounting for a large enough timing error. Therefore, when we sample from the histogram with large time difference we will receive very low value of the signal rate. The timing accuracy error will need to be taken account explicitly in the time difference on both trigger times.
+
+Another improvement that can be made in the generation of the \verb|phasetd| statistic files is including the sample rate of the search as a parameter. For a monte carlo simulation the trigger time differences are as accurate as a \verb|float64| parameter can be. Whereas the timing difference between triggers in the PyCBC Live search will only take discrete values of the time difference dependent on the sample rate, for example, the early warning search has a sample rate of $256$Hz and therefore the time difference between samples is $0.00390625$ seconds or approximately $3.9$ milliseconds. Therefore our \verb|phasetd| file will only ever been sampled from using time difference that are n-multiples of this time between samples. We can create \verb|phasetd| files with bins in the time difference parameter space which represent the sample rate of the search and therefore can be sampled more accurately.
 
 \subsubsection{\label{6:sec:missing-cands}Missing candidates}
 %
 \begin{figure}
        \centering
     \includegraphics[width=\textwidth]{images/6_earlywarning/identified-problems/non_mono_snr.pdf}
-    \caption{}
+    \caption{An illustration of the expected and SNRs for the case where one of the event's coincident triggers have fallen outside of the coincident timing window. In the first case we see a missing frequency in the SNR evolution (indicated by the red cross), in the second case we see a non-monotonic increase in SNR where the search has found a low significance event to `fill' the gap (shown by the orange star).}
     \label{6:fig:non-monotonic-snr}
 \end{figure}
 %
@@ -466,14 +485,14 @@ Another improvement that can be made in the generation of the \verb|phasetd| sta
 % - How often it happened
 % - Impact
 
-The most obvious indicator that the search has failed to find a coincidence due to the coincident trigger time difference falling outside the coincidence allowed timing window is that injections have `missing' events in the frequency evolution. We would expect to see a sequence of events for each injection when the starting frequency is not the greatest frequency truncation in the bank. For example, if we saw a real candidate event with a final frequency cutoff of $29$Hz then we would expect to find the $32$, $38$, $44$, $49$ and $56$Hz candidate events shortly following. If we fail to see the $32$Hz event but we still see the following events then we know that something has broken in the early warning search.
+The most obvious indicator that the search has failed to find a coincidence due to the coincident trigger time difference falling outside the coincidence allowed timing window is that injections have `missing' events in the frequency evolution. We would expect to see a sequence of events for each injection when the starting frequency is not the greatest frequency cutoff in the bank. For example, if we saw a real gravitational wave signal whose initial event has a frequency cutoff of $29$Hz then we would expect to find the $32$, $38$, $44$, $49$ and $56$Hz candidate events shortly following. If we fail to see the $32$Hz event but we still see the following events then we know that something has broken in the early warning search.
 
 We know that the $32$Hz triggers exist but they fall outside the allowed coincidence timing window and therefore a coincident event was never formed. The early warning search will output files containing all the single detector triggers found which we can use to identify the missing coincidence. Figure~\ref{6:fig:missing-freq-eg} shows an example of an injection which has been found with all but $1$ final frequency cutoff template. 
 %
 \begin{figure}
     \centering
     \includegraphics[width=1.0\linewidth]{images/6_earlywarning/stories/missing_freqs_example.pdf}
-    \caption{Caption}
+    \caption{An example of a gravitational wave injection seen by the PyCBC Live early warning search with a missing template with frequency cutoff $32 \, \text{Hz}$.}
     \label{6:fig:missing-freq-eg}
 \end{figure}
 %
@@ -485,7 +504,7 @@ To verify the time difference problem we investigated the expected network SNRs 
     \rowcolors{2}{white}{lightgray}
     \begin{tabular}{ccc}
         \toprule
-        \textbf{Final Frequency [Hz]} & \textbf{Noiseless SNR} & \textbf{Noisy SNR} \\
+        \textbf{Frequency Cutoff [Hz]} & \textbf{Noiseless SNR} & \textbf{Noisy SNR} \\
         \midrule
         29 & 16.43 & 15.38 \\
         32 & 19.16 & 17.95 \\
@@ -495,21 +514,23 @@ To verify the time difference problem we investigated the expected network SNRs 
         56 & 34.48 & 29.02 \\
         \bottomrule
     \end{tabular}
-    \caption{Caption text goes here}
+    \caption{The expected signal-to-noise ratios in both noiseless and noisy data for the gravitational wave injection shown in figure~\ref{6:fig:missing-freq-eg}. The noiseless SNR has been calculated by taking the un-normalised matched-filter of the template with itself~\cite{Brown_Thesis:2004}. The noisy SNR has been calculated by matched-filtering the template with the injection that has been injected into simulated gravitational wave data.}
     \label{6:tab:noise_snrs}
 \end{table}
 %
-We can clearly see that we are expecting to see a large network SNR for the $32$Hz case which isn't recovered by the PyCBC Live Early Warning search. Next we are able to re-run the early warning search using a template which perfectly describes the injection parameters and in this case we still fail to recover the candidate event but, we can look into the trigger files to identify the single trigger found by both searches with the same template above the SNR threshold. We find a H1 trigger with SNR $14.55$ and an L1 trigger with SNR $12.38$ (giving a network SNR of $19.11$) and when the time difference between triggers is calculated we get $0.015625$ seconds, greater than the currently allowed $0.013$ seconds. 
+We can clearly see that we are expecting to see a large network SNR for the $32$Hz case which isn't recovered by the search. Next we are able to re-run the early warning search using a template which perfectly describes the injection parameters and in this case we still fail to recover the candidate event but, we can look into the trigger files to identify the single trigger found by both searches with the same template above the SNR threshold. We find a H1 trigger with SNR $14.55$ and an L1 trigger with SNR $12.38$ (giving a network SNR of $19.11$) and when the time difference between triggers is calculated we get $0.015625$ seconds, greater than the currently allowed $0.013$ seconds. 
 
 We can then perform another search with a sample rate of $2048$Hz, which doesn't find a coincidence but has a smaller time difference of $0.0146$ seconds (still outside the window) proving that the time accuracy error is playing a part and it isn't simply a sampling inaccuracy. When performing a final search in which we expand the allowed coincidence timing window by $10$ms (this can be tuned in the future) we successfully recover all $6$ events for this injection.
 
 However, we still need to investigate how the \verb|phasetd| ranking statistic has responded to the highly unlikely time difference. We calculate the signal rate using
 %
 \begin{equation}
-    \log(r_s) = \frac{R - \rho_{H}^{2} + \rho_{L}^2}{2}
+    \log(r_s) = \frac{R - \hat{\rho}_{H}^{2} + \hat{\rho}_{L}^2}{2}
 \end{equation}
 %
-and when doing so recover a signal rate using the same \verb|phasetd| histogram as that used by the PyCBC Live search of $-24.70$. This is extremely low and therefore the signal is being considered as extremely unlikely but, the SNRs of the signal are so high such that this is cancelled out and the ranking statistic value found by the search overall is around $17.77$, quite significant. This points to issues surrounding the \verb|phasetd| histogram file that still needs to be fixed.
+where R is the event's ranking statistic value and $\hat{\rho}_{H}$ and $\hat{\rho}_{L}$ are the single detector new SNRs. We recover a signal rate using the same \verb|phasetd| histogram being used by the PyCBC Live search of $-24.70$. This is extremely low and therefore the signal is being considered as extremely unlikely but, the SNRs of the signal are so high such that this is compensated for and the ranking statistic value found by the search overall is around $17.77$, quite significant. This points to issues surrounding the \verb|phasetd| histogram file that still needs to be fixed.
+
+We find that $873$ injections are missing at least one candidate in the frequency evolution, this represents $2.68\%$ of all injections in our injection set. We note that we will only be counting injections which see more than one candidate event and where the candidate missing frequency isn't the lowest frequency in the evolution. If the missed frequency was the $56 \, \text{Hz}$ frequency but this was the only frequency cutoff seen for that injection then we would not count it as a missed frequency. If the missed frequency is the lowest frequency in the evolution, for example $29 \, \text{Hz}$, then we are just assuming that the $29 \, \text{Hz}$ did not have enough SNR to be seen and wasn't `missed' in this context. A more detailed analysis is possible using the expected SNRs of the frequency cutoffs.
 
 \subsubsection{\label{6:sec:non-mono-snr}Non-monotonic SNR evolution}
 % - Example
@@ -521,11 +542,41 @@ Another manifestation of the timing accuracy error is the possibility for the mi
 \begin{figure}
     \centering
     \includegraphics[width=1.0\linewidth]{images/6_earlywarning/stories/non_mono_example.pdf}
-    \caption{Caption}
+    \caption{An example of a gravitational wave injection that has been found with a non-monotonically increasing signal-to-noise ratio between successive frequency cutoffs. The $32 \, \text{Hz}$ frequency cutoff gravitational wave template has been seen with a lower SNR in the H1 and L1 single detector searches than the $29 \, \text{Hz}$ frequency cutoff template. This is caused by the actual $32 \, \text{Hz}$ template coincident triggers being found outside the allowed coincidence timing window.}
     \label{6:fig:non_mono_eg}
 \end{figure}
 
-It can be seen that the $32$Hz has been found by the search for this injection but with a much lower SNR than expected and not following the monotonic SNR increase that we would expect. When investigating the triggers found we can see that the search has managed to find a low-significance trigger within the coincidence time window and has managed to form a coincidence with low SNR, similar to the low significance candidates described in section~\ref{6:sec:low-significance-cands} but where one trigger is actually real. Looking into the single detector trigger files we can once again find the coicident trigger pair that should've been made if the coincidence timing window was larger and when running the search over this injection with the larger coincidence time window we find all $6$ events for this injection with the expected SNR.
+It can be seen that the $32$Hz has been found by the search for this injection but with a much lower SNR than expected and not following the monotonic SNR increase that we would expect. When investigating the triggers found we can see that the search has managed to find a low-significance trigger within the coincidence time window and has managed to form a coincidence with low SNR, similar to the low significance candidates described in section~\ref{6:sec:low-significance-cands} but where one trigger is actually real. Looking into the single detector trigger files we can once again find the coincident trigger pair that should've been made if the coincidence timing window was larger and when running the search over this injection with the larger coincidence time window we find all $6$ events for this injection with the expected SNR.
+
+We find that $997$ injections had non-monotonically increasing SNR between all successive frequency cutoffs. However, we expect a number of injections to have non-monotonically increasing SNRs due to Gaussian noise in the detector influencing the SNR values recovered for some templates. Therefore, we only count injections in which the drop between successive SNRs is greater than $5\%$ of the previous frequency cutoff template's SNR. When applying this limit we obtain only $120$ injections with non-monotonically increasing SNR ($0.37\%$).
+
+% Total number of injections with non-monotonic SNRs: 997
+% Fraction of total injections: 3.0579070052754265
+% Total number of injections with non-monotonic SNRs above threshold: 120
+% Fraction of total injections: 0.368052999631947
+
+
+
+\section{\label{6:sec:conclusion}Conclusion}
+
+We have described the PyCBC Live early warning search and how it is used to enhance multi-messenger astronomy by providing early warning of gravitational wave signal mergers to allow electromagnetic telescopes the ability to prepare for incoming counterparts to gravitational wave signals in the electromagnetic observation regime.
+
+We have performed a injection study using the early warning search to identify any potential problems with the search that might negatively affect any results from real events in the future. From this study we have identified three main categories of problem, relating to low significance Gaussian noise events, analysis stride boundaries interrupting analysis and producing duplicate events and, timing accuracy errors preventing the coincidence of two real single detector triggers being formed. We have provide the cause of these problems alongside illustrations and examples of cases in which they have occurred during our test. Further information has been provided for the timing accuracy error problem on solutions as well as further consideration (phase-time delay ranking statistic) for problems that need to be fixed in the future to ensure correct operation of the early warning search.
+
+In conclusion, the early warning search is more than capable of observing gravitational wave signals tens of seconds prior to the merger of the gravitational wave event. We are able to disseminate information about this event to the international science community however, there are problems with the search that have the potential to negatively affect the results of real events found in the future.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 % \section{\label{6:sec:potential-improvements}Potential Improvements}
@@ -573,7 +624,7 @@ It can be seen that the $32$Hz has been found by the search for this injection b
 \section*{Appendix}
 \section{Problems Faced when producing Injection Data}
 
-One of the problems experienced while doing the data analysis of this project is an issue caused by the method of creating the data initially. The PyCBC function used was \emph{pycbc\_condition\_strain} which takes an input for the power spectrum density of the noise you with to simulate. We used an analytical PSD (NAME, REF, CITE) which produced discontinuities at the boundaries between our data segments and therefore negative effects on the matched filtering being performed by the live search. An example of one of these discontinuities and an injection missing some candidates can be seen in figure~REMOVED.
+One of the problems experienced while doing the data analysis of this project is an issue caused by the method of creating the data initially. The PyCBC function used was \verb|pycbc_condition_strain| which takes an input for the power spectrum density of the noise you with to simulate. We used an analytical PSD (NAME, REF, CITE) which produced discontinuities at the boundaries between our data segments and therefore negative effects on the matched filtering being performed by the live search. An example of one of these discontinuities and an injection missing some candidates can be seen in figure~REMOVED.
 % %
 % \begin{figure}
 %        \centering
@@ -591,7 +642,7 @@ Since discovering this boundary issue the same data has been re-created with the
 
 \subsection{Computational Limitations}
 
-The early warning search is heavily optimized to the point it runs on a single dedicated machine with $10$ processes and $2$ threads per process. Just as the with full bandwidth search, the template bank is parallelised over these processes using MPI so each process will be performing the matched filter for only a few hundred templates before the message passing interface receives all the results and the coicidences are found by the rank 0 process. The search can be badly affected by other processes running on the same machines so this machine is exclusively used by the PyCBC Live early warning search.
+The early warning search is heavily optimised to the point it runs on a single dedicated machine with $10$ processes and $2$ threads per process. Just as the with full bandwidth search, the template bank is parallelised over these processes using MPI so each process will be performing the matched filter for only a few hundred templates before the message passing interface receives all the results and the coicidences are found by the rank 0 process. The search can be badly affected by other processes running on the same machines so this machine is exclusively used by the PyCBC Live early warning search.
 
 The search can suffer heavily from other non-PyCBC processes such as file storage, data frame delivery or GraceDB uploads. These can be mitigated slightly with reserved local storage on the dedicated machine or subprocess multiprocessing for the GraceDB uploads so the search isn't waiting on GraceDB to continue processing, especially at times where multiple events are being uploaded for a single signal and across multiple searches from other pipelines.
 

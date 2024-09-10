@@ -12,14 +12,14 @@ In this thesis we have made improvements to the search for gravitational waves u
 % Section by section of chapter
 In this chapter we will discuss the gravitational wave detectors and the limiting sources of noise in section~\ref{}. We define the research area of detector characterisation in section~\ref{}. We further explain some common characterisation techniques in section~\ref{}, the common noise transients in section~\ref{}, some of the challenges faced in detector characterisation in section~\ref{} and finally the detector characterisation tools most commonly used and referred to throughout this thesis, in section~\ref{}.
 
-\section{\label{}Gravitational Wave Detectors}
+\section{\label{3:sec:gw_detectors}Gravitational Wave Detectors}
 
 % To understand the importance of Detector Characterisation we must understand the detectors
 Gravitational wave astronomy in the present day is performed by ground-based detectors at different locations globally: the LIGO-Livingston and LIGO-Hanford detectors are located in the United States of America, the Virgo interferometer in Italy and, the KAGRA telescope in Japan. We will primarily reference the LIGO detectors in the United States of America when discussing the challenges faced in detector characterisation. 
 
 As previously mentioned in chapter~\ref{}, section~\ref{}, the LIGO detectors work on the principle of laser interferometry to detect gravitational wave signals. The sensitivity~\cite{aLIGO_design_curve:2018} of Gravitational Wave detectors is limited by fundamental sources of noise such as seismic noise~\cite{Glanzer:2023}, thermal noise~\cite{thermal_noise:2018} and quantum noise~\cite{quantum_noise:2003}. These are the non-stationary sources of noise~\cite{PSD_var:2020}. Additionally, we have non-Gaussian noise~\cite{Noise_Guide:2020} which manifests as transient noise bursts in the data which can contribute to false positives in gravitational wave searches and the obscuring of real gravitational wave signals~\cite{GW170817:2017, GW150914_noise:2016}.
 
-\section{\label{}Detector Characterisation and Calibration}
+\section{\label{3:sec:detchar_calib}Detector Characterisation and Calibration}
 
 Detector characterisation is a field of study which assess and improves the performance of gravitational wave detectors to ensure accurate and reliable detection of gravitational waves. Gravitational wave detector calibration determines how the response of the detector translates to astrophysical signals, ensuring accuracy in extracted astrophysical information. Detector characterisation is responsible for identifying and mitigating the many sources of noise that can obscure or mimic real signals. The optimization of detector sensitivity is also studied whereby different designs and components can be fine-tuned to increase sensitivity. Another responsibility of detector characterisation is the monitoring of detector performance in real-time to assess sensitivity changes.
 
@@ -77,7 +77,7 @@ Noise transients, commonly referred to as glitches, are short duration bursts of
 
 % Characteristics of Noise Transients
 
-There are as many as $24$~\cite{gravityspy:2023} different classes of glitch which all manifest with different durations (typically in the millisecond to second range) and amplitudes. Glitches populate the whole sensitive frequency bandwidth of the detectors with some glitches being broadband, affecting up to the whole frequency bandwidth, to others being narrowband and affecting only specific frequency ranges. Glitches are commonly characterised and studied in 2-dimensional time-frequency representations of the one-dimensional strain time series that the detector outputs. The typical time-frequency representation used is the OmegaScan~\cite{} (also referred to as a Q-scan) which is described later in this chapter.
+There are as many as $24$~\cite{gravityspy:2023} different classes of glitch which all manifest with different durations (typically in the millisecond to second range) and amplitudes. Glitches populate the whole sensitive frequency bandwidth of the detectors with some glitches being broadband, affecting up to the whole frequency bandwidth, to others being narrowband and affecting only specific frequency ranges. Glitches are commonly characterised and studied in 2-dimensional time-frequency representations of the one-dimensional strain time series that the detector outputs. The typical time-frequency representation used is the OmegaScan~\cite{qscan:2004} (also referred to as a Q-scan) which is described later in this chapter.
 
 % Common Sources of Noise Transients
 
