@@ -26,60 +26,65 @@
 
 % Chapter Introduction
 
-Search pipelines, such as PyCBC, are used to analyse data from \gw detectors to detect \gw signals both in real-time (live) and afterwards (offline). In this chapter we build up the theoretical basis for gravitational wave search pipelines and introduce the techniques used by the search pipelines in the detection of gravitational waves. There is a heavy focus on the PyCBC search pipelines (PyCBC Offline \% PyCBC Live) which was used heavily and development additions have been made to in this thesis.
+Gravitational wave search pipelines, such as PyCBC, play a critical role in analyzing data from detectors to identify gravitational wave signals, both in real-time (live) and in post-processing (offline). This chapter develops the theoretical foundation for these search pipelines and explores the techniques employed in gravitational wave detection. Emphasis is placed on the PyCBC pipelines---PyCBC Offline and PyCBC Live---both of which were extensively utilized and further developed as part of this thesis.
 
 \section{\label{2:sec:gw-data}Gravitational Wave Data}
 
-The gravitational wave observatories will produce a dimensionless strain time-series, $s(t)$, which consists of of detector noise, $n(t)$, and where present, an astrophysical gravitational wave signal, $h(t)$ such that
+Gravitational wave observatories produce a dimensionless strain time-series, $s(t)$, which is composed of detector noise, $n(t)$, and, when present, an astrophysical gravitational wave signal, $h(t)$. This relationship is expressed as:
 %
-\begin{equation}
+\[
     s(t) =
     \begin{cases}
-        n(t), & \text{no signal} \\
-        n(t) + h(t), & \text{signal}
+        n(t), & \text{if no signal is present}, \\
+        n(t) + h(t), & \text{if a signal is present}.
     \end{cases}
-\end{equation}
+\]
 %
-The goal of the gravitational wave search pipelines is the extract $h(t)$ from $s(t)$.
+The primary objective of gravitational wave search pipelines is to extract $h(t)$ from $s(t)$, isolating the astrophysical signal from the background noise.
 
-\section{\label{2:sec:signal-model}Modelling Gravitational-Wave Signals}
 
-% CBC Signals Only
 
-This section focusses on identifying gravitational wave signals from compact binary coalescence (CBC) sources: the signal emitted by the inspiral and merger of two company objects (black holes or neutron stars) in a binary configuration. Any CBC signal can be characterised by a set of parameters which can be split into two categories: intrinsic parameter, which describe physical properties of the system; and extrinsic parameters, which describe the parameters relating to the orientation and position of the observing detector.
+\subsection{Constructing Frequency-Domain Signals}
 
-% Intrinsic and Extrinsic Parameters
-%    Which parameters are we ignoring
+Although the raw data from gravitational wave detectors are delivered as time-series strain data, it is often desirable to perform the signal analysis in the frequency domain. This is because many gravitational wave search algorithms operate more efficiently in the frequency domain, where the noise characteristics of the detector and the signal structure can be more easily distinguished.
 
-The intrinsic parameters which affect the gravitational wave signals are:
+To convert the time-domain waveform $h(t)$ into the frequency domain $h(f)$, we apply the Fourier transform. The stationary phase approximation (SPA) is a common technique used to analytically compute the Fourier transform of certain types of signals, especially those with a slowly varying amplitude and rapidly varying phase, as is often the case for inspiral signals from CBC sources.
+
+In gravitational wave data analysis, the stationary phase approximation (SPA) is often used to transform the time-domain signal $h(t)$ into its frequency-domain counterpart $h(f)$. The key idea behind the SPA is that the phase of the signal varies much more rapidly than its amplitude, which allows for an efficient approximation of the Fourier transform.
+
+Consider a time-domain gravitational wave signal $h(t)$ of the form:
+\begin{equation}
+    h(t) = A(t) \cos(\phi(t)),
+\end{equation}
+where $A(t)$ is the slowly varying amplitude and $\phi(t)$ is the rapidly varying phase. In compact binary coalescences, the phase $\phi(t)$ is dominated by the orbital evolution of the binary system.
+
+To obtain the frequency-domain waveform $h(f)$, we perform a Fourier transform of $h(t)$. The stationary phase approximation allows us to approximate this Fourier transform by focusing on points in time where the phase is stationary, meaning that the derivative of the phase with respect to time is equal to the angular frequency, $\omega = 2 \pi f$. Specifically, this occurs when:
+\begin{equation}
+    \frac{d\phi(t)}{dt} = 2 \pi f.
+\end{equation}
+Let \( t' \) be the time at which this condition is satisfied, i.e., 
+\[
+    \frac{d\phi(t')}{dt} = 2 \pi f.
+\]
+
+The frequency-domain approximation of the signal, $h(f)$, is then given by:
+\begin{equation}
+    h(f) \approx \frac{A(t')}{\sqrt{\left| \frac{d^2 \phi(t')}{dt^2} \right|}} e^{i \left( 2 \pi f t' - \phi(t') \right)}.
+\end{equation}
+Here, \( A(t') \) is the amplitude at the stationary phase point, and \( \frac{d^2 \phi(t')}{dt^2} \) is the second derivative of the phase at the stationary time \( t' \). This approximation captures the essential features of the signal in the frequency domain, with the rapid oscillations of the phase dictating the frequency content of the waveform.
+
+The SPA provides an efficient way to model the inspiral phase of compact binary coalescence signals, which is particularly useful for search pipelines analyzing data in the frequency domain.
+
+
+\subsection{Waveform models}
+
+Two primary waveform families are commonly used in CBC signal modeling:
 \begin{itemize}
-   \item $m_{1}$, primary component mass
-   \item $m_{2}$, secondary component mass
-   \item $\vec{s_{1}}$, three-dimensional primary component spin
-   \item $\vec{s_{2}}$, three-dimensional secondary component spin
-   \item $t_{c}$, time of coalescence
-   \item $\phi_{c}$, coalescence phase
-\end{itemize}
-where the subscript $_1$ refers to the object in the binary system with the larger mass and $_2$ to the object with the smaller mass. It is worth noting that while $t_{c}$ and $\phi_{c}$ are intrinsic parameters that depend on the intrinsic dynamics of the system the effects of these parameters are observed extrinsically.
-
-The extrinsic parameters which affect the observation of the gravitational wave signal are:
-\begin{itemize}
-   \item $\alpha$, right ascension
-   \item $\delta$, declination
-   \item $r$, distance
-   \item $\iota$, inclination angle
-   \item $\psi$, polarization angle
+    \item \textbf{Inspiral-Merger-Ringdown (IMR) Models:} These models, such as IMRPhenom and SEOBNR, describe the entire evolution of a binary coalescence, from the inspiral phase through the merger and into the post-merger ringdown. These models are widely used in the analysis of gravitational wave signals.
+    \item \textbf{Effective-One-Body (EOB) Models:} These models provide a physically motivated description of the two-body problem in general relativity and can be extended to model the inspiral, merger, and ringdown of binary systems. SEOBNR is one such EOB model, extensively used in data analysis pipelines like PyCBC.
 \end{itemize}
 
-There are additional parameters to describe other physical effects such as: tidal deformation, eccentricity, the neutron star equation of state or any deviations from general relativity. These can affect CBC signals but, we will ignore these in this work.
-
-% Constructing frequency domain signals
-
-While the gravitational wave detectors will deliver time-series data to the search pipelines, it is desirable to perform the analysis in the frequency domain.
-%%% FINISH THIS ONCE THE GRAVITATIONAL WAVE PHASE AND TIME DEPENDENCE THING IN CHAPTER 1 IS DONE
-% Stationary Phase approximation
-
-% Waveform models: IMR and Seob (nah?)
+In this work, we focus on the use of IMR models, as they provide a complete description of the waveform throughout the entire coalescence process.
 
 
 \section{\label{2:sec:noise-model}Modelling Gravitational-Wave Data Noise}
