@@ -1,0 +1,29 @@
+space-time
+s not z
+coordinates
+
+
+%~~~% Text commands %~~~%
+\newcommand{\gw}{gravitational wave\xspace}
+\newcommand{\gws}{gravitational waves\xspace}
+\newcommand{\gwadj}{gravitational-wave\xspace}
+\newcommand{\gwadjs}{gravitational-waves\xspace}
+
+\newcommand{\Gw}{Gravitational wave\xspace}
+\newcommand{\Gws}{Gravitational waves\xspace}
+\newcommand{\Gwadj}{Gravitational-wave\xspace}
+\newcommand{\Gwadjs}{Gravitational-waves\xspace}
+
+\newcommand{\GR}{General Relativity\xspace}
+
+\newcommand{\scl}{scattered-light\xspace}
+\newcommand{\Scl}{Scattered-light\xspace}
+\newcommand{\scladj}{scattered-light\xspace}
+\newcommand{\Scladj}{Scattered-light\xspace}
+
+\newcommand{\cbc}{compact binary coalescence\xspace}
+\newcommand{\cbcs}{compact binary coalescences\xspace}
+\newcommand{\Cbcs}{Compact binary coalescences\xspace}
+
+
+\newcommand{\aligo}{Advanced LIGO\xspace}

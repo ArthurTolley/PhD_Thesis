@@ -28,135 +28,231 @@
 
 Gravitational wave search pipelines, such as PyCBC, play a critical role in analyzing data from detectors to identify gravitational wave signals, both in real-time (live) and in post-processing (offline). This chapter develops the theoretical foundation for these search pipelines and explores the techniques employed in gravitational wave detection. Emphasis is placed on the PyCBC pipelines---PyCBC Offline and PyCBC Live---both of which were extensively utilized and further developed as part of this thesis.
 
-\section{\label{2:sec:gw-data}Gravitational Wave Data}
+\section{\label{2:sec:gw-data}Gravitational wave data}
 
-Gravitational wave observatories produce a dimensionless strain time-series, $s(t)$, which is composed of detector noise, $n(t)$, and, when present, an astrophysical gravitational wave signal, $h(t)$. This relationship is expressed as:
+\Gwadj observatories produce a dimensionless strain time-series, $s(t)$, which is composed of detector noise, $n(t)$, and, when present, an astrophysical \gwadj signal, $h(t)$. This relationship is expressed as:
 %
-\[
+\begin{equation}
     s(t) =
     \begin{cases}
         n(t), & \text{if no signal is present}, \\
         n(t) + h(t), & \text{if a signal is present}.
     \end{cases}
-\]
+\end{equation}
 %
 The primary objective of gravitational wave search pipelines is to extract $h(t)$ from $s(t)$, isolating the astrophysical signal from the background noise.
 
+\section{\label{2:sec:search-methods}Searching through gravitational-wave data}
 
+Detecting \gws from \cbcs requires sophisticated search methods capable of sifting through vast amounts of data collected by \gwadj detectors. This section details the search techniques used to identify and characterize \gwadj signals. There many pipelines which search for \gws~\cite{pipelines} and in this section we will focus on the PyCBC search~\cite{PyCBC:2016, PyCBC:2017, PyCBC_package:2021}
 
-\subsection{Constructing Frequency-Domain Signals}
+We begin with the single detector search techniques to identify potential \gwadj events and then detail the tests and techniques used to combine single detector detections to identify coincidentally found \gwadj signals.
 
-Although the raw data from gravitational wave detectors are delivered as time-series strain data, it is often desirable to perform the signal analysis in the frequency domain. This is because many gravitational wave search algorithms operate more efficiently in the frequency domain, where the noise characteristics of the detector and the signal structure can be more easily distinguished.
+\subsection{\label{2:sec:matched-filter}Matched filtering}
 
-To convert the time-domain waveform $h(t)$ into the frequency domain $h(f)$, we apply the Fourier transform. The stationary phase approximation (SPA) is a common technique used to analytically compute the Fourier transform of certain types of signals, especially those with a slowly varying amplitude and rapidly varying phase, as is often the case for inspiral signals from CBC sources.
-
-In gravitational wave data analysis, the stationary phase approximation (SPA) is often used to transform the time-domain signal $h(t)$ into its frequency-domain counterpart $h(f)$. The key idea behind the SPA is that the phase of the signal varies much more rapidly than its amplitude, which allows for an efficient approximation of the Fourier transform.
-
-Consider a time-domain gravitational wave signal $h(t)$ of the form:
+% Use Jolien's book
+Detecting \gws relies on being able to distinguish between data that contains a \gwadj signal, \( s(t) = n(t) + h(t) \), and data which is only noise, \( s(t) = n(t) \). We must construct an optimal detection statistic which expresses the value of the probability that the data contains a known signal. The optimal detection statistic is found by computing the ratio of the probability that the data contains the signal (hypothesis $\mathcal{H}_{1}$) to the probability that the data is pure noise (the null hypothesis $\mathcal{H}_{0}$)
+%
 \begin{equation}
-    h(t) = A(t) \cos(\phi(t)),
+    \Lambda = \frac{P(s|\mathcal{H}_{1})}{P(s|\mathcal{H}_{0})},
 \end{equation}
-where $A(t)$ is the slowly varying amplitude and $\phi(t)$ is the rapidly varying phase. In compact binary coalescences, the phase $\phi(t)$ is dominated by the orbital evolution of the binary system.
-
-To obtain the frequency-domain waveform $h(f)$, we perform a Fourier transform of $h(t)$. The stationary phase approximation allows us to approximate this Fourier transform by focusing on points in time where the phase is stationary, meaning that the derivative of the phase with respect to time is equal to the angular frequency, $\omega = 2 \pi f$. Specifically, this occurs when:
+%
+where \( \Lambda \) is the likelihood ratio that serves as the detection statistic, \( P(s|\mathcal{H}_{1}) \) is the probability that the data contains the signal, and \( P(s|\mathcal{H}_{0}) \) is the probability that the data is pure noise. It is natural to use probability densities due to the detection process involving continuous data and not discrete events
+%
 \begin{equation}
-    \frac{d\phi(t)}{dt} = 2 \pi f.
+    \Lambda = \frac{p(s|\mathcal{H}_{1})}{p(s|\mathcal{H}_{0})},
+    \label{2:eq:likelihood_ratio}
 \end{equation}
-Let \( t' \) be the time at which this condition is satisfied, i.e., 
-\[
-    \frac{d\phi(t')}{dt} = 2 \pi f.
-\]
+%
+where \( p(s|\mathcal{H}_{1}) \) is the probability density that the data contains the signal, and \( p(s|\mathcal{H}_{0}) \) is the probability density that the data is pure noise.
 
-The frequency-domain approximation of the signal, $h(f)$, is then given by:
+If the detector noise is Gaussian we can compute the probability densities
+%
+\begin{align}
+    p(s|\mathcal{H}_{0}) &\propto {\rm e}^{-(s|s)/2}, \\ 
+    p(s|\mathcal{H}_{1}) &\propto {\rm e}^{-(s-h|s-h)/2},
+\end{align}
+%
+and the likelihood ratio (equation~\ref{2:eq:likelihood_ratio})
+%
 \begin{equation}
-    h(f) \approx \frac{A(t')}{\sqrt{\left| \frac{d^2 \phi(t')}{dt^2} \right|}} e^{i \left( 2 \pi f t' - \phi(t') \right)}.
+    \Lambda(\mathcal{H}_{1}|s) = \frac{{\rm e}^{-(s-h|s-h)/2}}{{\rm e}^{-(s|s)/2}} = {\rm e}^{(s|h)}{\rm e}^{-(h|h)/2},
 \end{equation}
-Here, \( A(t') \) is the amplitude at the stationary phase point, and \( \frac{d^2 \phi(t')}{dt^2} \) is the second derivative of the phase at the stationary time \( t' \). This approximation captures the essential features of the signal in the frequency domain, with the rapid oscillations of the phase dictating the frequency content of the waveform.
-
-The SPA provides an efficient way to model the inspiral phase of compact binary coalescence signals, which is particularly useful for search pipelines analyzing data in the frequency domain.
-
-
-\subsection{Waveform models}
-
-Two primary waveform families are commonly used in CBC signal modeling:
-\begin{itemize}
-    \item \textbf{Inspiral-Merger-Ringdown (IMR) Models:} These models, such as IMRPhenom and SEOBNR, describe the entire evolution of a binary coalescence, from the inspiral phase through the merger and into the post-merger ringdown. These models are widely used in the analysis of gravitational wave signals.
-    \item \textbf{Effective-One-Body (EOB) Models:} These models provide a physically motivated description of the two-body problem in general relativity and can be extended to model the inspiral, merger, and ringdown of binary systems. SEOBNR is one such EOB model, extensively used in data analysis pipelines like PyCBC.
-\end{itemize}
-
-In this work, we focus on the use of IMR models, as they provide a complete description of the waveform throughout the entire coalescence process.
-
-
-\section{\label{2:sec:noise-model}Modelling Gravitational-Wave Data Noise}
-
-Gravitational wave data noise 
-
-\section{\label{2:sec:search-methods}Search Methods}
-
-\subsection{\label{2:sec:matched-filter}Matched Filter}
-
-Using GR, we can produce waveforms which represent a \gw in our photodetector output. Knowing what we are looking for allows us to use matched filtering, a signal processing technique where a known signal is correlated with data to
-obtain a signal-to-noise ratio (SNR) informing us of the likelihood of the waveform being in the data
-
-To being we can the data as a sum of a signal and noise:
-
+%
+where it is sensible to take the logarithm to obtain the log-likelihood ratio
+%
 \begin{equation}
-   s(t) = h(t) + n(t)
-   \label{2:eqn:s_h_n}
+    \log \Lambda(\mathcal{H}_{1}|s) = (s|h) - \frac{(h|h)}{2}.
+    \label{2:eq:log_likelihood_ratio}
 \end{equation}
-
-Where $s$ is the data, $h$ is a signal (in this case, a real \gw signal) and $n$ is the noise. Using a template of the signal, we can use matched filtering to find the signal within our data.
-
-The matched filter is defined as \cite{PyCBC:2016}:
-
+%
+From equation~\ref{2:eq:log_likelihood_ratio} we can see that the likelihood ratio depends only on the data through the inner product of $s$ and $h$. We define the noise-weighted inner product between two time series $s(t)$ and $h(t)$ as
+%
 \begin{equation}
-   \rho^2(t) = \frac{(s|h)^2}{(h|h)}
-   \label{2:eqn:matched_filter}
+  (s | h) = 4 \Re \int^{\infty}_{0} \frac{\tilde{s}(f) \tilde{h}^*(f)}{S_n(f)} df,
+  \label{2:eqn:inner_product}
 \end{equation}
-
-The weighted inner product of the data, $s$, and the signal, $h$, in the frequency domain producing a signal-to-noise ratio (SNR), $\rho^2(t)$, in the time domain. We define the inner product:
-
+%
+where a tilde denotes a Fourier transformed version of the variable and where $S_n(f)$, represents the one-sided power spectral density (PSD) of the data, defined as
+%
 \begin{equation}
-   (s|h)(t) = 4 \Re \int^{+\infty}_{-\infty} \frac{\tilde{s}(f) \tilde{h}^*(f)}{S_n(f)} e^{2 \pi i f t} df
-   \label{2:eqn:inner_product}
+  \langle \tilde{s}(f) \tilde{s}(f^\prime) \rangle = \frac{1}{2} S_n(f) \delta(f - f^\prime) \;,
+  \label{1:eqn:psd}
 \end{equation}
+%
+and angle brackets denote an average over noise realizations and $\delta$ is the Dirac delta function. This inner product is the optimal detection statistic and is known as the \textit{matched filter}, effectively a noise-weighted correlation between the known signal and the data.
 
-A tilde, e.g. $\tilde{s}(f)$, denotes a Fourier transformed version of the variable.
-
+Since we are interested in evaluating the presence of a signal in the data, it is useful to define the \textit{signal-to-noise ratio} (SNR), \( \rho \), which quantifies how strong the signal is relative to the background noise. The SNR is defined as~\cite{FINDCHIRP:2012}
+%
 \begin{equation}
-   \tilde{s}(f) = \int^{+\infty}_{-\infty} s(t) e^{-2 \pi i f t} dt
-   \label{2:eqn:fourier_transform}
+    \rho = \frac{(s|h)}{\sqrt{(h|h)}}.
+    \label{2:eq:snr}
 \end{equation}
+%
+This expression indicates how well the signal correlates with the data, relative to the noise level in the detector. A high SNR corresponds to a stronger, more detectable signal, whereas a low SNR indicates a weak signal buried in the noise. We will use the SNR value as the detection statistic moving forward.
 
-In equation \ref{2:eqn:inner_product} we have Fourier transformed data, $\tilde{s}(f)$, and a Fourier transformed signal, $\tilde{h}(f)$.
+\subsection{\label{2:sec:snr_timeseries}Signal-to-noise ratio over time}
 
-On the denominator within the integral in equation \ref{2:eqn:inner_product} $S_n(f)$ is the power spectral density (PSD) of the detector noise:
-
+Previously we have assumed that we know all the parameters of the signal we are searching for. We will begin to build up a more robust search in which we know very few of the initial \gwadj signal parameters. First, we consider the case of a signal that has a known waveform but an unknown amplitude and arrival time. We can describe the true signal as
+%
 \begin{equation}
-   \langle \tilde{n}(f) \tilde{n}(f') \rangle = \frac{1}{2} S_n(f) \delta(f-f')
-   \label{2:eqn:PSD}
+    h(t) = A g(t - t_{0}),
 \end{equation}
-
-The angle brackets denote averaging over noise realizations, $n$ is stationary Gaussian detector noise and $\delta$ is the Dirac delta function.
-
-These equations build a tool that allows us to analyse a data to look for a signal. One requirement is that we must know the signal we are looking for before we search for it. We can create a template of our signal, referred to as a waveform. We then matched filter our data with the waveform and search through the resulting SNR timeseries for a peak, indicating the presence of the signal.
-
-\subsection{\label{2:sec:phase-maximisation}Phase Maximisation}
-
-Furthermore, the matched filter maximises the amplitude of the \gw signal and we have the ability to maximise over the phase of the signal by using an altered version of the matched filter:
-
+%
+where A is the unknown amplitude of the signal, $t_{0}$ is the unknown arrival time and $g(t)$ is the known waveform. We can take the Fourier transform of this signal
+%
 \begin{equation}
-   \text{$\rho^2_{\Phi,max}(t) = \frac{(s|h)^2 + (s|h_{\pi/2})^2}{(h|h)}$ where $\tilde{h}_{\pi/2}(f) = i \tilde{h}(f)$}
-   \label{2:eqn:phase_mf}
+    \tilde{h}(f) = A \tilde{g}(f) {\rm e}^{-2\pi i f t_{0}},
 \end{equation}
+%
+and obtain the matched filter using equation~\ref{2:eqn:inner_product} to be
+%
+\begin{equation}
+    (s|h) = 4 A \Re \int^{\infty}_{0} \frac{\tilde{s}(f) \tilde{g}^*(f)}{S_n(f)} {\rm e}^{2\pi i f t_{0}} df.
+\end{equation}
+%
+From this we can define
+%
+\begin{align}
+    (s|h) &= A x(t_{0}) \\
+    x(t) &= 4 \Re \int^{\infty}_{0} \frac{\tilde{s}(f) \tilde{g}^*(f)}{S_n(f)} {\rm e}^{2\pi i f t} df.
+\end{align}
+%
+where $x(t)$ is a time series representing the matched filter at any arrival time $t$. From this we can define an SNR time series $\rho(t)$ containing information about the SNR value at each point in time. To find the maximum likelihood detection statistic we simply find the largest value of $\rho(t)$ which will correspond to the amplitude and will reveal the previously unknown arrival time $t_{0}$.
 
-Where $\tilde{h(f)}$ and $\tilde{h}_{\pi/2}(f)$ are orthogonal phases of our template.
+\subsection{\label{2:sec:phase-maximisation}Phase maximisation}
 
-\subsection{\label{2:sec:template-bank}Template Bank}
+The phase of the \gwadj signal is another unknown parameter. Another unknown parameter is the phase of the signal. In section~\ref{1:sec:fourier_transform_chirp} we give a signal of the form
+%
+\begin{equation}
+    h(t) = A(t) \cos\left(\Phi(t)\right).
+\end{equation}
+%
+We include an additional phase offset, $\phi_{0}$, to account for the random orientation and sky position of the binary
+%
+\begin{equation}
+    h(t) = A(t) \cos\left(\Phi(t) + \phi_{0}\right).
+    \label{2:eq:phase_signal_model}
+\end{equation}
+%
+We must maximise over this phase offset in the matched filter and to do so we rewrite our signal as
+%
+\begin{equation}
+    h(t) = h_{0}(t) \cos(\phi_{0}) + h_{\pi/2}(t)\sin(\phi_{0}),
+\end{equation}
+%
+where $h_{0}(t)$ and $h_{\pi/2}(t)$ are realisations of equation~\ref{2:eq:phase_signal_model} where the phase offset has been set equal to $0$ and $\frac{\pi}{2}$ respectively~\cite{IHOPE:2012zx}.
 
-Our waveform template bank will be only 5 parameters: the two masses, the two free spins and, the time of coalescence. We must create a bank of waveform templates describing all the possible signals and template density of the bank needs to be fine-tuned in order to ensure two things: our template bank covers the parameter space well enough to find all signals and our template bank isn't so large we are wasting computational time and resources \cite{Owen_Sathya:1999}.
+We can then calculate $\rho^{2}$ using these two new signals to maximise over the phase
+%
+\begin{equation}
+    \underset{\Phi}{\text{max}}(\rho^{2}(t)) = \frac{(s|h_{0})^{2} + (s|h_{\pi/2})^2}{(h_{0}|h_{0})},
+\end{equation}
+%
+having made the assumption that $\tilde{h}_{\pi/2}(f) = i\tilde{h}_{0}(f)$ which is true for frequency domain waveforms with the stationary phase approximation~\cite{Droz:1999}
 
-\subsection{\label{2:sec:signal-consistency}Signal Consistency Tests}
+
+\subsection{\label{2:sec:template-bank}Template bank}
+
+We have demonstrated that the matched filter can be used to analytically and efficiently maximise over the amplitude, time of arrival and phase of a known signal. We acknowledge that for a real search for \gws we will not know the $15$ parameters of the signal. The search is performed by creating many realisations of the \gwadj signal and searching over the data with each of them. However, we need to discuss how the realisation parameter values are chosen to ensure a sufficiently covered parameter space.
+
+A realisation of the \gwadj signal waveform is called a `template waveform' or simply `template' When a signal is found by template with parameters not equal to the true values we will expect to see a fraction loss in the expected SNR. The closer the template parameters are to the signal parameters, the closer to the maximum SNR we will see. 
+
+We can define a signal with parameters $\lambda$
+%
+\begin{equation}
+    h(t) = \rho u(t;\lambda),
+\end{equation}
+where $\rho$ is the expected SNR value with the true template. If we have a nearby template with parameters $u(t;\lambda + \Delta \lambda)$, the expected SNR in when using template will be
+%
+\begin{equation}
+    \rho^{\prime} = (h|u(\lambda + \Delta \lambda)) = \rho(u(\lambda)|u(\lambda + \Delta \lambda)),
+\end{equation}
+%
+and we can see therefore that the expected fractional loss in the expected SNR is
+%
+\begin{equation}
+    \frac{\rho - \rho^{\prime}}{\rho} = 1 - (u(\lambda)|u(\lambda + \Delta \lambda)) = 1 - \mathcal{A},
+\end{equation}
+%
+where we can define $\mathcal{A}$ as the ambiguity function
+%
+\begin{equation}
+    \mathcal{A}(\lambda;\lambda + \Delta \lambda) := (u(\lambda)|u(\lambda + \Delta \lambda)),
+\end{equation}
+%
+which tells us how well our nearby template matches to the true signal\footnote{Templates are assumed to be normalized such that $(u(\lambda)|u(\lambda)) = 1$.}. If the ambiguity value is large then we have a small fraction loss and the template is a good match to the true signal, if the value is small then the `nearby' template isn't so nearby and is a poor description of the signal template.
+
+The ambiguity function accounts for both \textit{extrinsic} and \textit{intrinsic} parameters in $\lambda$, we have previously maximised over the extrinsic parameters and therefore we define the \textit{overlap} between two templates considering only the intrinsic parameters, $\mu$
+%
+\begin{equation}
+    \mathcal{O}(\mu;\mu + \Delta \mu) := \underset{t_{0}, \phi_{0}}{max}\left( u(t_{0};\phi_{0}|\mu) | u(t_{0};\phi_{0}|\mu + \Delta \mu)\right).
+\end{equation}
+%
+We can then construct a metric from the overlap
+%
+\begin{equation}
+    \mathcal{O}(\mu;\mu + \Delta \mu) \simeq 1 - 1 - g_{ij} \Delta\mu^{i}\mu^{j},
+\end{equation}
+%
+where
+%
+\begin{equation}
+    g_{ij}(\mu) = -\frac{1}{2}\underset{t_{0};\phi_{0}}{max} \frac{\partial^{2}\mathcal{O}(\mu;\mu + \Delta \mu)}{\partial\mu^{i}\partial\mu^{j}} .
+\end{equation}
+%
+We can then construct a bank of templates with a requirement that any signal, when matched filtered by the whole bank, can be recovered with a maximum of $3\%$~\cite{Owen_Sathya:1999} loss. For this requirement to be satisfied there must be a template in the bank with the greatest overlap with the true signal within $ds^{2} = 3\%$, from this we can define the \textit{minimal match} of the whole template bank as $1 - ds^{2}$.
+
+The minimum match defines the volume of each template and therefore we can calculate the number of templates required to cover the whole parameter space
+%
+\begin{equation}
+    N \sim \left(\Delta V\right)^{-1} \int \sqrt{det |g_{ij}|} d^D\mu.
+    \label{2:eq:num_templates_in_bank}
+\end{equation}
+%
+The first factor in equation~\ref{2:eq:num_templates_in_bank} describes the inverse of the volume covered by a single template and the integral calculates the total volume of the entire parameter space.
+
+\subsection{\label{2:sec:signal-consistency}Signal consistency tests}
+
+We have described the matched filter as the optimal detection statistic in stationary Gaussian noise when searching for a known signal. While we have dealt with the case of an unknown signal we now consider the case where the detector noise is not Gaussian. Within the detector data we have many instances of short duration bursts of excess power that are non-Gaussian, commonly called `glitches'~\cite{LIGO_data_quality:2015}.
+
+Glitches produce large SNRs in the matched filter even when they do not share the same morphological characteristics. To combat this we use signal consistency tests, which are able to discriminate between glitches and signal based on the distribution of the power present in the detector data.
+
+We know the expected time and frequency evolution of a \gwadj signal using our waveform models. The time-frequency waveform consistency test described in~\cite{Allen_Chi:2005} divides the matched filter into $p$ sub-templates such that each of the sub-templates contributes equally to the total SNR when the true signal is present.
+%
+\begin{equation}
+    4 \int^{f_{1}}_{0}\frac{|\tilde{g}(f)|^{2}}{Sn(f)}df = 4 \int^{f_{2}}_{f_{1}}\frac{|\tilde{g}(f)|^{2}}{Sn(f)}df = ... =  4 \int^{\inf}_{f_{p-1}}\frac{|\tilde{g}(f)|^{2}}{Sn(f)}df ,
+\end{equation}
+%
+where $\tilde{g}(f)$ is the matched filter from discrete non-overlapping frequencies.
+
+To calculate the divergence from the expected time-frequency distribution we must then matched filter the data and the sub-templates
+
+The divergence from expected time-frequency distribution is then calculated by matched filtering against each sub-template of the signal template
+
+
+\subsection{\label{2:sec:auto-gating}Auto-gating}
+
 
 \subsection{\label{2:sec:template-fits}Exponential Noise Model}
 
@@ -165,75 +261,6 @@ Our waveform template bank will be only 5 parameters: the two masses, the two fr
 \subsection{\label{2:sec:coincidence-test}Coincidence Tests}
 
 \subsection{\label{2:sec:ranking-statistic}Ranking Statistic}
-% Searches need a ranking statistic to map to FAR
-% We will discuss the PyCBC ranking statistic in more detail later on
-% Signal Consistency Tests
-% Astro signal rates and that
-% The optimal ranking statistic -> the ranking statistic we have
-The ranking statistic is a measure of confidence that a signal originated from an astrophysical source as opposed to noise in the detectors. We use the ranking statistic to calculate a false alarm rate which informs us of the number of events per unit time that will originate from noise only. There must be a balance struck when choosing a false alarm rate at which events are determined to be real, require a very small false alarm rate and you will potentially exclude real events from a catalogue and allow too high of a false alarm rate and you will potentially include noise in the catalogue. In this section we will describe the different components which make up the ranking statistic.
-
-%%%%%%%%%%%%%%%%%%%%%%%% TAKEN FROM PYCBCLIVE
-Each trigger in an interferometer (H1 and L1) will produce an \verb|SNR| ($\rho$), $\chi^{2}$, $\chi^{2}$ degrees of freedom ($\chi^{2}_{dof}$) and Sine-Gaussian $\chi^{2}$ (\verb|sg_chisq|). To calculate the new SNR ($\rho_{new}$) for each trigger we must firstly convert $\chi^{2}$ to reduced-$\chi^{2}$ using the degrees of freedom which needs to itself be converted from the degrees of freedom saved in the Live trigger files:
-%
-\begin{equation}
-\text{dof} = 2 \cdot \chi^{2}_{dof} - 2,
-\end{equation}
-%
-\begin{equation}
-  \chi_{reduced}^{2} = \frac{\chi^{2}}{\textrm{DOF}} = \frac{n}{2n - 2} \sum_{i=1}^n \left(\frac{\rho}{\sqrt{n}} - \rho_{bin,i}\right)^2.
-  \label{2:eqn:chi_squared}
-\end{equation}
-%
-\begin{equation}
-\rho_{rw} =  \left\{  \begin{array}{l@{\quad}cr} 
-\rho & \mathrm{if} & \chi_{r}^{2} < 1, \\  
-\rho [(1 + (\chi_{r}^{2})^3)/2]^{-\frac{1}{6}} &  \mathrm{if} & \chi_{r}^{2} \ge 1,   
-\end{array}\right.
-\label{2:eqn:allen-reweighting}
-\end{equation}
-%
-\begin{equation}
-\rho_{\text{new}} = 
-\begin{cases} 
-\rho_{\text{rw}} & \text{if } \text{sg\_chisq} \leq 4, \\  
-\rho_{\text{rw}}  / \left(\frac{\text{sg\_chisq}}{4}\right)^{0.5} & \text{if } \text{sg\_chisq} > 4.
-\end{cases}
-\label{2:eqn:sg-reweighting}
-\end{equation}
-
-Another consideration in the ranking statistic calculation when comparing the old statistic to the new statistic is how the $\rho_{new}$ for each detector is accounted for in the ranking statistic calculation. The old statistic is composed of two quantities, \verb|rstat|, which is the single detector $\rho_{new}$ and, \verb|logr_s|, which is the log of the expected signal rate. \verb|rstat| is calculated by summing the squares of the $\rho_{new}$ from each detector,
-%
-\begin{equation}
-    \textbf{rstat} = \rho_{new, H1}^{2} + \rho_{new, L1}^{2}
-\end{equation}
-%
-which then to find the total ranking statistic is added to $2 \times$ the log signal rate and square rooted,
-%
-\begin{equation}
-    \textbf{cstat} = (\textbf{rstat} + 2 \cdot \textbf{logr\_s})^{\frac{1}{2}} \ .
-\end{equation}
-%
-The new statistic simply takes the log signal rate, \verb|logr_s|, and subtracts the combined lognoiserate, \verb|ln_noise_rate|,
-%
-\begin{equation}
-    \textbf{loglr} = \textbf{logr\_s} - \textbf{ln\_noise\_rate}
-\end{equation}
-%
-where the combined lognoiserate is calculated in equation~REMOVED.
-
-We can directly compare how $\rho_{new}$ manifests in both of these equations. In the old statistic we are summing the squares of the $\rho_{new}$ from each interferometer and then square rooting after adding the contribution from the signal rate. In the new statistic we are simply adding the $\rho_{new}$ from each interferometer together (after applying the fits values). Due to this the old statistic will prefer higher SNR ratios between the two interferometers whereas the new statistic will favour equal SNRs.
-
-For the old statistic, the quadrature sum of the SNRs will maximise the equation,
-%
-\begin{equation}
-    a^{2} + b^{2} = (a + b)^{2} - 2ab
-\end{equation}
-%
-where the difference between $a$ and $b$ is largest (neither $a$ or $b$ can be $0$ in our example because a coincidence detection requires both detectors to pass the minimum threshold). Therefore \verb|rstat| will be largest where the SNR ratio is greatest. In contrast, the new statistic will naturally favour equal SNRs as the search attempts to maximize the sum of the lognoises and not the squared sums when searching for coincidence pairs.
-
-To visualise this difference we can plot the distribution of H1 and L1 SNR values and their coincident detector ranking statistic values. In both of these figures we neglect a changing signal rate and focus solely on the SNR contribution to the single detector ranking statistic.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{\label{2:sec:pycbc-live}PyCBC}
 
