@@ -4,17 +4,17 @@ The Laser Interferometer Gravitational-Wave Observatory (LIGO)~\cite{aLIGO:2015}
 
 The detection of \gws{} is made possible by both the sensitivity of the detectors and the search pipelines~\cite{PyCBC:2016, GstLAL:2020, SPIIR:2020, MBTA:2021, cWB:2020} which analyse raw strain data from the output of the detectors and identify observed \gw{} signals. One of the problems that these search pipelines must deal with is the fact the data contains both non-stationary noise and short duration `glitches'~\cite{Noise_Guide:2020, O2O3_DetChar:2021, VirgoDetChar:2023} where noise power increases rapidly. Glitches are caused by instrument behaviour or interactions between the instrument and the environment~\cite{GW150914_noise:2016, Glanzer:2023} and glitches reduce the sensitivity of the detectors~\cite{O3_sensitivity:2020}, can potentially obscure candidate \gw{} events~\cite{gwtc2:2021} and can even mimic \gw{} events~\cite{GWMimicking:2010, PyCBC_singles:2022}.
 
-Different classes of glitches have been characterized using tools such as Gravity Spy~\cite{gravityspy:2017, gravityspy:2023}. Of the 325,101 glitches classified by Gravity Spy in the third observing run of Advanced LIGO~\cite{gravityspy:2021} with a confidence of $90\%$ or higher, 120,733 ($32.1\%$) were classified as ``Scattered Light''. \Scl{} glitches occur in the 10-120Hz frequency band~\cite{reducing_scattering:2020} which coincides with the frequency band where we observe the inspiral and merger signatures of compact binary coalescences. \Scl{} glitches are characterized by an arch-like pattern in a time-frequency spectrogram of the detector output, as seen in figure~\ref{4:fig:scattered_light}. 
+Different classes of glitches have been characterised using tools such as Gravity Spy~\cite{gravityspy:2017, gravityspy:2023}. Of the 325,101 glitches classified by Gravity Spy in the third observing run of Advanced LIGO~\cite{gravityspy:2021} with a confidence of $90\%$ or higher, 120,733 ($32.1\%$) were classified as ``Scattered Light''. \Scl{} glitches occur in the 10-120Hz frequency band~\cite{reducing_scattering:2020} which coincides with the frequency band where we observe the inspiral and merger signatures of compact binary coalescences. \Scl{} glitches are characterised by an arch-like pattern in a time-frequency spectrogram of the detector output, as seen in figure~\ref{4:fig:scattered_light}. 
 %
 \begin{figure}
   \includegraphics[width=\textwidth]{images/4_archenemy/Section1/single_stack.pdf}
-  \caption{An Omega scan \cite{gwdetchar_tools:2021} of \gw{} data containing an example of a \scl{} glitch. \Scl{} glitches are characterized by a symmetric arch-like pattern. Multiple \scl{} glitches can be seen at the 4, 8 \& 12 second marks as well as multiple harmonic glitches at 8 seconds.}
+  \caption{An Omega scan \cite{gwdetchar_tools:2021} of \gw{} data containing an example of a \scl{} glitch. \Scl{} glitches are characterised by a symmetric arch-like pattern. Multiple \scl{} glitches can be seen at the 4, 8 \& 12 second marks as well as multiple harmonic glitches at 8 seconds.}
   \label{4:fig:scattered_light}
 \end{figure}
 %
 \Scl{} glitches occur when laser light in the interferometer is scattered from the main optical path by components within the detector. The motion of these components is coupled to seismic motion inducing a phase shift on the light being scattered as the surface moves back and forth. This \scl{} then recombines with the main laser, producing \scl{} glitches in the data. The surfaces from which \scl{} glitches originate have been objects on optical benches such as lenses, mirrors and photo-detectors~\cite{TAccadia:2010}.
 
-\Scl{} glitches have been a significant problem when observing compact binary mergers. As an example, GW190701\_203306 was coincident with a \scl{} glitch, as shown in figure \ref{4:fig:obscured_detection}~\cite{gwtc2:2021}, requiring subtraction from the data before the event could be properly characterized~\cite{O3_subtraction:2022}. A further 7 candidate events were found to be in coincidence with \scl{} glitches in the third observing run~\cite{gwtc3:2023}. For this reason, it is important to reduce the effect of \scl{} glitches in the detectors and \gw{} search pipelines. \Scl{} glitches occur as single or multiple glitches and can appear rapidly in time and simultaneously in frequency (see figure \ref{4:fig:consec_scattered_light}), which we refer to as harmonic glitches.
+\Scl{} glitches have been a significant problem when observing compact binary mergers. As an example, GW190701\_203306 was coincident with a \scl{} glitch, as shown in figure \ref{4:fig:obscured_detection}~\cite{gwtc2:2021}, requiring subtraction from the data before the event could be properly characterised~\cite{O3_subtraction:2022}. A further 7 candidate events were found to be in coincidence with \scl{} glitches in the third observing run~\cite{gwtc3:2023}. For this reason, it is important to reduce the effect of \scl{} glitches in the detectors and \gw{} search pipelines. \Scl{} glitches occur as single or multiple glitches and can appear rapidly in time and simultaneously in frequency (see figure \ref{4:fig:consec_scattered_light}), which we refer to as harmonic glitches.
 
 \begin{figure}
   \includegraphics[width=\textwidth]{images/4_archenemy/Section1/GW190701_203306_overlay.pdf}
@@ -41,7 +41,7 @@ We begin by reviewing previous research and describing the formulation of the wa
 
 \section{\label{4:sec:sc_li}\Scl{}}
 
-To identify \scl{} glitches in \gw{} data requires an accurate model of \scl{} glitches. This section details the derivation of the model we will use for generating our \scl{} glitch filter waveforms, along with its parameterization.
+To identify \scl{} glitches in \gw{} data requires an accurate model of \scl{} glitches. This section details the derivation of the model we will use for generating our \scl{} glitch filter waveforms, along with its parameterisation.
 
 \subsection{Modelling \scl{} glitches - a review}
 
@@ -89,14 +89,14 @@ where $f_{m}$ is the frequency-modulated signal with modulation index $m = A_{m}
 %
 \begin{equation}
     h_{sc}(t) = G \cdot \cos\phi_{0} \cdot \frac{4 \pi}{\lambda} \cdot \delta x_{sc}(t) \;.
-    \label{4:eqn:accadia_strain_linearized}
+    \label{4:eqn:accadia_strain_linearised}
 \end{equation}
 
 \subsection{Model}
 
-The model introduced in~\cite{TAccadia:2010} for the \gw{} strain noise introduced by \scl{} uses a lot of knowledge about the detector state. The model used in this work will be more phenomenological in the parameterization, allowing us to rely only on the characteristics of the glitches in the strain data and not knowledge of the detector configuration, especially in cases where this detector information might not be known. Each \scl{} glitch, as viewed in a spectrogram (see figure \ref{4:fig:scattered_light}), has two easily identifiable features: the maximum frequency reached, \emph{glitch frequency} ($f_{gl}$); and the period of time the glitch exists in detector data, \emph{time period} ($T$).  In addition we can fully describe an artifact by defining an \emph{amplitude} ($A$), \emph{phase} ($\psi$) and \emph{center time} of the glitch ($t_0$).
+The model introduced in~\cite{TAccadia:2010} for the \gw{} strain noise introduced by \scl{} uses a lot of knowledge about the detector state. The model used in this work will be more phenomenological in the parameterisation, allowing us to rely only on the characteristics of the glitches in the strain data and not knowledge of the detector configuration, especially in cases where this detector information might not be known. Each \scl{} glitch, as viewed in a spectrogram (see figure \ref{4:fig:scattered_light}), has two easily identifiable features: the maximum frequency reached, \emph{glitch frequency} ($f_{gl}$); and the period of time the glitch exists in detector data, \emph{time period} ($T$).  In addition we can fully describe an artifact by defining an \emph{amplitude} ($A$), \emph{phase} ($\psi$) and \emph{center time} of the glitch ($t_0$).
 
-To formulate a model of \scl{} glitches in terms of these parameters, we simplify equation \ref{4:eqn:accadia_strain_linearized}, treating the strain noise caused by \scl{} as the sinusoidal function
+To formulate a model of \scl{} glitches in terms of these parameters, we simplify equation \ref{4:eqn:accadia_strain_linearised}, treating the strain noise caused by \scl{} as the sinusoidal function
 %
 \begin{equation}
   h_{sc}(t) \propto \sin(\phi_{noise}(t)).
@@ -192,7 +192,7 @@ Equipped with our model for \scl{} glitches from the previous section, we now di
 
 \subsection{Matched Filtering \label{4:subsec:MF}}
 
-Given our model of \scl{} glitches, we can consider a realization with specific values of the parameters discussed above. To identify glitches with these values of the parameterization, we follow the same technique as that commonly used to identify compact binary mergers and apply matched filtering. The matched filter is defined as~\cite{FINDCHIRP:2012}
+Given our model of \scl{} glitches, we can consider a realisation with specific values of the parameters discussed above. To identify glitches with these values of the parameterisation, we follow the same technique as that commonly used to identify compact binary mergers and apply matched filtering. The matched filter is defined as~\cite{FINDCHIRP:2012}
 %
 \begin{equation}
   \rho(t) = \frac{(h | s)}{\sqrt{(h | h)}} \equiv (\hat{h} | s).
@@ -215,7 +215,7 @@ The tilde on $\tilde{a}$ and $\tilde{b}$ refer to the Fourier-transform of both 
   \label{4:eqn:psd}
 \end{equation}
 %
-where the angle brackets denote an average over noise realizations and $\delta$ is the Dirac delta function.
+where the angle brackets denote an average over noise realisations and $\delta$ is the Dirac delta function.
 
 \Scl{} glitches will take a range of values of the parameters describing them and we must be able to identify glitches anywhere in the parameter space. Following~\cite{FINDCHIRP:2012} we can analytically maximize over the \emph{amplitude}, \emph{phase} and the \emph{center time} glitch parameters in equation \ref{4:eqn:model}. The matched filter naturally maximizes over \emph{amplitude} when expressed in terms of signal-to-noise ratio, and can be evaluated as a function of time by including a time shift in equation~\ref{4:eqn:inner_product},
 %
@@ -230,18 +230,18 @@ To maximize over phase we take the absolute value of the inner product, rather t
 
 \subsection{Template Bank}
 
-Our \scl{} glitch model is parameterized by 5 variables. As shown above, by maximizing over \emph{phase}, \emph{amplitude} and \emph{time}, we can analytically maximize the signal-to-noise ratio over 3 of these variables. However, the remaining two describe the intrinsic evolution of the glitch and we must explicitly search over these parameters. To do this we create and use a ``template bank'' of \scl{} glitch waveforms, created such that it would be able to identify glitches with any value of our 2 remaining parameters, \emph{glitch frequency} and \emph{time period}.
+Our \scl{} glitch model is parameterised by 5 variables. As shown above, by maximizing over \emph{phase}, \emph{amplitude} and \emph{time}, we can analytically maximize the signal-to-noise ratio over 3 of these variables. However, the remaining two describe the intrinsic evolution of the glitch and we must explicitly search over these parameters. To do this we create and use a ``template bank'' of \scl{} glitch waveforms, created such that it would be able to identify glitches with any value of our 2 remaining parameters, \emph{glitch frequency} and \emph{time period}.
 
 To generate this template bank, a stochastic template placement algorithm~\cite{Harry_sbank:2009} is used. This algorithm randomly generates a new template, places the template in the existing template bank and calculates the ``distance'' (how similar two templates appear) between the new template and existing templates. If the new template is too close to an existing template it is discarded, otherwise, it is accepted into the bank. The density of the bank is dependent on the allowed distance between two templates. The dominant cost of the search for \scl{} glitches is matched filtering and is approximately linear in the number of templates, a larger template bank will find all of the glitches with more accurate parameter values but the computational cost of the search will be increased. The template bank generation alone does not constitute a significant computational cost in the search.
 
-The distance function we have chosen to evaluate templates by is the match between two glitch templates. To calculate the match, we first normalize both templates such that the matched filter between a template and itself would be equal to 1. We can then compute the inner product between the two normalized templates to find their match
+The distance function we have chosen to evaluate templates by is the match between two glitch templates. To calculate the match, we first normalize both templates such that the matched filter between a template and itself would be equal to 1. We can then compute the inner product between the two normalised templates to find their match
 %
 \begin{equation}
     M = \max_{t, \psi} (\hat{a} | \hat{b}).
   \label{4:eqn:match}
 \end{equation}
 %
-The value for the match, $M$,  is bounded between 0 and 1, where a value of 0 indicates orthogonal waveforms and a value of 1 indicates identical normalized waveforms. The maximum match allowed between any two templates in our bank is 0.97, which implies that a fully converged stochastic bank would have at least one waveform in it with $M \geq 0.97$ for any point in the space of parameters. 
+The value for the match, $M$,  is bounded between 0 and 1, where a value of 0 indicates orthogonal waveforms and a value of 1 indicates identical normalised waveforms. The maximum match allowed between any two templates in our bank is 0.97, which implies that a fully converged stochastic bank would have at least one waveform in it with $M \geq 0.97$ for any point in the space of parameters. 
 
 For our \scl{} glitch search, we generated a template bank with \emph{time periods} $\in$ $1.8$s - $5.5$s and \emph{glitch frequencies} $\in$ $20$Hz - $80$Hz. We chose to use the Advanced LIGO zero-detuned high-power sensitivity curve~\cite{aLIGO_design_curve:2018}\footnote{The zero-detuned high-power sensitivity curve is a broader noise curve than the O3 Advanced LIGO data that we identify \scl{} glitches in. However, this broader noise curve will result in \emph{more} template waveforms that we need, and will therefore overcover the parameter space, rather than potentially miss \scl{} glitches.}. This allowed us to generate a template bank that contains 117,481 templates. We visualize the distribution of the templates as a function of \emph{time period} and \emph{glitch frequency} in figure~\ref{4:fig:sq_bank}, observing a greater density of templates at higher frequencies and longer durations.
 
@@ -375,7 +375,7 @@ Figure~\ref{4:fig:overlay_goods} is an example of the results of the ArchEnemy p
     \label{4:fig:overlay_bads}
 \end{figure}
 
-We have demonstrated the ArchEnemy pipeline on a stretch of data from O3 and have identified and characterized a list of \scl{} glitches, which could be removed from the data. We do note that there are cases where the identification has not worked well, but we expect that subtracting our list of glitches from the data will reduce their effect on the \gw{} search. In the next section we will demonstrate this by quantifying sensitivity with the PyCBC pipeline.
+We have demonstrated the ArchEnemy pipeline on a stretch of data from O3 and have identified and characterised a list of \scl{} glitches, which could be removed from the data. We do note that there are cases where the identification has not worked well, but we expect that subtracting our list of glitches from the data will reduce their effect on the \gw{} search. In the next section we will demonstrate this by quantifying sensitivity with the PyCBC pipeline.
 
 \subsection{Safety of \scl{} identification}
 \label{4:ssec:injsafety}
