@@ -283,7 +283,7 @@ These glitches are identified by looking for excess power in the whitened\footno
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/2_searches/autogating.pdf}
+    \includegraphics[width=0.9\linewidth]{images/2_searches/autogating.pdf}
     \caption{Gating a very loud noise transient. The detector strain has been rescaled by a factor of $10^{21}$ and the glitch has a peak magnitude over $5,000$. The blue line shows the data before applying the Tukey window and the red shows the data after applying the Tukey window. Note the smooth decrease in data amplitude at the edges of the windowing function. Image taken from~\cite{PyCBC:2016}.}
     \label{2:fig:autogating}
 \end{figure}
@@ -301,8 +301,8 @@ In a two detector example, for example LIGO-Hanford and LIGO-Livingston, the sig
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/2_searches/observatories.png}
-    \caption{Taken from~\cite{Brown_Thesis:2004}.}
+    \includegraphics[width=0.8\linewidth]{images/2_searches/observatories.png}
+    \caption{The two LIGO detectors locations and orientations, separated by approximately $3,000 \, \text{km}$. Taken from~\cite{Brown_Thesis:2004}.}
     \label{2:fig:observatories}
 \end{figure}
 %
@@ -341,18 +341,18 @@ Again, it is natural to use the log-likelihood ratio due to the order of magnitu
     R(\vec{\kappa}) = \log \Lambda(\vec{\kappa}) = \log r_{s}(\vec{\kappa}) - \log r_{n}(\vec{\kappa}).
 \end{equation}
 %
-We call the log-likelihood detection statistic the ranking statistic which is constructed from a noise model and signal model. The PyCBC noise and signal models have changed over the course of the \gwadj search history. For this reason we will focus primarily on the models used in one of the first searches for \cbcs---\verb|ihope|~\cite{IHOPE:2012zx}
+We call the log-likelihood detection statistic the ranking statistic which is constructed from a noise model and signal model. The PyCBC noise and signal models have changed over the course of the \gwadj search history. For this reason we will focus primarily on the models used in one of the first searches for \cbcs---\texttt{ihope}~\cite{IHOPE:2012zx}
 
 \subsubsection{\label{2:sec:ihope}ihope}
 
-The \verb|ihope| search pipeline ranked single detector triggers by their SNR and $\chi^{2}$ values to create a re-weighted SNR, $\hat{\rho}$ for each detector. The ranking statistic noise model used by the \verb|ihope| search pipeline was a simple quadrature sum of single detector re-weighted SNRs
+The \texttt{ihope} search pipeline ranked single detector triggers by their SNR and $\chi^{2}$ values to create a re-weighted SNR, $\hat{\rho}$ for each detector. The ranking statistic noise model used by the \texttt{ihope} search pipeline was a simple quadrature sum of single detector re-weighted SNRs
 %
 \begin{equation}
     \hat{\rho}^{2} = \sqrt{\hat{\rho}^{2}_{d_{1}} + \hat{\rho}^{2}_{d_{2}}}.
     \label{2:eq:IHOPE_noise_model}
 \end{equation}
 %
-The \verb|ihope| search pipeline had no signal model and so the ranking statistic was simply the noise model presented above. As detailed in~\cite{IHOPE:2012zx}, this ranking statistic was shown to `downrank' all triggers below a re-weighted SNR of $6$ in both a Gaussian noise simulation and the $5^{th}$ science run of LIGO~\cite{S5:2012}. We note that in this case there are $0$ real signals in the data and therefore this noise model has been applied to only noise triggers.
+The \texttt{ihope} search pipeline had no signal model and so the ranking statistic was simply the noise model presented above. As detailed in~\cite{IHOPE:2012zx}, this ranking statistic was shown to `downrank' all triggers below a re-weighted SNR of $6$ in both a Gaussian noise simulation and the $5^{th}$ science run of LIGO~\cite{S5:2012}. We note that in this case there are $0$ real signals in the data and therefore this noise model has been applied to only noise triggers.
 
 \subsection{\label{2:sec:background-estimation}Candidate event significance}
 
@@ -362,8 +362,8 @@ The PyCBC search pipeline measures the false-alarm rate using `time slides'. As 
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/2_searches/TimeslideExample.png}
-    \caption{Taken from~\cite{PyCBC_global:2020}.}
+    \includegraphics[width=0.9\linewidth]{images/2_searches/TimeslideExample.png}
+    \caption{The time-sliding process carried out by the PyCBC search to generate a background distribution of candidate events. The foreground, real \gwadj event, is shown as a golden star and is the coincidence between three detectors with a single detector trigger in each which falls within the allowed light travel time of the detector network. The dashed black box indicates a time slide being made where two detectors have their data shifted by an interval greater than the allowed light travel time window to produce events which can only be caused by non-astrophysical noise sources. An example of a background event is shown as the three black stars in the blue box on the right image. Taken from~\cite{PyCBC_global:2020}.}
     \label{2:fig:timeslides}
 \end{figure}
 %
@@ -401,27 +401,27 @@ and the false-alarm rate at the ranking statistic value $R^{*}$ is being calcula
 
 \section{\label{2:sec:gw-pipelines}Gravitational-wave search pipelines}
 
-We can develop the idea of a \gwadj search pipeline by describing the structure of the \verb|ihope|~\cite{IHOPE:2012zx} search pipeline and how \gwadj events are identified from the initial \gwadj data using all the techniques described previously in this chapter.
+We can develop the idea of a \gwadj search pipeline by describing the structure of the \texttt{ihope}~\cite{IHOPE:2012zx} search pipeline and how \gwadj events are identified from the initial \gwadj data using all the techniques described previously in this chapter.
 
 \subsection{\label{2:sec:searching-for-gw-with-ihope}\texttt{ihope}}
-The flow chart describing the structure of the \verb|ihope| pipeline has been taken from the \verb|ihope| paper and can be seen in figure~\ref{2:fig:ihope-flowchart}. We follow this flowchart in our description of the search pipeline.
+The flow chart describing the structure of the \texttt{ihope} pipeline has been taken from the \texttt{ihope} paper and can be seen in figure~\ref{2:fig:ihope-flowchart}. We follow this flowchart in our description of the search pipeline.
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/2_searches/ihope_flowchart.pdf}
-    \caption{The structure of the \verb|ihope| search pipeline for \gws. Taken from~\cite{IHOPE:2012zx}.}
+    \includegraphics[width=0.6\linewidth]{images/2_searches/ihope_flowchart.pdf}
+    \caption{The structure of the \texttt{ihope} search pipeline for \gws. Taken from~\cite{IHOPE:2012zx}.}
     \label{2:fig:ihope-flowchart}
 \end{figure}
 
 \subsubsection{Data conditioning}
 
-Science data is \gwadj data that is collected during periods when the detector is functioning optimally and is capable detecting \gws. Science quality data is identified and split into $2048 \, \text{second}$ blocks, the LIGO data is initially sampled at $16,384 \, \text{Hz}$ and is down-sampled to $4096 \, \text{Hz}$ due to higher frequencies being dominated by detector noise and not containing any measurable \gwadj signal. The \verb|ihope| pipeline also imposed a high-pass of $40 \, \text{Hz}$ due to low-frequency noise dominating below this. A $2048 \, \text{s}$ block will then be split into $15$ segments $256 \, \text{s}$ long where neighbouring segments overlap by $128 \, \text{s}$. The power spectral density (PSD) for a block of data is estimated by computing the PSD for each segment (equation~\ref{2:eqn:psd}), these are then median averaged to get the PSD for the whole block.
+Science data is \gwadj data that is collected during periods when the detector is functioning optimally and is capable detecting \gws. Science quality data is identified and split into $2048 \, \text{second}$ blocks, the LIGO data is initially sampled at $16,384 \, \text{Hz}$ and is down-sampled to $4096 \, \text{Hz}$ due to higher frequencies being dominated by detector noise and not containing any measurable \gwadj signal. The \texttt{ihope} pipeline also imposed a high-pass of $40 \, \text{Hz}$ due to low-frequency noise dominating below this. A $2048 \, \text{s}$ block will then be split into $15$ segments $256 \, \text{s}$ long where neighbouring segments overlap by $128 \, \text{s}$. The power spectral density (PSD) for a block of data is estimated by computing the PSD for each segment (equation~\ref{2:eqn:psd}), these are then median averaged to get the PSD for the whole block.
 
 \subsubsection{Template bank generation}
 
 A key consideration for \gwadj search pipelines is computational cost. A greater computational cost requires more time to analyse \gwadj data alongside greater monetary cost and carbon emission cost. The dominant cost for modelled searches is matched filtering. Therefore, the number of templates in the template bank is proportional to the computational cost of the search. The number of templates is tuned to balance a minimal loss in matched filter SNR with the computational cost.
 
-The \verb|ihope| template bank is placed with a minimum match of $0.97$ between any signal and the template bank. The loss in sensitivity due to this minimum match limit is equal to the minimum match$^{3}$ and is $\simeq 10\%$. Calculating the match between templates is the bank is simpler when using a flat parameter space such as ``chirp times'' $\tau_{0}$ and $\tau_{3}$~\cite{Droz:1999}
+The \texttt{ihope} template bank is placed with a minimum match of $0.97$ between any signal and the template bank. The loss in sensitivity due to this minimum match limit is equal to the minimum match$^{3}$ and is $\simeq 10\%$. Calculating the match between templates is the bank is simpler when using a flat parameter space such as ``chirp times'' $\tau_{0}$ and $\tau_{3}$~\cite{Droz:1999}
 %
 \begin{equation}
     \tau_{0} = \frac{5}{256\pi f_{low}\eta}\left(\frac{\pi G M f_{low}}{c^{3}}\right)^{-\frac{5}{3}},
@@ -431,12 +431,12 @@ The \verb|ihope| template bank is placed with a minimum match of $0.97$ between 
     \tau_{3} = \frac{5}{8 f_{low}\eta}\left(\frac{\pi G M f_{low}}{c^{3}}\right)^{-\frac{2}{3}},
 \end{equation}
 %
-where $M$ is the total mass, $\eta$ is the symmetric mass ratio and $f_{low}$ is the lower frequency cutoff used in template generation. The template bank used by \verb|ihope| during the later LIGO science runs was generated in the $\tau_{0}$-$\tau_{3}$ parameter space and contained approximately $6,000$ templates. The template bank depends on the noise curve of the data and therefore was generated per data block.
+where $M$ is the total mass, $\eta$ is the symmetric mass ratio and $f_{low}$ is the lower frequency cutoff used in template generation. The template bank used by \texttt{ihope} during the later LIGO science runs was generated in the $\tau_{0}$-$\tau_{3}$ parameter space and contained approximately $6,000$ templates. The template bank depends on the noise curve of the data and therefore was generated per data block.
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/2_searches/ihope_template_bank.pdf}
-    \caption{An example of a template bank used by the \verb|ihope| search pipeline that has been generated from a single block of data and has been created in the chirp time parameter space, $\tau_{0}$-$\tau_{3}$. Comprises of approximately $6,000$ templates. Taken from~\cite{IHOPE:2012zx}.}
+    \includegraphics[width=0.75\linewidth]{images/2_searches/ihope_template_bank.pdf}
+    \caption{An example of a template bank used by the \texttt{ihope} search pipeline that has been generated from a single block of data and has been created in the chirp time parameter space, $\tau_{0}$-$\tau_{3}$. Comprises of approximately $6,000$ templates. Taken from~\cite{IHOPE:2012zx}.}
     \label{2:fig:ihope-template-bank}
 \end{figure}
 %
@@ -459,7 +459,7 @@ The $\chi^{2}$ test values are calculated for each new SNR trigger found by the 
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/2_searches/ihope_snr_timeseries.pdf}
+    \includegraphics[width=0.75\linewidth]{images/2_searches/ihope_snr_timeseries.pdf}
     \caption{An SNR time series and $\chi^{2}$ time series for a simulated compact binary coalescence injected into S5~\cite{S5:2012} data with an SNR of $300$. Taken from~\cite{IHOPE:2012zx}.}
     \label{2:fig:ihope-snr-timeseries}
 \end{figure}

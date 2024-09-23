@@ -299,7 +299,7 @@ The physical effect of a passing \gw on a ring of particles (figure~\ref{1:fig:r
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/1_general_relativity/gravitational_wave_detection/IFO.eps}
+    \includegraphics[width=0.9\linewidth]{images/1_general_relativity/gravitational_wave_detection/IFO.eps}
     \caption{An example Michelson laser interferometer detailing the main components of the advanced LIGO \gwadj observatory~\cite{aLIGO:2015}. Half the laser is reflected to the north arm cavity, physically defined by the input test mass (ITM$_{\text{N}}$) and the end test mass (ETM$_{\text{N}}$), and the other half is transmitted through to the east arm. Laser power builds up in the arm cavities through reflection between test masses before returning to the beam splitter, where there will be a total destructive inteference of light when no \gwadj signal is present and therefore no signal will be measured at the photo-detector output. The power recycling mirror reflects laser light back into the detector arms to build up more power. The signal recycling mirror reflects light back into the arms with frequencies like those expected from \gwadj signals which resonates inside the cavity and increase signal sensitive frequency power. Taken from~\cite{IFO_diagram:2008}.}
     \label{1:fig:ifo}
 \end{figure}
@@ -588,7 +588,7 @@ Our Newtonian model of the \gwadj signal from a CBC source has been derived with
 The simplest PN expansion can be performed by expanding in powers of \( v/c \), where \( v \) is the velocity of the orbiting bodies, to obtain the corrections to the waveform which can then be summed to get waveforms up to the require PN order. For a compact binary coalescence, the waveform could be written as
 %
 \begin{equation}
-    h(t) = h_{\text{Newtonian}}(t) + h_{\text{1PN}}(t) + h_{\text{1.5PN}}(t) + h_{\text{1.5PN}}(t) + \cdots,
+    h(t) = h_{\text{Newtonian}}(t) + h_{\text{1PN}}(t) + h_{\text{1.5PN}}(t) + h_{\text{2PN}}(t) + \cdots,
 \end{equation}
 %
 where \( h_{\text{Newtonian}}(t) \) is the leading-order Newtonian term, and the following terms represent higher and higher PN order corrections. Current waveform models use waveforms with corrections up to 3.5PN order~\cite{PN_models:2009}.
@@ -601,7 +601,7 @@ Generating full waveforms requires solving the Einstein field equations using nu
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/1_general_relativity/modelling_cbc/IMR.pdf}
+    \includegraphics[width=0.75\linewidth]{images/1_general_relativity/modelling_cbc/IMR.pdf}
     \caption{The evolution of a compact binary merger is illustrated through three distinct phases. The inspiral phase involves the two compact objects orbiting each other, with the orbit decaying as they emit \gws. This phase is modeled using post-Newtonian theory. The merger phase occurs when the objects' orbit shrinks sufficiently for them to merge into a new compact object, modeled using numerical relativity. The ringdown phase represents the newly formed object's vibration as it settles into its final shape, modeled using perturbation theory. This image is adapted from~\cite{IMR_plot:2016}.}
     \label{1:fig:IMR}
 \end{figure}
@@ -610,14 +610,14 @@ Generating full waveforms requires solving the Einstein field equations using nu
 
 The Effective-One-Body (EOB) model~\cite{EOB_1:1998} simplifies the binary system by transforming it into an equivalent single test particle moving in an external gravitational field, which can be described by a Hamiltonian~\cite{EOB_1:1998, EOB_2:2000, EOB_3:2000, EOB_4:2001}. This Hamiltonian includes both leading-order Newtonian terms and higher-order post-Newtonian corrections~\cite{EOB_5:2008}.
 
-EOB models tuned to numerical relativity (NR) data are known as ``EOBNR'' models~\cite{EOB_6:2007}. Some of these models, such as \verb|SEOBNRv5|~\cite{SEOBNRv5:2023tna}, also incorporate the effects of anti-aligned spins. Further enhancements allow for precession effects and higher-order modes of \gwadj emission, as seen in the state-of-the-art model \verb|SEOBNRv5_PHM|~\cite{SEOBNRv5_PHM-Buades:2023ehm}, which represents the most advanced EOB waveform model as of the drafting of this thesis.
+EOB models tuned to numerical relativity (NR) data are known as ``EOBNR'' models~\cite{EOB_6:2007}. Some of these models, such as \texttt{SEOBNRv5}~\cite{SEOBNRv5:2023tna}, also incorporate the effects of anti-aligned spins. Further enhancements allow for precession effects and higher-order modes of \gwadj emission, as seen in the state-of-the-art model \texttt{SEOBNRv5\_PHM}~\cite{SEOBNRv5_PHM-Buades:2023ehm}, which represents the most advanced EOB waveform model as of the drafting of this thesis.
 
 \subsubsection{Phenomenological Models}
 
 Phenomenological models, often abbreviated as `Phenom', use a phenomenological ansatz calibrated with NR simulations to produce full waveforms. These models are fully analytical and can generate both Fourier domain and time domain waveforms~\cite{IMR_1:2007, IMR_2:2020}. The ability to create waveforms directly in the Fourier domain is highly desirable for analyses that require generating millions of waveforms, such as offline searches or parameter estimation.
 
-Phenom models that cover the inspiral, merger, and ringdown phases are prefixed with \verb|IMRPhenom|~\cite{IMRPhenomD:2009}. The state-of-the-art model of this family is \verb|IMRPhenomXPHM|~\cite{IMRPhenomXPHM:2020}, which can accurately model anti-aligned spins, precessing binaries (\verb|P|), higher-order modes (\verb|HM|), and extreme mass ratios (\verb|X|).
+Phenom models that cover the inspiral, merger, and ringdown phases are prefixed with \texttt{IMRPhenom}~\cite{IMRPhenomD:2009}. The state-of-the-art model of this family is \texttt{IMRPhenomXPHM}~\cite{IMRPhenomXPHM:2020}, which can accurately model anti-aligned spins, precessing binaries (\texttt{P}), higher-order modes (\texttt{HM}), and extreme mass ratios (\texttt{X}).
 
 \subsubsection{Surrogate Models}
 
-Surrogate models create waveforms by interpolating from NR simulations~\cite{Surr_1:2019, Surr_2:2022}. These models, such as \verb|NRSur7dq4|~\cite{NRSur7dq4:2019}, provide greater accuracy than other model families but are limited by the parameter regions covered by the NR simulations used for interpolation. The current leading surrogate model, \verb|NRSur7dq4|, is valid up to a mass ratio of four.
+Surrogate models create waveforms by interpolating from NR simulations~\cite{Surr_1:2019, Surr_2:2022}. These models, such as \texttt{NRSur7dq4}~\cite{NRSur7dq4:2019}, provide greater accuracy than other model families but are limited by the parameter regions covered by the NR simulations used for interpolation. The current leading surrogate model, \texttt{NRSur7dq4}, is valid up to a mass ratio of four.
