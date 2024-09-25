@@ -22,8 +22,8 @@ time series
 
 \newcommand{\GR}{General Relativity\xspace}
 
-\newcommand{\scl}{scattered-light\xspace}
-\newcommand{\Scl}{Scattered-light\xspace}
+\newcommand{\scl}{scattered light\xspace}
+\newcommand{\Scl}{Scattered light\xspace}
 \newcommand{\scladj}{scattered-light\xspace}
 \newcommand{\Scladj}{Scattered-light\xspace}
 

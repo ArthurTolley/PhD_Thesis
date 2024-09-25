@@ -6,7 +6,7 @@ In this thesis we have made improvements to the search for \gws using a detector
 % Section by section of chapter
 This chapter is laid out as follows: we briefly repeat our the state of the current \gwadj detector network in section~\ref{3:sec:gw_detectors}, in section~\ref{3:sec:detchar_calib} we define the research area of detector characterisation, the systematic sources of noise faced in the detectors is described in section~\ref{3:sec:detector-analysis}, some commonly detector data noise transients in section~\ref{3:sec:noise-transients} and finally, the detector characterisation tools most commonly used and referred to throughout this thesis in section~\ref{3:sec:detchar-tools}.
 
-\section{\label{3:sec:gw_detectors}Gravitational-Wave Detectors}
+\section{\label{3:sec:gw_detectors}\Gwadj detectors}
 
 % To understand the importance of Detector Characterisation we must understand the detectors
 \Gwadj astronomy in the present day is performed by ground-based detectors at different locations globally: the LIGO-Livingston and LIGO-Hanford detectors are located in the United States of America, the Virgo interferometer in Italy and, the KAGRA telescope in Japan. We will primarily reference the LIGO detectors in the United States of America when discussing the challenges faced in detector characterisation. 
@@ -75,14 +75,11 @@ There are at least $27$~\cite{gravityspy:2023, gravityspy:2024} different classe
 
 % Common Sources of Noise Transients
 
-Glitches originate from either environmental sources, instrumental sources or a coupling of the two. As mentioned previously, seismic noise limits the sensitivity of the detectors below ${\sim}10 \, \text{Hz}$, but the coupling of seismic motion into interferometer components can cause one of the more common glitches---scattered light. Other environmental noise sources are heavy winds, lightning, and human activity (traffic, construction, trains, the daily commute). A historical glitch identified at LIGO-Livingston was caused by an air conditioning compressor cycling, these glitches were seen by both a magnetometer and the \gwadj strain channel. Other instrumental glitches might be caused by mirror suspensions, electronics, control systems or laser fluctuations.
-%
-% Figure for scattered light and magnetic noise
-%
+Glitches originate from either environmental sources, instrumental sources or a coupling of the two. As mentioned previously, seismic noise limits the sensitivity of the detectors below ${\sim}10 \, \text{Hz}$, but the coupling of seismic motion into interferometer components can cause one of the more common glitches---\scl. Other environmental noise sources are heavy winds, lightning, and human activity (traffic, construction, trains, the daily commute). A historical glitch identified at LIGO-Livingston was caused by an air conditioning compressor cycling, these glitches were seen by both a magnetometer and the \gwadj strain channel. Other instrumental glitches might be caused by mirror suspensions, electronics, control systems or laser fluctuations.
 
 % Other examples of some common glitches
 
-The most common glitches are: blips~\cite{blips:2019}, scattered light~\cite{ArchEnemy:2023} and whistles~\cite{glitschen:2021}, Omega scans of these glitches can be seen in figure~\ref{3:fig:glitches_subset}. The sources of these glitches have been studied, for example, whistles are caused by the beating of radio frequencies in the detector, however, some glitches are from unknown sources such as blips. Scattered light has been found from many different sources in the detector and great effort has been made to reduce the presence of scattered light in the data~\cite{reducing_scattering:2020} but as of the fourth observing run some scattered light still remains.
+The most common glitches are: blips~\cite{blips:2019}, \scl~\cite{ArchEnemy:2023} and whistles~\cite{glitschen:2021}, Omega scans of these glitches can be seen in figure~\ref{3:fig:glitches_subset}. The sources of these glitches have been studied, for example, whistles are caused by the beating of radio frequencies in the detector, however, some glitches are from unknown sources such as blips. \Scl has been found from many different sources in the detector and great effort has been made to reduce the presence of \scl in the data~\cite{reducing_scattering:2020} but as of the fourth observing run some \scl still remains.
 %
 \begin{figure}
     \centering

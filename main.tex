@@ -129,8 +129,8 @@ minnames=1
 
 \newcommand{\GR}{General Relativity\xspace}
 
-\newcommand{\scl}{scattered-light\xspace}
-\newcommand{\Scl}{Scattered-light\xspace}
+\newcommand{\scl}{scattered light\xspace}
+\newcommand{\Scl}{Scattered light\xspace}
 \newcommand{\scladj}{scattered-light\xspace}
 \newcommand{\Scladj}{Scattered-light\xspace}
 
@@ -140,6 +140,28 @@ minnames=1
 
 \newcommand{\aligo}{Advanced LIGO\xspace}
 %~~~% %~~~% %~~~%
+
+% Make sure cleardoublepage blank pages aren't counted in the page numbers - This actually decreases the next page count by 1
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage%
+  \if@twoside
+    \ifodd\c@page
+    % If the page number is odd, do nothing
+    \else
+      % If the page number is even, insert a blank page without advancing the counter
+      \hbox{}%
+      \thispagestyle{empty}% Suppress headers, footers, and numbering
+      \newpage
+    \fi
+  \fi
+}
+\makeatother
+
+
+% Force new chapters to begin on (odd) Right Hand Pages
+\let\oldchapter\chapter
+\renewcommand{\chapter}{\cleardoublepage\oldchapter}
 
 
 
@@ -223,10 +245,10 @@ minnames=1
 \addcontentsline{toc}{chapter}{Abstract}
 \input{chapters/preamble/abstract}
 
-%---% Dedication %---%
-\chapter*{Dedication}
-\addcontentsline{toc}{chapter}{Dedication}
-\input{chapters/preamble/dedication}
+% %---% Dedication %---%
+% \chapter*{Dedication}
+% \addcontentsline{toc}{chapter}{Dedication}
+% \input{chapters/preamble/dedication}
 
 %---% Acknowledgements %---%
 \chapter*{Acknowledgements}
@@ -250,28 +272,28 @@ minnames=1
 %---% Introduction %---%
 \chapter*{\label{chapter:introduction}Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
-% \input{chapters/content/0_introduction}
+\input{chapters/content/0_introduction}
 
 %---% General Relativity %---%
 \chapter[Gravitational Waves]{\label{chapter:1-gravitational-waves}Gravitational Waves}
 \chapterquote{``This little manoeuvre's gonna cost us 51 years.''}{Joseph Cooper, Interstellar}
-% \input{chapters/content/1_general_relativity}
+\input{chapters/content/1_general_relativity}
 
 %---% Searches %---%
 \chapter[Searching for Gravitational-Waves from Compact Binary Coalescences]{\label{chapter:2-searches}Searching for Gravitational Waves from Compact Binary Coalescences}
 \chapterquote{``Even in death I serve the Omnissiah''}{Magos Dominus Reditus, Warhammer 40,000: Mechanicus}
-% \input{chapters/content/2_searches}
+\input{chapters/content/2_searches}
 
 %---% Detector Characterisation %---%
 \chapter[Detector Characterisation]{\label{chapter:3-detchar}Detector Characterisation}
 \chapterquote{``This is the decompress before the intermission''}{Drake}
-% \input{chapters/content/3_detector_characterisation}
+\input{chapters/content/3_detector_characterisation}
 
 %---% ArchEnemy %---%
 \chapter[ArchEnemy]{\label{chapter:4-archenemy}ArchEnemy}
 \chapterquote{``One less enemy within.''}{Swain, League of Legends}
 I am first author on a peer-reviewer and published work carrying the name \textit{"ArchEnemy: Removing scattered-light glitches from gravitational wave data"}, within the Institute of Physics journal Classical and Quantum Gravity~\cite{ArchEnemy:2023}.
-% \input{chapters/content/4_archenemy}
+\input{chapters/content/4_archenemy}
 
 %---% PyCBC Live Ranking Statistic %---%
 \chapter[Improving the PyCBC Live Ranking Statistic]{\label{chapter:5-pycbc-live}Improving the PyCBC Live Ranking Statistic}
@@ -282,28 +304,28 @@ This work will be published as part of the PyCBC Live fourth observing run metho
 %---% Early Warning Ranking Statistic %---%
 \chapter[Evaluating the PyCBC Live Early Warning Search]{\label{chapter:6-earlywarning}Evaluating the PyCBC Live Early Warning Search}
 \chapterquote{``Stars are better off without us.''}{Josephus Miller, Leviathan Wakes}
-% \input{chapters/content/6_earlywarning}
+\input{chapters/content/6_earlywarning}
 
 %---% Other Work %---%
 \chapter[Optimising Detection Statistic in PyCBC Live]{\label{chaper:7-snr-optimizer}Optimising Detection Statistic in PyCBC Live}
-\chapterquote{``''}{HatFilms}
-% \input{chapters/content/7_snr_optimiser}
+\chapterquote{``I can't wait for you to finish your PhD so I can retire.''}{Wiktoria Kedziora}
+\input{chapters/content/7_snr_optimiser}
 
 %---% Placements %---%
-\chapter[Working in Industry]{\label{chapter:8-industry}Working in Industry}
-\chapterquote{``I can't wait for you to finish your PhD so I can retire.''}{Wiktoria Kedziora}
+% \chapter[Working in Industry]{\label{chapter:8-industry}Working in Industry}
+% \chapterquote{``''}{Hat Films}
 % \input{chapters/content/8_placements}
 
 %---% Conclusion %---%
 \chapter[Conclusion]{\label{chapter:conclusion}Conclusion}
 \chapterquote{``Re-search? I haven't found it yet.''}{Arthur Tolley}
-% \input{chapters/content/9_conclusion}
+\input{chapters/content/9_conclusion}
 
 %---% Appendix %---%
-\appendix
-\chapter[Appendix]{Appendix Title}
-\chapterquote{``Are we there yet?''}{Donkey, Shrek 2}
-% \input{chapters/content/appendix}
+% \appendix
+% \chapter[Appendix]{Appendix Title}
+% \chapterquote{``Are we there yet?''}{Donkey, Shrek 2}
+% % \input{chapters/content/appendix}
 
 % \bibliographystyle{unsrt}
 % \bibliography{refs}

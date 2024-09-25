@@ -26,9 +26,9 @@
 
 % Chapter Introduction
 
-Gravitational wave search pipelines, such as PyCBC, play a critical role in analysing data from detectors to identify \gwadj signals, both in real-time (live) and in post-processing (offline). This chapter develops the theoretical foundation for these search pipelines and explores the techniques employed in \gwadj detection. Emphasis is placed on the PyCBC pipelines---PyCBC Offline and PyCBC Live---both of which were extensively utilised and further developed as part of this thesis.
+\Gwadj search pipelines, such as PyCBC, play a critical role in analysing data from detectors to identify \gwadj signals, both in real-time (live) and in post-processing (offline). This chapter develops the theoretical foundation for these search pipelines and explores the techniques employed in \gwadj detection. Emphasis is placed on the PyCBC pipelines---PyCBC Offline and PyCBC Live---both of which were extensively utilised and further developed as part of this thesis.
 
-\section{\label{2:sec:gw-data}Gravitational wave data}
+\section{\label{2:sec:gw-data}\Gwadj data}
 
 \Gwadj observatories produce a dimensionless strain time-series, $s(t)$, which is composed of detector noise, $n(t)$, and, when present, an astrophysical \gwadj signal, $h(t)$
 %
@@ -40,7 +40,7 @@ Gravitational wave search pipelines, such as PyCBC, play a critical role in anal
     \end{cases}
 \end{equation}
 %
-The primary objective of gravitational wave search pipelines is to extract $h(t)$ from $s(t)$, detecting the astrophysical signal from inside the background noise.
+The primary objective of \gwadj search pipelines is to extract $h(t)$ from $s(t)$, detecting the astrophysical signal from inside the background noise.
 
 \section{\label{2:sec:search-methods}Searching through \gwadj data}
 
@@ -399,7 +399,7 @@ where $\Theta$ is the Heaviside step function
 %
 and the false-alarm rate at the ranking statistic value $R^{*}$ is being calculated by integrating over all possible background events and summing up the events that have a ranking statistic greater than or equal to $R^{*}$, the ranking statistic threshold. The optimal ranking statistic will maximise the expected number of coincident events due to signals recovered above $R^{*}$.
 
-\section{\label{2:sec:gw-pipelines}Gravitational-wave search pipelines}
+\section{\label{2:sec:gw-pipelines}\Gwadj search pipelines}
 
 We can develop the idea of a \gwadj search pipeline by describing the structure of the \texttt{ihope}~\cite{IHOPE:2012zx} search pipeline and how \gwadj events are identified from the initial \gwadj data using all the techniques described previously in this chapter.
 
@@ -455,7 +455,7 @@ We note that this method has been heavily disfavoured in more modern search pipe
 
 The templates responsible for the coincident triggers found by the initial matched filter and coincidence test are used to create a \textit{triggered template bank} which is used to matched filter the data again. This time the $\chi^{2}$ test~\cite{Allen_Chi:2005} and an $r^{2}$ test are performed alongside consistency in relative signal amplitude and \textit{data-quality vetoes}.
 
-The $\chi^{2}$ test values are calculated for each new SNR trigger found by the triggered template bank (equation~\ref{2:eq:reduced_chisq}. The \( r^{2} \) test assesses the sharpness of the SNR peak surrounding a large SNR trigger, under the premise that real \gwadj signals will exhibit a distinct peak, while non-astrophysical glitches will display a broader structure. The test counts the number of samples above a specified SNR threshold. An example of the SNR time series from a loud signal can be seen in figure~\ref{2:fig:ihope-snr-timeseries}.
+The $\chi^{2}$ test values are calculated for each new SNR trigger found by the triggered template bank (equation~\ref{2:eq:reduced_chisq}). The \( r^{2} \) test assesses the sharpness of the SNR peak surrounding a large SNR trigger, under the premise that real \gwadj signals will exhibit a distinct peak, while non-astrophysical glitches will display a broader structure. The test counts the number of samples above a specified SNR threshold. An example of the SNR time series from a loud signal can be seen in figure~\ref{2:fig:ihope-snr-timeseries}.
 %
 \begin{figure}
     \centering
