@@ -13,7 +13,7 @@ This chapter is laid out as follows: we briefly repeat our the state of the curr
 
 As described in chapter~\ref{chapter:1-gravitational-waves}, the LIGO detectors work on the principle of laser interferometry to detect \gwadj signals. The sensitivity~\cite{aLIGO_design_curve:2018} of \gwadj detectors is limited by fundamental sources of noise such as seismic noise~\cite{Glanzer:2023}, thermal noise~\cite{thermal_noise:2018} and quantum noise~\cite{quantum_noise:2003}. These are the non-stationary sources of noise~\cite{PSD_var:2020}. Additionally, we have non-Gaussian noise~\cite{Noise_Guide:2020} which manifests as transient noise bursts in the data which can contribute to false positives in \gwadj searches and the obscuring of real \gwadj signals~\cite{GW170817:2017, GW150914_noise:2016}.
 
-\section{\label{3:sec:detchar_calib}Detector Characterisation and Calibration}
+\section{\label{3:sec:detchar_calib}Detector characterisation and calibration}
 
 Detector characterisation is a field of study which assess and improves the performance of \gwadj detectors to ensure accurate and reliable detection of \gws. \Gwadj detector calibration determines how the response of the detector translates to astrophysical signals, ensuring accuracy in extracted astrophysical information. Detector characterisation is responsible for identifying and mitigating the many sources of noise that can obscure or mimic real signals. The optimisation of detector sensitivity is also studied whereby different designs and components can be fine-tuned to increase sensitivity. Another responsibility of detector characterisation is the monitoring of detector performance in real-time to assess sensitivity changes.
 
@@ -21,7 +21,7 @@ Overall, effective detector characterisation ensures that \gwadj observatories c
 
 The detector characterisation group has the important task of verifying data quality when a \gwadj signal is detected by live detection pipelines, giving the confirmation that the \gwadj signal isn't a false alarm potentially caused by noise transients or poor data quality immediately surrounding the \gwadj signal.
 
-\subsection{\label{3:sec:detector-analysis}Detector Analysis}
+\subsection{\label{3:sec:detector-analysis}Detector analysis}
 
 % Noise analysis
 %    Different sources of noise
@@ -60,7 +60,7 @@ To monitor detector sensitivity the binary neutron star inspiral range is calcul
 \end{figure}
 %
 
-\subsection{\label{3:sec:noise-transients}Noise Transients}
+\subsection{\label{3:sec:noise-transients}Noise transients}
 
 % Introduction to Noise Transients
 
@@ -100,7 +100,7 @@ An number of algorithms and tools have been developed to detect and characterise
 
 Another tool to use in the identification and classification of glitches in the thousands of auxiliary channels alongside the main strain channel~\cite{iDQ:2020} which monitor the many subsystems of the detector and can be used to find noise correlations between the different parts of the instrument~\cite{DQ_vetoes:2017}. The auxiliary channels which are not sensitive to \gws are very useful in identifying any correlations between noise in the gravitational strain channel and noise also seen in another channel which cannot observe \gws, an example of this is the magnetometer recording the same glitch as seen in the \gwadj strain channel when the air conditioning compressor was cycling at LIGO-Livingston~\cite{Nuttall:2018}.
 
-\subsection{\label{3:sec:detchar-tools}Detector Characterisation Tools}
+\subsection{\label{3:sec:detchar-tools}Detector characterisation tools}
 
 \paragraph{Omega scans}
 

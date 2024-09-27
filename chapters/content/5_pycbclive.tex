@@ -14,11 +14,9 @@ Offline searches for \gws are capable of using post-detection information when p
 
 PyCBC Offline contains components and information that previously could not be used by the PyCBC Live search without violating the latency restrictions. Introducing these components into the live search will improve the sensitivity of the \gwadj search, bringing the two PyCBC searches closer to parity and detecting more \gwadj events with greater significance.
 
+This chapter is laid out as follows: in section~\ref{5:sec:ranking-stat} we describe how PyCBC ranks identified events to assess significance, in section~\ref{5:sec:previous-stat} we discuss the ranking statistic used by the PyCBC searches during the third observing run and how these are constructed, in section~\ref{5:sec:new-additions} we describe the new additions to the PyCBC Live ranking statistic we have implemented and how these have been adapted specifically for the PyCBC Live search, in section~\ref{5:sec:injection-tests} we discuss how we evaluate the sensitivity improvement of our changes using an injection study and in section~\ref{5:sec:sensitivity-improvements} we discuss the immediate sensitivity increase highlighted by the injection study. After this we delve deeper into the regions of parameter space responsible for the sensitivity changes in sections~\ref{5:sec:injection-investigations} and~\ref{5:sec:investigating-regions}. We describe the test of the ranking statistic changes on the PyCBC Live mock data challenge infrastructure in section~\ref{5:sec:mdc-test} and conclude in section~\ref{5:sec:conclusion}.
 
-% INTRODUCTION CHAPTER LAYOUT - DO THIS
-This chapter is laid out as follows: in section~\ref{}.
-
-\section{\label{5:sec:ranking-stat}The Ranking Statistic}
+\section{\label{5:sec:ranking-stat}The ranking statistic}
 
 % what is a ranking statistic
 The ranking statistic is the detection statistic used to calculate the significance of a \gwadj detection. The ranking statistic values can be mapped directly to false-alarm rate (FAR), a key metric used to assess the likelihood that a detected signal is real and not a result of coincident noise triggers being found by the \gwadj search~\cite{PyCBC_global:2020}.
@@ -29,7 +27,7 @@ A ranking statistic combines numerous pieces of information about a candidate ev
 % A good description of the effects of having one
 Improving the ranking statistic used in the PyCBC Live search will improve the search's ability to distinguish between real \gwadj events and false-alarms. The PyCBC Offline search's ranking statistic contains more information than the ranking statistic used by PyCBC Live during the third observing run, some of which we can adapt for the PyCBC Live search~\cite{PSD_var:2020, PyCBC:2017, PyCBC_global:2020}.
 
-\section{\label{5:sec:previous-stat}PyCBC Ranking Statistics Used in O3}
+\section{\label{5:sec:previous-stat}PyCBC ranking statistics used in O3}
 
 % How does a ranking statistic work: single first then coincident
 In PyCBC searches the single detector ranking statistic for each trigger is calculated for each online detector, coincidences are then formed between triggers to identify potential \gwadj events. The coincident triggers are then ranked by the coincident ranking statistic to provide the final ranking statistic value. 
@@ -44,7 +42,7 @@ Triggers across detectors found within the time window and above the $\hat{\rho}
 % The PyCBC Live third observing run ranking statistic
 The PyCBC Live ranking statistic used during the third observing run was comparatively simple. The single detector ranking statistic is the same as the PyCBC Offline single detector ranking statistic except without the PSD variation statistic. PyCBC Live only ranks coincident triggers by the likelihood of their time and phase differences~\cite{PyCBC_Live:2018}.
 
-\subsection{\label{5:sec:old-stat-construction}Constructing the O3 PyCBC Live Ranking Statistic}
+\subsection{\label{5:sec:old-stat-construction}Constructing the O3 PyCBC Live ranking statistic}
 
 We describe the ranking statistic used by PyCBC Live during the third observing run in more detail to identify the potential components that can be added from the PyCBC Offline ranking statistic. The construction of the ranking statistic used by PyCBC Live during the third observing run is described in~\cite{PyCBC_Live:2018}.
 
@@ -92,13 +90,13 @@ To expand on the quadrature sum ranking statistic, which only considers the nois
 %
 which is the final version of the original ranking statistic used by PyCBC Live in the third observing run.
 
-\section{\label{5:new-additions}Improving the PyCBC Live Ranking Statistic}
+\section{\label{5:sec:new-additions}Improving the PyCBC Live ranking statistic}
 
 The ranking statistic used by PyCBC Live in the third observing run combines the noise rate contribution, which is the quadrature sum of detector $\hat{\rho}$ in stationary, Gaussian noise, and the signal rate of the trigger. We know our detector noise is \textbf{not} stationary and Gaussian~\cite{LIGO_data_quality:2015} and therefore by including an accurate noise model in the ranking statistic we can improve the sensitivity of the PyCBC Live search.
 
 There are two components of the PyCBC Offline ranking statistic that directly address these two deficiencies in our ranking statistic: PSD variation, which corrects the single detector $\rho$ for non-stationary noise present in the data and; the exponential noise model, which models the noise distribution of each template by fitting an exponential to the noise falloff.
 
-These changes dramatically improve our noise model for the data, providing a more accurate noise rate for use in calculating the ranking statistic and assigning significance to our \gwadj events. A better noise model will allow the ranking statistic to better be able to distinguish between signal and noise events. There are other components of the PyCBC Offline ranking statistic that are in development in parallel to our work to be used in the PyCBC Live ranking statistic in the future: \verb|KDE| uses a kernel density estimation method estimate probability density functions of signal rate for templates in the template bank, applying a weighting to the signal rate of a coincidence trigger depending on the signal search parameters and the template used to find the signal~\cite{PyCBC_focussed_bbh:2024}; \verb|iDQ| uses data quality information from auxiliary channels to provide more information to the noise rate for triggers in PyCBC Live~\cite{iDQ:2020}. All of these changes will improve PyCBC Live's significance estimation in future observing runs. 
+These changes dramatically improve our noise model for the data, providing a more accurate noise rate for use in calculating the ranking statistic and assigning significance to our \gwadj events. A better noise model will allow the ranking statistic to better be able to distinguish between signal and noise events. There are other components of the PyCBC Offline ranking statistic that are in development in parallel to our work to be used in the PyCBC Live ranking statistic in the future: \texttt{KDE} uses a kernel density estimation method estimate probability density functions of signal rate for templates in the template bank, applying a weighting to the signal rate of a coincidence trigger depending on the signal search parameters and the template used to find the signal~\cite{PyCBC_focussed_bbh:2024}; \texttt{iDQ} uses data quality information from auxiliary channels to provide more information to the noise rate for triggers in PyCBC Live~\cite{iDQ:2020}. All of these changes will improve PyCBC Live's significance estimation in future observing runs. 
 
 \subsection{\label{5:sec:methodology}Adapting PyCBC Live to compute generic offline detection statistic in low-latency}
 
@@ -128,7 +126,7 @@ To incorporate the exponential noise model into the PyCBC Live ranking statistic
 
 This approach offers a significant advantage in terms of efficiency, as it allows the creation of template fit statistic files to occur in parallel with the PyCBC Live search, avoiding any additional latency in processing \gwadj events. Furthermore, this system is flexible enough to accommodate regular updates to the statistic files. While we currently update the statistic files on a weekly basis, a more dynamic approach could involve a rolling window, where the noise model is refreshed more frequently---for example, by using a sliding week-long window that is updated every day. Such a rolling update would allow for a more refined, real-time adjustment to changing noise conditions. These can be tuned in the future.
 
-\subsection{\label{5:sec:psd-var}PSD Variation}
+\subsection{\label{5:sec:psd-var}PSD variation}
 
 % Motivation
 The power spectral density (PSD) describes how much power is present in the data at each frequency, essentially how the data power is distributed in the frequency domain. The power in each frequency band can change over time due to instrumental noise such as seismic noise, thermal noise and quantum noise and cannot be mitigated except through detector improvements. We call this noise non-stationary noise. The noise profile can change over the period of a search segment, meaning the PSD will be inaccurate at different times. Identifying triggers in the PyCBC searches is done by matched filtering the data with a signal template,
@@ -200,14 +198,14 @@ The live search maintains a data ring buffer of $512$ seconds, rolling the newes
 % How is the PSD variation calculated in Live
 The live search does not need to calculate $\nu_{s}(t)$ for the entire data ring buffer, new triggers are only ever found in the latest analysis segment and therefore this is the only period of time for which $\nu_{s}(t)$ needs to be calculated and $\nu_{s}$ values distributed to the new triggers. To calculate the PSD variation values we need to track $S_{E}$ for each detector and create a new filter (equation~\ref{5:eqn:psd-var-filter}) for each detector which is updated every time $S_{E}$ is updated. The filters are then convolved with the latest eight seconds in the data ring buffer, the mean square of $\nu_{s}(t)$ is calculated every $0.25$ seconds to find outliers caused by short duration glitches. These outliers are then replaced with an average of the adjacent elements in $\nu_{s}(t)$ and the time series is then further averaged every second to produce the final $\nu_{s}(t)$. For each trigger, $\nu_{s}$ is then extracted by interpolating between the two nearest whole seconds in the time series and is then used to scale $\rho$ before $\hat{\rho}$ is calculated, as shown in equation~\ref{5:eqn:psd-var-snr-reweighting}.
 
-\subsection{\label{5:subsec:template-fits}Modelling the Noise Distribution in Live}
+\subsection{\label{5:subsec:template-fits}Modelling the noise distribution in live}
 
 % Introduce the need for modelling the noise falloff
 Non-gaussian noise artefacts (glitches) can produce high SNR triggers, these are partially mitigated with the single detector ranking statistic signal consistency tests but there is still a long tail in the noise distribution (figure~\ref{5:fig:H1_long_tails}) that can be attributed to the effects of glitches.
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/5_pycbclive/H1-newsnr_trigs.pdf}
+    \includegraphics[width=1.0\linewidth]{images/5_pycbclive/plots/H1-newsnr_trigs.pdf}
     \caption{The new-SNR, $\hat{\rho}$, distribution of LIGO-Hanford triggers for a chunk of data searched through using PyCBC Offline in the third observing run. The higher SNR triggers can be attributed to non-Gaussian noise transients. $\hat{\rho}$ has been calculated using the Allen-$\chi^{2}$~\cite{Allen_Chi:2005} and sine-Gaussian $\chi^{2}$~\cite{PyCBC_sg:2018} to re-weight SNR.}
     \label{5:fig:H1_long_tails}
 \end{figure}
@@ -277,7 +275,7 @@ and when the natural logarithm is taken we arrive at the complete single detecto
 %
 for each detector, $d$.
 
-\section{\label{5:sec:injection-tests}Measuring Improvements in Search Sensitivity}
+\section{\label{5:sec:injection-tests}Measuring improvements in search sensitivity}
 
 % Motivation for investigating the sensitivity increase
 % How do we quantify sensitivity
@@ -339,7 +337,7 @@ We have chosen to test the ranking statistic changes to PyCBC Live using a small
 % How did we test the search changes
 As previously mentioned, the template fits are measured from the triggers found in the previous week to the week currently being searched through. Therefore to perform our injection set test we need to do an initial search with PyCBC Live using the original ranking statistic to generate a week's worth of triggers and create template fit statistics. The second week of data is then created containing a large number of injected \gwadj signals that is searched through with PyCBC Live using both the original ranking statistic and the new ranking statistic. The two weeks of O3b \gwadj data used lasted from 06 January 2020 23:59:42 to 20 January 2020 23:59:42 and, according to the \gwadj catalogue for the third observing run~\cite{gwtc3:2023}, there are no known \gwadj signals present. After both searches have completed analysing the second week of data we can estimate the sensitivity improvement. We can choose a threshold false-alarm rate (FAR) and count the number of injections in both searches that have been found with a FAR lower than that number, if the counted number of injections is higher when including the new ranking statistic additions we have seen an increase in the sensitivity of the search. We can do this for a range of FAR values from $10^{4} - 10^{-4}$ to build up a picture of the sensitivity ratio curve.
 
-\section{\label{5:sec:sensitivity-improvements}Improvements in Sensitivity}
+\section{\label{5:sec:sensitivity-improvements}Improvements in sensitivity}
 
 By adding the PSD variation and the exponential noise model to the ranking statistic we expect to find \gwadj injections with a greater significance than before. This significance is determined by the FAR of the injection, which has a direct mapping to the ranking statistic value, an event found with a FAR of $1$ per year would indicate that an event with the exact same parameters is expected to be seen in the data caused by non-astrophysical noise-not a real event-once per year of analysis time. We commonly use the inverse false-alarm rate (IFAR) with units of $years$ where a large IFAR indicates a more confident detection. An IFAR threshold is chosen to separate events which are real from those that are false alarms. A balance must be made to avoid contaminating the detection catalogue with a large number of potential false alarms while not missing any real events. In this analysis we are considering only two detectors, allowing potentially more false-alarms from coincident noise when compared to a three detector configuration and therefore we have chosen a more conservative IFAR threshold of $1$ year to assess sensitivity improvements. The current threshold for LIGO/Virgo alert generation is $1$ per $2$ months~\cite{PyCBC_Live:2018} so low-latency \gwadj searches will identify more \gwadj events but these detections have additional post detection checks from data quality checks from detector characterisation~\cite{O2O3_DetChar:2021} and parameter estimation~\cite{gwtc3:2023} which can also rule out false-alarms and to prevent catalogue contamination.
 
@@ -353,7 +351,7 @@ To measure the sensitivity improvement of the new ranking statistic we count the
   \centering
   \begin{minipage}[t]{1.0\linewidth}
   
-    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/fits-psd/fits_psd_vt_ratio_with_counts.pdf}
+    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/plots/fits_psd_vt_ratio_with_counts.pdf}
     \caption{The sensitive volume ratio between a PyCBC Live search whose ranking statistic contains PSD variation and an exponential noise model and a PyCBC Live search using the original ranking statistic used by PyCBC Live during the third observing run as a function of inverse false-alarm rate (IFAR). The blue curve represents the sensitivity ratio computed by comparing the number of injections detected with an IFAR exceeding the corresponding x-axis value. An increase in sensitivity is indicated by values greater than 1, the horizontal red-dashed line. Two vertical dashed lines at fixed false-alarm rates (FAR) highlight specific thresholds: FAR = 1 per year (dark purple, dashed) with a sensitivity ratio of 1.38, and FAR = 2 per month (light purple, dotted) with a sensitivity ratio of 0.90. The green and orange curves represent the cumulative number of injections detected in the old and new searches, respectively, as a function of IFAR.}
     \label{5:fig:fits-psdvar-sensitivity}
 
@@ -363,14 +361,14 @@ To measure the sensitivity improvement of the new ranking statistic we count the
 % Comments about the weird shape of the plot
 Figure~\ref{5:fig:fits-psdvar-sensitivity} shows the sensitivity ratio plot comparing the new statistic search to the original statistic search. We see $35\%$ more injections with an IFAR greater than our threshold of $1$ year which is a very large increase in sensitivity however at a FAR of $2$ per month we see a sensitivity decrease of $10\%$. To understand the shape of the sensitivity curve we can look at the new additions to the ranking statistic and understand further how they are changing the significance of individual injections.
 
-\section{\label{5:sec:injection-investigations}Changes in Injection Significance}
+\section{\label{5:sec:injection-investigations}Changes in injection significance}
 
 % How do we map from Ranking Stat to FAR??
 
 % How do IFAR and Significance relate
 \begin{figure}
       \centering
-    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/fits-psd/fits_psd_far_vs_stat.pdf}
+    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/plots/fits_psd_far_vs_stat.pdf}
     \caption{The mapping between false-alarm rate (FAR) and ranking statistic for the original PyCBC Live ranking statistic used in the third observing run (left, blue) and the new PyCBC Live ranking statistic including PSD variation and an exponential noise model (right, green). Ranking statistic values cannot be compared between ranking statistics but injection FARs can be. Higher ranking statistic values indicate better, lower FARs. The original ranking statistic has a narrower range of allowed ranking statistic values ($5 - 12.5$) along with a distinct curvature whereas the new statistic ranking statistic can take a broader range of ranking statistic values ($-20-22$) and has a relatively smooth drop off with increasing ranking statistic values.}
     \label{5:fig:fits-psdvar-far-stat}
 \end{figure}
@@ -383,14 +381,14 @@ figure~\ref{5:fig:ifar-ifar-fits-psdvar-shaded}.
 %
 \begin{figure}
       \centering
-    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/fits-psd/fits_psd_ifar_vs_ifar_shaded_region.pdf}
+    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/plots/fits_psd_ifar_vs_ifar_shaded_region.pdf}
     \caption{The inverse false-alarm rate (IFAR) values recorded for each injection that was seen by both the PyCBC Live search that includes the PSD variation and exponential noise model in the ranking statistic and the PyCBC Live search using the same ranking statistic as used in the third observing run. Each point represents an injection from the injection set, with the x-axis showing the IFAR recorded using the original ranking statistic and the y-axis showing the IFAR recorded using the new ranking statistic. The color bar indicates the logarithmic difference in IFAR between the two searches, with positive values (yellow) indicating better performance of the new statistic and negative values (purple) indicating a worse performance with the new statistic. The dashed line at y=x represents equal IFAR values for both searches. The vertical and horizontal red dashed lines denote a false-alarm rate threshold of $2$ per month. The highlighted region in the bottom right of the plot indicates excess injections that have been seen by the original ranking statistic above the $2$ per month threshold and by the new ranking statistic below the $2$ per month threshold.}
     \label{5:fig:ifar-ifar-fits-psdvar-shaded}
 \end{figure}
 %
 Within figure~\ref{5:fig:ifar-ifar-fits-psdvar-shaded} we have plotted a line on the diagonal $y=x$, injections above this line ($y > x$) have been found with a larger IFAR with the new ranking statistic and injections below ($y < x$) have been found with a lower IFAR with the new statistic. Figure~\ref{5:fig:fits-psdvar-sensitivity} highlighted the decrease in sensitivity at a FAR of $2$ per month, this decrease is due to an excess number of injections in the red-shaded box in the bottom-right of figure~\ref{5:fig:ifar-ifar-fits-psdvar-shaded}, this region represents injections which have been found by the original ranking statistic below a FAR of $2$ per month but with a FAR above $2$ per month when found by the new ranking statistic. We now proceed to explore these results, investigating why the injections found in the red-shaded box have been down-ranked and other interesting features.
 
-\subsection{\label{5:sec:ignoring-psdvar}Effects of PSD Variation on Sensitivity}
+\subsection{\label{5:sec:ignoring-psdvar}Effects of PSD variation on sensitivity}
 
 The injections shown in figure~\ref{5:fig:ifar-ifar-fits-psdvar-shaded} that lie below the $y = x$ diagonal line have been found with a lower significance when including the PSD variation and the exponential noise model in the ranking statistic. We can separate the new additions and investigate the individual contributions to the changes in sensitivity.
 
@@ -398,7 +396,7 @@ The PSD variation statistic measures the non-stationary noise in the data and ap
 %
 \begin{figure}
        \centering
-    \includegraphics[width=1\textwidth]{images/5_pycbclive/fits-only/fits_only_fits_psd_var_ifar_vs_ifar.pdf}
+    \includegraphics[width=1\textwidth]{images/5_pycbclive/plots/fits_only_fits_psd_var_ifar_vs_ifar.pdf}
     \caption{The inverse false-alarm rate (IFAR) values recorded for injections that were seen by both the PyCBC Live search that includes new additions of the PSD variation statistic and exponential noise model in the ranking statistic and the PyCBC Live search which has new additions of only the exponential noise model. Each point represents an injection from the injection set, with the x-axis showing the IFAR recorded by the PyCBC Live search including the exponential noise model and PSD variation ranking statistic and the y-axis showing the IFAR recorded by the PyCBC Live search which has added only the exponential noise model. The color bar indicates the logarithmic difference in IFAR between the two searches, with positive values (yellow) indicating better performance when \textbf{not} including PSD variation and negative values (purple) indicating a better performance with the PSD variation statistic. The dashed line at y=x represents equal IFAR values for both searches.}
     \label{5:fig:ifar-ifar-fits-vs-fits-psdvar}
 \end{figure}
@@ -410,7 +408,7 @@ We can compare the sensitivity change when including the PSD variation statistic
 %
 \begin{figure}
        \centering
-    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/fits-only/fits_only_fits_psd_vt_ratio.pdf}
+    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/plots/fits_only_fits_psd_vt_ratio.pdf}
     \caption{A comparison of sensitive volume ratio between two PyCBC Live searches: one which includes the addition of the PSD variation statistic and an exponential noise model in the ranking statistic and one which includes only the addition of the exponential noise model. The blue curve represents the sensitivity ratio computed by comparing the number of injections detected with an inverse false-alarm rate (IFAR) exceeding the corresponding x-axis value. An increase in sensitivity is indicated by values greater than 1, the horizontal red-dashed line. The green dashed curve represents the cumulative number of injections detected as a function of IFAR by the PyCBC Live search with added PSD variation and the exponential noise model. The orange dashed curve represents the cumulative number of injections detected as a function of IFAR by the PyCBC Live search with only the exponential noise model added.}
     \label{5:fig:vt-ratio-f-fo}
 \end{figure}
@@ -424,7 +422,7 @@ When adding only the exponential noise model to the ranking statistic we can re-
 %
 \begin{figure}
        \centering
-    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/fits-only/fits_only_vt_ratio_with_counts.pdf}
+    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/plots/fits_only_vt_ratio_with_counts.pdf}
     \caption{A comparison of sensitive volume ratio between a PyCBC Live search whose ranking statistic contains an exponential noise model and a PyCBC Live search using the original ranking statistic used by PyCBC Live during the third observing run as a function of inverse false-alarm rate (IFAR). The blue curve represents the sensitivity ratio computed by comparing the number of injections detected with an IFAR exceeding the corresponding x-axis value. An increase in sensitivity is indicated by values greater than 1, the horizontal red-dashed line. Two vertical dashed lines at fixed false-alarm rates (FAR) highlight specific thresholds: FAR = 1 per year (dark purple, dashed) with a sensitivity ratio of 1.43, and FAR = 2 per month (light purple, dotted) with a sensitivity ratio of 0.94. The green and orange curves represent the cumulative number of injections detected in the old and new searches, respectively, as a function of IFAR.}
     \label{5:fig:vt-ratio-fits-only}
 \end{figure}
@@ -436,14 +434,14 @@ We can plot the IFAR vs IFAR plot for the search including only the exponential 
 % 
 \begin{figure}
        \centering
-    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/fits-only/fits_only_ifar_vs_ifar_regions.pdf}
+    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/plots/fits_only_ifar_vs_ifar_regions.pdf}
     \caption{The inverse false-alarm rate (IFAR) values recorded for each injection that was seen by both the PyCBC Live search that includes the exponential noise model in the ranking statistic and the PyCBC Live search using the same ranking statistic used in the third observing run. Each point represents an injection from the injection set, with the x-axis showing the IFAR recorded using the original ranking statistic and the y-axis showing the IFAR recorded using the exponential noise model ranking statistic. The color bar indicates the logarithmic difference in IFAR between the two searches, with positive values (yellow) indicating better performance when including the exponential noise model in the statistic and negative values (purple) indicating a better performance with the original statistic. The dashed line at y=x represents equal IFAR values for both searches. Three regions containing injections that have been down-ranked and will be investigated have been highlighted in dashed boxes.}
     \label{5:fig:ifar-ifar-fits-only-regions}
 \end{figure}
 %
 We have highlighted three regions of interest which contains injections that have decreased in significance that we will investigate further and understand the cause of their down-ranking.
 
-\subsection{\label{5:sec:poor-temp-fits}Templates which Trigger Frequently with Large SNRs}
+\subsection{\label{5:sec:poor-temp-fits}Templates which trigger frequently with large SNRs}
 
 % Log(noise rate) equation
 % Combined log(noise rate) equation
@@ -460,7 +458,7 @@ Figure~\ref{5:fig:template-fits} shows an example of the exponential fitting to 
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/others/fit_plot.pdf}
+    \includegraphics[width=1.0\textwidth]{images/5_pycbclive/plots/fit_plot.pdf}
     \caption{The noise distribution and template fits for a bin which contains triggers from templates which have symmetric mass ratio, $\eta$, between $0.208 - 0.229$ and effective spin, $\chi_{eff}$, between $-0.333 - 0.333$. The template triggers are further split into 4 bins depending on the duration of the template responsible for the trigger (in seconds). The solid coloured lines represent the cumulative counts of triggers that have been found in a template duration bin with $\rho$ that has been re-weighted by the traditional $\chi^{2}$~\cite{Allen_Chi:2005} and the sine-gaussian $\chi^{2}$~\cite{PyCBC_sg:2018} to obtain new signal-to-noise ratio, $\hat{\rho}$. The dashed coloured lines represent the exponential fit that has been made to the cumulative counts for each template duration bin where the exponential fit factor value, $\alpha$, is displayed in the top right most legend.}
     \label{5:fig:template-fits}
 \end{figure}
@@ -471,7 +469,7 @@ Templates which trigger more frequently and with a large $\hat{\rho}$ on noise w
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{images/5_pycbclive/high-noise-rate/lognoise_alpha_rate.pdf}
+    \includegraphics[width=1\textwidth]{images/5_pycbclive/plots/lognoise_alpha_rate.pdf}
     \caption{The single detector ($\log$) noise rate for varying combinations of exponential fit factor, $\alpha$, and trigger rates above a single detector statistic value ($\hat{\rho}_{thresh} = 6.0$), $\mu$. Constant contours of single detector noise rate are shown as dashed red lines, with the single detector noise rate value labelled within the contour line. This figure has been made using equation~\ref{5:eqn:single-log-noise-rate} where $\hat{\rho} = 10.0$.}
     \label{5:fig:log-noise-static-snr}
 \end{figure}
@@ -480,7 +478,7 @@ Figure~\ref{5:fig:log-noise-static-rate} shows the noise rate's dependence on $\
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{images/5_pycbclive/high-noise-rate/lognoise_alpha_snr.pdf}
+    \includegraphics[width=1\textwidth]{images/5_pycbclive/plots/lognoise_alpha_snr.pdf}
     \caption{The single detector ($\log$) noise rate for varying combinations of exponential fit factor, $\alpha$, and single detector statistic value, $\hat{\rho}$. Constant contours of single detector noise rate are shown as dashed red lines, with the single detector noise rate value labelled within the contour line. This figure has been made using equation~\ref{5:eqn:single-log-noise-rate} where $\mu$ has been set equal to the benchmark noise rate $-14.6$.}
     \label{5:fig:log-noise-static-rate}
 \end{figure}
@@ -495,7 +493,7 @@ We can plot the IFAR vs IFAR distribution for the injection set for a single det
 %
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{images/5_pycbclive/fits-only/fits_only_ifar_vs_ifar_subplots.pdf}
+    \includegraphics[width=\textwidth]{images/5_pycbclive/plots/fits_only_ifar_vs_ifar_subplots.pdf}
     \caption{The inverse false-alarm rate (IFAR) values recorded for each injection that was seen by both the PyCBC Live search that includes the exponential noise model in the ranking statistic and the PyCBC Live search using the same ranking statistic used in the third observing run. Each point represents an injection from the injection set, with the x-axis showing the IFAR recorded using the original ranking statistic and the y-axis showing the IFAR recorded using the exponential noise model ranking statistic. The top left plot is coloured by the LIGO-Hanford trigger template's exponential fit factor, $\alpha$. The top right plot is coloured by the LIGO-Hanford trigger template's count of triggers found above $\hat{\rho}_{threshold} = 6.0$, $\mu$. The bottom left plot is coloured by the LIGO-Hanford single detector ($\log$) noise rate, calculated using equation~\ref{5:eqn:single-log-noise-rate}. The bottom right plot is coloured by the combined ($\log$) noise rate, equation~\ref{5:eqn:comb-log-noise-rate}.}
     \label{5:fig:ifar-ifar-subplots}
 \end{figure}
@@ -504,7 +502,7 @@ It is not clear from these figures that $\alpha$ (top-left) and $\mu$ (top-right
 
 Figure~\ref{5:fig:ifar-ifar-subplots} shows the combined detector noise rates (equation~\ref{5:eqn:comb-log-noise-rate}), where we can see a clearer distinction between high and low noise rates and how this is affecting the IFAR values. However, looking at this plot we can see that combined noise rate does not completely explain the improved significance for a number of injections, we can see clearly there are some low noise rate injections below the $y=x$ line which should have caused an increase in the significance but we have seen a decrease. Therefore we must investigate other changes to the ranking statistic.
 
-\subsection{\label{5:sec:comparing-statistic-construction}Ranking Statistic Construction}
+\subsection{\label{5:sec:comparing-statistic-construction}Ranking statistic construction}
 
 % Motivation
 The original ranking statistic and our new ranking statistic both take contributions from the signal event rate density, $p^{S}(\Vec{\theta})$, and the noise event rate density, $p^{N}(\Vec{\theta})$. The construction of these ranking statistics has been detailed in sections~\ref{5:sec:old-stat-construction} and~\ref{5:subsec:template-fits} where it can be seen they include the contributions from $p^{S}(\Vec{\theta})$ differently. For comparison, the original statistic is constructed as,
@@ -532,7 +530,7 @@ One particular way the different noise rate models manifests is in the ratio of 
 \begin{figure}
   \centering
   \begin{minipage}[t]{1.0\linewidth}
-    \includegraphics[width=1\textwidth]{images/5_pycbclive/regions/fits_only_ifar_vs_ifar_regions_snr_ratio.pdf}
+    \includegraphics[width=1\textwidth]{images/5_pycbclive/plots/fits_only_ifar_vs_ifar_regions_snr_ratio.pdf}
   \end{minipage}
   \caption{The inverse false-alarm rate (IFAR) values recorded for each injection that was seen by both the PyCBC Live search that includes the exponential noise model in the ranking statistic and the PyCBC Live search using the same ranking statistic used in the third observing run. Each point represents an injection from the injection set, with the x-axis showing the IFAR recorded using the original ranking statistic and the y-axis showing the IFAR recorded using the exponential noise model ranking statistic. The injections are coloured by the SNR ratio of the two detector $\hat{\rho}$ values, set so that the SNR ratio is always greater than $1$. Three regions containing injections that will be investigated have been highlighted in dashed boxes.}
   \label{5:fig:ifar-ifar-snr-ratio}
@@ -541,7 +539,7 @@ One particular way the different noise rate models manifests is in the ratio of 
 It can be seen that there are a number of points in regions of interest that have been down-ranked by the new search specifically because they have a high SNR ratio in the old statistic.
 
 
-\subsection{\label{5:sec:diff-triggers}Different Triggers Selected by Each Search}
+\subsection{\label{5:sec:diff-triggers}Different triggers selected by each search}
 
 The ranking statistic is responsible for determining the most significant triggers in an analysis segment in the live search. As stated in equation~\ref{5:eqn:signal-minus-noise-rate} the ranking statistic is composed of two primary contributions, the signal rate and the noise rate. As described in the previous section (\ref{5:sec:comparing-statistic-construction}, both the signal and the noise rate are template dependent and therefore when the construction of the ranking statistic is changed a different template might become responsible for the preferred trigger compared with the template chosen by the original statistic search. We investigate some injections which have now been found with a different trigger when compared to the original ranking statistic search to understand how changing ranking statistic individually changes the injections.
 
@@ -631,19 +629,19 @@ Similarly, when we look at the original statistic calculation in table~\ref{5:ta
 
 The addition of the exponential noise model in the ranking statistic can explain the increase in sensitivity for some injections but others have an increase in sensitivity due to the different constructions of the ranking statistics. Different weighting has been placed on the signal and noise rates between the two searches and therefore a different trigger, with a better significance, can be chosen with a similar noise rate (the container for the exponential noise model) to the original trigger but the template associated with that trigger has a better signal rate.
 
-\section{\label{5:sec:investigating-regions}Investigating Down-ranked Regions}
+\section{\label{5:sec:investigating-regions}Investigating down-ranked regions}
 
 In sections~\ref{5:sec:ignoring-psdvar} we investigated the effect of including the PSD variation in the ranking statistic and concluded that it will not enter the ranking statistic going forward. However, when looking at the sensitivity ratio for the new ranking statistic, including only the exponential noise model, against the original statistic (figure~\ref{5:fig:vt-ratio-fits-only}) we can see that the decrease in sensitivity around at an FAR of $2$ per month is still around $6\%$.
 
 We have discussed how changing the ranking statistic can change the significance of individual injections in sections~\ref{5:sec:poor-temp-fits}, \ref{5:sec:comparing-statistic-construction} and, \ref{5:sec:diff-triggers} and looking at the IFAR vs IFAR plot in figure~\ref{5:fig:ifar-ifar-fits-only-regions} we can highlight three region of interest which contain down-ranked injections that we must investigate and understand the reasoning behind the down-ranking. The highlighted yellow region is of particular interest as being responsible for the decrease in sensitivity at a FAR of $2$ per month.
 
-\subsection{\label{5:sec:bottom-left-region}Injections Down-Ranked around FAR = 2 per Month}
+\subsection{\label{5:sec:bottom-left-region}Injections down-ranked around FAR = 2 per month}
 
 The sensitive volume ratio between the new ranking statistic search and the original ranking statistic search (figure~\ref{5:fig:vt-ratio-fits-only}) highlights a drop in the sensitive ratio at an approximate FAR of $2$ per month. The region responsible for this drop is highlighted on figure~\ref{5:fig:ifar-ifar-fits-only-regions} in a yellow dashed box and a zoomed in version of this figure can be seen in figure~\ref{5:fig:bottom-left-region}.
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{images/5_pycbclive/regions/fits_only_ifar_vs_ifar_bottom_left_region.pdf}
+    \includegraphics[width=1\textwidth]{images/5_pycbclive/plots/fits_only_ifar_vs_ifar_bottom_left_region.pdf}
     \caption{The inverse false-alarm rate (IFAR) values recorded for each injection that was seen by both the PyCBC Live search that includes the exponential noise model in the ranking statistic and the PyCBC Live search using the same ranking statistic used in the third observing run. Each point represents an injection from the injection set, with the x-axis showing the IFAR recorded using the original ranking statistic and the y-axis showing the IFAR recorded using the exponential noise model ranking statistic. The color bar indicates the logarithmic difference in IFAR between the two searches, with positive values (yellow) indicating better performance when including the exponential noise model in the statistic and negative values (purple) indicating a better performance with the original statistic. The dashed line at y=x represents equal IFAR values for both searches. This figure is zooms in on the yellow dashed box shown in figure~\ref{5:fig:ifar-ifar-fits-only-regions}.}
     \label{5:fig:bottom-left-region}
 \end{figure}
@@ -652,7 +650,7 @@ The original IFAR values of the injections found in this region range from $0.02
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{images/5_pycbclive/regions/fits_only_ifar_vs_ifar_bottom_left_region_subplots.pdf}
+    \includegraphics[width=1\textwidth]{images/5_pycbclive/plots/fits_only_ifar_vs_ifar_bottom_left_region_subplots.pdf}
     \caption{The inverse false-alarm rate (IFAR) values recorded for each injection that was seen by both the PyCBC Live search that includes the exponential noise model in the ranking statistic and the PyCBC Live search using the same ranking statistic used in the third observing run. Each point represents an injection from the injection set, with the x-axis showing the IFAR recorded using the original ranking statistic and the y-axis showing the IFAR recorded using the exponential noise model ranking statistic. The top left plot is coloured by the LIGO-Hanford trigger template's exponential fit factor, $\alpha$. The top right plot is coloured by the LIGO-Hanford trigger template's count of triggers found above $\hat{\rho}_{threshold} = 6.0$, $\mu$. The bottom left plot is coloured by the SNR ratio of the two detector $\hat{\rho}$, chosen such that the SNR ratio is always greater than $1$. The bottom right plot is coloured by the combined ($\log$) noise rate~\ref{5:eqn:comb-log-noise-rate}.}
     \label{5:fig:bottom-left-subplots}
 \end{figure}
@@ -663,7 +661,7 @@ The bottom right figure shows the combined log noise event rate density for the 
 
 The bottom left figure shows the ratio of the two detector $\hat{\rho}$ values identified in the search using the new statistic, calculated such that the ratio is always greater than $1$. This figure shows that injections that have been most significantly down-ranked when using the new statistic have higher SNR ratios, this is caused by the noise rate contributions to the ranking statistic described in section~\ref{5:sec:comparing-statistic-construction} and how the original statistic maximises the squared sum of the detector $\hat{\rho}$ values in the noise rate calculation and the new statistic takes a linear sum of $\hat{\rho}$ with a weighting based on historical noise rate of the trigger template. Therefore, in the new statistic search a low $\hat{\rho}$ in one detector can no longer be compensated for by a much larger $\hat{\rho}$ in the other detector, leading to a decrease in the significance of the injections. This is a consequence of the ranking statistic formulation.
 
-\subsection{\label{5:sec:top-right-region}Down-Ranked Highly Significant Injections}
+\subsection{\label{5:sec:top-right-region}Down-ranked highly significant injections}
 
 The region indicated in the top right of figure~\ref{5:fig:ifar-ifar-fits-only-regions} by a dashed red box contains injections that were found with the maximum IFAR value with the original ranking statistic but have now been down-ranked by including the exponential noise rate model in the ranking statistic. These injections are still found with a high significance in the new statistic. This region contains $24$ injections, which we can split into two groups for investigation: $12$ injections found with the same trigger in both searches and $12$ injections found with different triggers in both searches. 
 
@@ -785,7 +783,7 @@ When an injection has been found with a different trigger by the new ranking sta
 These injections have very poor fit parameter values with low $\alpha$ values (especially in H1) and high $\mu$ values. One thing that is very clear, especially when compared to the same trigger table, is that these injections were all found with substantial SNR ratios. These injections and their SNR ratios can be seen in figure~\ref{5:fig:ifar-ifar-snr-ratio} and this is a clear demonstration of how high SNR ratio triggers are favoured in the old statistic and are not in the new statistic. Overall most injections have been found with high combined detector noise rates and the signal rates aren't large enough to compensate. This region demonstrates that while injections may be down-ranked using the new ranking statistic we are still achieving an overall increase in sensitivity in this IFAR region (figure~\ref{5:fig:vt-ratio-fits-only}) and we understand the causes of the down-ranking of these highly significant injections.
 
 
-\subsection{\label{5:sec:middle-region}Down-Ranked Marginal Injections}
+\subsection{\label{5:sec:middle-region}Down-ranked marginal injections}
 
 The injections found in the blue dashed box in the middle of figure~\ref{5:fig:ifar-ifar-fits-only-regions} are injections which have been found with IFAR above ${\sim}1$ year with the original ranking statistic but have been down-ranked by the new ranking statistic. An IFAR of $1$ year is a conservative threshold that distinguishes \gwadj events as being real or fake, the sensitive ratio plot (figure~\ref{5:fig:vt-ratio-fits-only}) highlights the sensitivity increase at this IFAR threshold as being $43\%$. These are the few injections in this region that have been down-ranked and so we want to understand what has caused this down-ranking. This region only contains $3$ injections and therefore we can investigate each injection individually to understand the cause of their down-ranking.
 
@@ -817,7 +815,7 @@ We can look at the numerical values associated with each injection, this is show
 %
 All three of these injections have been found with the same trigger in both searches and demonstrate a few different cases for injection down-ranking. Injection $8313$ was found with the same trigger in both searches and while the new statistic's combined noise rate is very low it isn't enough to overcome the very low signal rate whereas the original statistic placed more weight on the very high L1 $\hat{\rho}$ which has compensated for the relatively low H1 $\hat{\rho}$. This is another case where the SNR ratio has a big impact on the significance of recovered events in the original statistic search. Injection $10256$ was originally found with an IFAR of $1.24$ and has been down-ranked to an IFAR of $0.35$. The L1 noise rate is very high, contributing to a large combined noise rate which, when matched with the signal rate has not produced a very significant ranking statistic value. Finally, injection $10955$ is seen with decent $\hat{\rho}$ in both detectors but the $\alpha$ values are poor, especially in L1. This produces a high combined log noise rate which the signal rate couldn't overcome. 
 
-\section{\label{5:sec:mdc-test}Testing using the Full Template Bank}
+\section{\label{5:sec:mdc-test}Testing using the full template bank}
 
 To test the implementation of the new additions to the ranking statistic we ran the PyCBC Live search in an `offline' mode where the PyCBC Live search operates how it will for the real low-latency search but all the data is available before the search begins and there is no need to wait for the next analysis segment. This allows the PyCBC Live search to process the data as fast as possible and when using the PyCBC-BBH template bank we could process one week of \gwadj data in as little as $1$ day.
 
@@ -831,7 +829,7 @@ To test the ranking statistic changes we created static template fits for all te
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/5_pycbclive/mdc_ifar_candidates.pdf}
+    \includegraphics[width=1.0\linewidth]{images/5_pycbclive/plots/mdc_ifar_candidates.pdf}
     \caption{\Gwadj candidates jointly seen by the PyCBC Live full bandwidth Mock Data Challenge (MDC) searches using the original PyCBC Live third observing run ranking statistic (Original Ranking Statistic, green circles) and the PyCBC Live ranking statistic including the exponential noise noise (Exponential Noise Model, blue circles). Events which have been seen with an increased inverse false-alarm rate with the exponential noise model ranking statistic have a green arrow between the original search's circle and the exponential noise model's circle, events seen with a decreased inverse false-alarm rate have a red arrow.}
     \label{5:fig:mdc_results}
 \end{figure}
@@ -849,7 +847,7 @@ We measure an overall increase in sensitivity when both PSD variation and the ex
 
 We have tested the changes to the PyCBC Live search using the smaller PyCBC-BBH template bank and the complete PyCBC Live template bank being currently used in the fourth observing run and we highlight the difficulty of increasing the complexity of the low-latency search pipeline ranking statistic where changes have the potential to introduce latency to the search pipeline, delaying the dissemination of search results and how the new additions to ranking statistic have not increased the analysis latency of the PyCBC Live search.
 
-The new additions to the PyCBC Live ranking statistic are currently being tested in completeness alongside PyCBC Live infrastructure changes to allow template fit statistics to update weekly based on the previous week's triggers to adapt to changing template noise distributions. The new PyCBC Live ranking statistic will also include data quality information from \verb|iDQ| \textsc{iDQ} and will be run on the second half of the fourth observing run.
+The new additions to the PyCBC Live ranking statistic are currently being tested in completeness alongside PyCBC Live infrastructure changes to allow template fit statistics to update weekly based on the previous week's triggers to adapt to changing template noise distributions. The new PyCBC Live ranking statistic will also include data quality information from \texttt{iDQ} and will be run on the second half of the fourth observing run.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -876,7 +874,7 @@ The new additions to the PyCBC Live ranking statistic are currently being tested
 % %
 % \begin{figure}
 %        \centering
-%     \includegraphics[width=1.2\textwidth]{images/5_pycbclive/fits_only_0s_ifar_vs_ifar_log_ifar_diff.png}
+%     \includegraphics[width=1.2\textwidth]{images/5_pycbclive/plots/fits_only_0s_ifar_vs_ifar_log_ifar_diff.png}
 %     \caption{}
 %     \label{5:fig:ifar-ifar-fits-only-0s}
 % \end{figure}
@@ -885,14 +883,14 @@ The new additions to the PyCBC Live ranking statistic are currently being tested
 % %
 % \begin{figure}
 %     \centering  
-%     \includegraphics[width=1.2\textwidth]{images/5_pycbclive/fits_only_0s_ifar_vs_ifar_regions.png}
+%     \includegraphics[width=1.2\textwidth]{images/5_pycbclive/plots/fits_only_0s_ifar_vs_ifar_regions.png}
 %     \caption{}
 %     \label{5:fig:ifar-ifar-fits-only-0s-regions}
 % \end{figure}
 % %
 % \begin{figure}
 %     \centering
-%     \includegraphics[width=1\textwidth]{images/5_pycbclive/fits_only_0s_vt_ratio.png}
+%     \includegraphics[width=1\textwidth]{images/5_pycbclive/plots/fits_only_0s_vt_ratio.png}
 %     \caption{}
 %     \label{5:fig:sensitivity-fits-only-0s}
 % \end{figure}

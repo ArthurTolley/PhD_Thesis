@@ -7,6 +7,13 @@ false-alarm rate
 high-pass
 low-pass
 time series
+british spellings: artefacts, colour
+value ranges \text{--}
+in text hyphens ---
+{\sim}NUMBER
+PyCBC Live
+PyCBC Live early warning/full bandwidth
+\texttt{} not \verb||
 
 
 %~~~% Text commands %~~~%
@@ -33,3 +40,14 @@ time series
 
 
 \newcommand{\aligo}{Advanced LIGO\xspace}
+
+
+
+FINAL CHECKS:
+- Equations with units $number \, \text{unit}$
+- Punctuation in all equations (where needed)
+- Compound adjectives with hypens (gravitational-wave signal)
+- Sentence case in section titles
+- Section, Subsection, Figure, Equation, Table (capitals!)
+- Define acronyms the first time they appear and check for consistency (e.g., use either "SNR" or "signal-to-noise ratio" uniformly).
+- Figures are PDFs and where possible, with the style file

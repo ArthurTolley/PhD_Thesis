@@ -194,7 +194,7 @@ We can see that the proper distance between the two particles is stretched by th
 Figure~\ref{1:fig:ring_of_particles} provides a visual representation of how the proper distances in a ring of particles change under the influence of a \gw with pure $+$ or $\times$ polarisation.
 %
 \begin{figure}
-   \includegraphics[width=\textwidth]{images/1_general_relativity/polarisation.png}
+   \includegraphics[width=\textwidth]{images/1_general_relativity/gravitational_radiation/polarisation.png}
    \caption{The effect of the two polarisations on a ring of test particles~\cite{gw_polarisation_plots}.}
    \label{1:fig:ring_of_particles}
 \end{figure}
@@ -350,7 +350,7 @@ The \gw observed by the detector will not be the same as the \gw emitted by the 
 %
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{images/1_general_relativity/euler.png}
+    \includegraphics[width=0.75\linewidth]{images/1_general_relativity/gravitational_wave_detection/euler.png}
     \caption{The angles of rotation to describe a \gw from the source from (unprimed coordinates) to the detector frame (single primed coordinates) through the radiation frame (double primed coordinates). Taken from~\cite{Brown_Thesis:2004}.}
     \label{1:fig:source_to_detector_frame}
 \end{figure}
@@ -404,7 +404,7 @@ The induced strain expected from passing \gws is on the order of $\mathcal{O}(10
 
 One technique we use to effectively increase the arm length of the detectors is to make the repeatedly light travel down the arms multiple times. The Fabry-Pérot cavities~\cite{aLIGO:2015} in the arms of the aLIGO detectors contain an additional mirror on the input test mass (ITM) which faces the end mirrors and has high reflectivity, allowing only a small fraction of light to transmit through. As a result, the light reflects many times between these two mirrors, increasing the optical path length to approximately $1000 \, \text{km}$. This has the additional effect of building up laser power in the arms which allows sharper fringes to distinguish between noise and signal at the photo-detector~\cite{Meers:1988}.
 
-Two additional components which increase detector sensitivity are: \textit{power recycling}, in which a mirror is placed at the laser input port which directs the reflected light back into the interferometer, boosting the circulating power within the arms and enhancing any signal-to-noise ratio, enabling the detection of weaker \gwadj signals. The second improvement is a signal recycling mirror placed at the output port which helps in resonating specific \gwadj frequencies, effectively increasing the detector's response to signals of interest. By tuning this mirror, we can optimize the detector's sensitivity to certain frequency bands. These improvements allow us to reach detector sensitivities capable of observing strain of order $\mathcal{O(10^{-21}}$. 
+Two additional components which increase detector sensitivity are: \textit{power recycling}, in which a mirror is placed at the laser input port which directs the reflected light back into the interferometer, boosting the circulating power within the arms and enhancing any signal-to-noise ratio, enabling the detection of weaker \gwadj signals. The second improvement is a signal recycling mirror placed at the output port which helps in resonating specific \gwadj frequencies, effectively increasing the detector's response to signals of interest. By tuning this mirror, we can optimize the detector's sensitivity to certain frequency bands. These improvements allow us to reach detector sensitivities capable of observing strain of order $\mathcal{O}(10^{-21}$. 
 
 \section{\label{1:sec:modelling_CBC}Modelling compact binary coalescences}
 
@@ -593,7 +593,7 @@ The simplest PN expansion can be performed by expanding in powers of \( v/c \), 
 %
 where \( h_{\text{Newtonian}}(t) \) is the leading-order Newtonian term, and the following terms represent higher and higher PN order corrections. Current waveform models use waveforms with corrections up to 3.5PN order~\cite{PN_models:2009}.
 
-\subsection{\label{1:sec:full_waveform}Full Waveform}
+\subsection{\label{1:sec:full_waveform}Full waveform}
 
 The post-Newtonian (PN) formalism is accurate during the inspiral phase of the waveform when the two objects are still distant from each other and formalism does not cover the entire evolution of the system. The system continues to emit \gws throughout the merger and post-merger phases, including the ringdown, where the newly formed object settles into its final shape. The \gwadj emission peaks during the merger, making it crucial for detecting \gws. The ringdown phase is particularly valuable for testing General Relativity (GR)~\cite{GW150914_TGR:2016, GW170817_TGR:2019, O3_TGR:2021}.
 
@@ -612,12 +612,12 @@ The Effective-One-Body (EOB) model~\cite{EOB_1:1998} simplifies the binary syste
 
 EOB models tuned to numerical relativity (NR) data are known as ``EOBNR'' models~\cite{EOB_6:2007}. Some of these models, such as \texttt{SEOBNRv5}~\cite{SEOBNRv5:2023tna}, also incorporate the effects of anti-aligned spins. Further enhancements allow for precession effects and higher-order modes of \gwadj emission, as seen in the state-of-the-art model \texttt{SEOBNRv5\_PHM}~\cite{SEOBNRv5_PHM-Buades:2023ehm}, which represents the most advanced EOB waveform model as of the drafting of this thesis.
 
-\subsubsection{Phenomenological Models}
+\subsubsection{Phenomenological models}
 
 Phenomenological models, often abbreviated as `Phenom', use a phenomenological ansatz calibrated with NR simulations to produce full waveforms. These models are fully analytical and can generate both Fourier domain and time domain waveforms~\cite{IMR_1:2007, IMR_2:2020}. The ability to create waveforms directly in the Fourier domain is highly desirable for analyses that require generating millions of waveforms, such as offline searches or parameter estimation.
 
 Phenom models that cover the inspiral, merger, and ringdown phases are prefixed with \texttt{IMRPhenom}~\cite{IMRPhenomD:2009}. The state-of-the-art model of this family is \texttt{IMRPhenomXPHM}~\cite{IMRPhenomXPHM:2020}, which can accurately model anti-aligned spins, precessing binaries (\texttt{P}), higher-order modes (\texttt{HM}), and extreme mass ratios (\texttt{X}).
 
-\subsubsection{Surrogate Models}
+\subsubsection{Surrogate models}
 
 Surrogate models create waveforms by interpolating from NR simulations~\cite{Surr_1:2019, Surr_2:2022}. These models, such as \texttt{NRSur7dq4}~\cite{NRSur7dq4:2019}, provide greater accuracy than other model families but are limited by the parameter regions covered by the NR simulations used for interpolation. The current leading surrogate model, \texttt{NRSur7dq4}, is valid up to a mass ratio of four.
