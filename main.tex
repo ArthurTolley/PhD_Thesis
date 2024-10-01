@@ -294,23 +294,25 @@ In this thesis we focus on improving the capabilities of \gwadj search pipelines
 %---% ArchEnemy %---%
 \chapter[ArchEnemy]{\label{chapter:4-archenemy}ArchEnemy}
 \chapterquote{``One less enemy within.''}{Swain, League of Legends}
-I am first author on a peer-reviewer and published work carrying the name \textit{"ArchEnemy: Removing scattered-light glitches from gravitational wave data"}, within the Institute of Physics journal Classical and Quantum Gravity~\cite{ArchEnemy:2023}.
+This chapter reproduces the published work carrying the name \textit{"ArchEnemy: Removing scattered-light glitches from gravitational wave data"}, in CQG~\cite{ArchEnemy:2023} with changes for formatting consistency and no changes to content. I am the first author of this publication and was responsible for the development of the scattered-light glitch model, $\chi^{2}$ test and glitch search pipeline and I then tested the changes using a PyCBC Offline search injection study to evaluate the glitch search and subtraction tool ArchEnemy. 
 \input{chapters/content/4_archenemy}
 
 %---% PyCBC Live Ranking Statistic %---%
 \chapter[Improving the PyCBC Live Ranking Statistic]{\label{chapter:5-pycbc-live}Improving the PyCBC Live Ranking Statistic}
 \chapterquote{``Have patience, all will be explained.''}{Guthix, The World Wakes}
-This work will be published as part of the PyCBC Live fourth observing run methods paper which is currently being drafted.
+This work will be published as part of the PyCBC Live fourth observing run methods paper which is currently being drafted. I am responsible for the changes concerning the exponential noise model in the PyCBC Live ranking statistic as well as contributing to the development necessary to introduce these changes in the PyCBC Live infrastructure.
 \input{chapters/content/5_pycbclive}
 
 %---% Early Warning Ranking Statistic %---%
 \chapter[Evaluating the PyCBC Live Early Warning Search]{\label{chapter:6-earlywarning}Evaluating the PyCBC Live Early Warning Search}
 \chapterquote{``Stars are better off without us.''}{Josephus Miller, Leviathan Wakes}
+The work that forms this chapter was performed as my final project during the PhD to investigate and improve the PyCBC Live Early Warning search. This work has highlighted a few problems with the search and has identified the solutions to these problems, if more time were available the next steps would be to implement these solutions into PyCBC Live. These solutions will be implemented by other researches at the University of Portsmouth.
 \input{chapters/content/6_earlywarning}
 
 %---% Other Work %---%
-\chapter[Optimising Detection Statistic in PyCBC Live]{\label{chapter:7-snr-optimiser}Optimising Detection Statistic in PyCBC Live}
+\chapter[Optimising Signal-to-Noise Ratio in PyCBC Live]{\label{chapter:7-snr-optimiser}Optimising Signal-to-Noise Ratio in PyCBC Live}
 \chapterquote{``''}{Hat Films}
+The work that forms this chapter was performed as my first initial project upon starting my PhD and small additions were made over the course of the PhD. The PyCBC Live SNR optimiser has not been detailed in any PyCBC methods publication to date and will form a section in the upcoming fourth observing run PyCBC Live methods paper where these changes will be published. I was responsible for tuning the current PyCBC Live SNR optimiser, developing and introducing a new optimiser to PyCBC Live, and implementing astrophysically-motivated bounds on the spin template parameters.
 \input{chapters/content/7_snr_optimiser}
 
 %---% Placements %---%
@@ -333,5 +335,7 @@ This work will be published as part of the PyCBC Live fourth observing run metho
 % \bibliography{refs}
 \nocite{*}
 \printbibliography
+
+\includepdf[pages=-]{chapters/UPR16-Ethics-Review-Checklist.pdf}
 
 \end{document}

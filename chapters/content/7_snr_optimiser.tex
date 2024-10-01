@@ -1,6 +1,7 @@
 % Introduction to SNR optimisation in PyCBC Live
+The PyCBC Live search pipeline identifies \gwadj signals in real-time from the \gwadj data provided by the current international \gwadj network. Sky maps are produced of the found \gwadj events, which indicate the sky position of the source of the signal. The sky localisation is more accurate for an event with a greater signal-to-noise ratio (SNR), therefore, as part of the pipeline we rapidly optimise event SNR using an optimisation algorithm to recover the greatest SNR and more accurate sky localisation possible.
 
-The optimal methods for optimising signal-to-noise ratio in PyCBC Live was researched and improved multiple times across the course of the PhD. These changes are being written up in the PyCBC Live fourth observing run methods paper. ADD A BIT OF INFORMATION
+There are many optimisation algorithms with many tunable hyperparameters which determine operating parameters of the algorithm, the appropriate algorithms and hyperparameter values need to be chosen to ensure the optimisation performs optimally. The optimal methods for optimising SNR in PyCBC Live were researched and improved multiple times across the course of the PhD. These changes are being written up in the PyCBC Live fourth observing run methods paper.
 
 \section{\label{7:sec:introduction}Introduction}
 
@@ -16,7 +17,7 @@ When multiple online searches report events at the same time, the preferred even
     \item A publishable event, meeting the public alert threshold, is given preference over one that does not meet the threshold.
     \item An event from CBC searches is preferred over an event from unmodeled Burst searches (see Searches for details on search pipelines).
     \item In the case of multiple CBC events, three-interferometer events are preferred over two-interferometer events, and two-interferometer events are preferred over single-interferometer events.
-    \item In the case of multiple CBC events with the same number of participating interferometers, the event with the highest SNR is preferred. The SNR is used to select the preferred event among CBC candidates because higher SNR implies better sky location and parameter estimates from low-latency searches. In the case of multiple Burst events, the event with the lowest FAR is preferred.
+    \item In the case of multiple CBC events with the same number of participating interferometers, the event with the highest SNR is preferred. The SNR is used to select the preferred event among CBC candidates because higher SNR implies better sky location and parameter estimates from low-latency searches. In the case of multiple burst events, the event with the lowest FAR is preferred.
 \end{itemize}
 %
 The PyCBC Live search is a CBC search and when analysing the same number of interferometers as other CBC searches there is a tie-breaker for preferred event dependent on the SNR of the event.
@@ -24,12 +25,12 @@ The PyCBC Live search is a CBC search and when analysing the same number of inte
 % 2. Motivation and Relevance
 % Why This Topic?: Explain why the topic of your paper or chapter matters. What are the practical, scientific, or theoretical reasons that make it worth investigating?
 % Gap in Knowledge: Identify any gaps or unresolved issues in the current literature that your work will address.
-It is clear from these set of rules that to become the preferred event we must upload the event with the highest SNR. This is where the PyCBC Live SNR optimiser becomes relevant. We construct our template bank with a minimum match of $0.97$, allowing up to a $3\%$ SNR loss for any event. If we want to maximise the SNR of our event we must perform a finer search over the template bank parameter space around the initially found template to recover that potentially lost $3\%$.
+It is clear from these set of rules that to become the preferred event with the most accurate sky map we must upload the event with the highest SNR. This is where the PyCBC Live SNR optimiser becomes relevant. We construct our template bank with a minimum match of $0.97$, allowing up to a $3\%$ SNR loss for any event. If we want to maximise the SNR of our event we must perform a finer search over the template bank parameter space around the initially found template to recover that potentially lost $3\%$.
 
 % 3. Objectives and Research Questions
 % Main Goals: Clearly state the primary objectives of the chapter or paper. What do you aim to achieve or contribute?
 % Research Questions: If applicable, list specific research questions or hypotheses that guide your work.
-The SNR optimiser uses optimisation algorithms which tune input parameters (template parameters) to maximise (or minimise) an output (network SNR). There are a number of different optimisation algorithms operating under different mathematical optimisation techniques all of which have hyperparameters which can be tuned to the problem space to optimise optimiser performance---both output value and computational time.
+The SNR optimiser uses optimisation algorithms which tune input parameters (template parameters) to maximise (or minimise) an output (network SNR). There are a number of different optimisation algorithms operating under different mathematical optimisation techniques, all of which have hyperparameters which can be tuned to the problem space to optimise optimiser performance---both output value and computational time.
 
 We detail the investigation into an optimal optimisation algorithm for PyCBC Live along with the tuning of the hyperparameters for this optimisation algorithm, how these algorithms were tested and the results of using the SNR optimiser on a number of PyCBC Live events.
 
@@ -38,25 +39,13 @@ We detail the investigation into an optimal optimisation algorithm for PyCBC Liv
 
 % Goals: State what you aim to cover in this chapter (history, methods, results, and implementation).
 
-In this chapter we begin by discussing the need for the SNR optimiser.
-
-Then we discuss the historical background for the snr optimiser, the need for it and the initial configuration.
-
-Then we move on to the research performed by me to initially select optimal hyperparameters for the optimiser. How we did this, what did we test, which optimisers and event type (BBH, BNS, NSBH). DE, SHGO, the other one?
-
-Then we look at PySwarms.
-
-Then we look at some results.
-
-Then we look at some final research into chirp times and astrophysical bounds, initial point in the swarm and potentially template bank initial points.
-
-Then we discuss future improvements to this programme.
+In Section~\ref{7:sec:optimising_snr_in_low_latency} we discuss how the SNR optimiser fits into the PyCBC Live search pipeline and when it is run, alongside this we detail the generic form of the optimisation algorithms and the current optimiser being used in PyCBC Live. In Section~\ref{7:sec:original_bounds} we list the parameter value bounds for the optimised parameters and how these were calculated, in Section~\ref{7:sec:original_de} we detail the \textit{differential evolution} optimisation algorithm and in Section~\ref{7:sec:de_hyperparameter_tuning} how the hyperparameter of this algorithm were tuned and the improvements from tuning the hyperparameter. In Section~\ref{7:sec:exploring_alt_opts} we explore other optimisers and describe Particle Swarm Optimisation, the newly implemented optimisation algorithm. We detail some additional improvements to the SNR optimiser in Section~\ref{7:sec:additional-improvements} and in Section~\ref{7:sec:results} we analyse the average SNR increase of the SNR optimiser over the events uploaded by PyCBC in 2024. We conclude in Section~\ref{7:sec:conclusion} and detail potential future improvements to the SNR optimiser.
 
 \section{\label{7:sec:optimising_snr_in_low_latency}Optimising SNR in low-latency}
 
 The PyCBC Live search will matched filter the entire template bank with the data ring buffer every analysis stride (see chapter~\ref{chapter:5-pycbc-live} for greater detail). The matched filter will produce SNR triggers when any template has been found with a matched filter above an SNR of $4.5$. The PyCBC Live search will then pass these triggers to the ranking statistic, taking into account any signal-consistency test values or other ranking statistic components, to find the most significant coincident set of triggers. After the uploading of an event to GraceDB, the PyCBC Live search will spawn a subprocess and the PyCBC programme \texttt{pycbc\_optimize\_snr} is initialised. This programme takes the \gwadj data and is given the event template parameters to run a finer search over the parameter space specifically optimising for the network SNR. This finer search is performed not using a template bank approach but with an optimisation function, a process that finds the `best' possible solution by maximising for a particular objective given input parameters that can be tuned. For PyCBC Live the objective being maximised is the network SNR and the tunable input parameters are the template bank parameters: primary component mass $m_{1}$, secondary component mass $m_{2}$, primary spin z-component $s_{1z}$ and, secondary spin z-component $s_{2z}$. Boundaries are applied to the input parameters which are calculated using the initial event parameter values.
 
-We run this SNR optimisation to become the preferred event for the GraceDB `superevent' (the \gwadj signal each pipeline event has observed). An example for a recent \gwadj signal (S240924a~\cite{superevent_S240924a}) can be seen in figure~\ref{7:fig:gracedb_pref_event}.
+We run this SNR optimisation to become the preferred event for the GraceDB `super event' (the \gwadj signal each pipeline event has observed). An example for a recent \gwadj signal (S240924a~\cite{superevent_S240924a}) can be seen in Figure~\ref{7:fig:gracedb_pref_event}.
 %
 \begin{figure}
     \centering
@@ -65,17 +54,17 @@ We run this SNR optimisation to become the preferred event for the GraceDB `supe
     \label{7:fig:gracedb_pref_event}
 \end{figure}
 %
-When all pipelines pass the public alert threshold and use the same number of interferometers the tie for preferred event is broken by the SNR of the event. For S240924a we can see the PyCBC event (which was the preferred event) was an SNR optimised event, indicated by the label `SNR\_OPTIMIZED' in figure~\ref{7:fig:gracedb_snr_optimizer}.
+When all pipelines pass the public alert threshold and use the same number of interferometers, the tie for preferred event is broken by the SNR of the event. For S240924a we can see the PyCBC event (which was the preferred event) was an SNR optimised event, indicated by the label `SNR\_OPTIMIZED' in Figure~\ref{7:fig:gracedb_snr_optimizer}.
 %
 \begin{figure}
     \centering
     \includegraphics[width=1.0\linewidth]{images/7_snr_optimiser/gracedb_pycbc_pref_event.png}
-    \caption{The preferred event for the superevent S240924a~\cite{superevent_S240924a} identified by the PyCBC Live search pipeline (among others). This PyCBC Live event was created by the SNR optimiser.}
+    \caption{The preferred event for the super event S240924a~\cite{superevent_S240924a} identified by the PyCBC Live search pipeline (among others). This PyCBC Live event was created by the SNR optimiser.}
     \label{7:fig:gracedb_snr_optimizer}
 \end{figure}
 %
 
-The original PyCBC SNR optimiser was introduced during the second half of the third observing run to improve the sky maps that are generated by PyCBC Live using the SciPy~\cite{SciPy:2020} optimiser \texttt{differential evolution}~\cite{DE:1997}. Examples noted in the original Github pull request~\cite{pycbc_pull_request_2659} see increases in network SNR from $9.818$ to $10.149$, an increase of $3.6\%$.
+The original PyCBC SNR optimiser was introduced during the second half of the third observing run to improve the sky maps that are generated by PyCBC Live using the SciPy~\cite{SciPy:2020} optimiser \texttt{differential evolution}~\cite{DE:1997}. Examples noted in the original GitHub pull request~\cite{pycbc_pull_request_2659} see increases in network SNR from $9.818$ to $10.149$, an increase of $3.6\%$.
 
 Optimisation algorithms can generally be categorised into two main types based on their approach to searching the parameter space: population-based algorithms and single-solution algorithms. Population-based algorithms initialise a set of candidate solutions (a population) and explore the parameters space iteratively using interactions between the candidates to locate the optimal solution. Single-solution algorithms use a single candidate point that is iteratively improved based on some criteria. Only population-based algorithms have been considered for the PyCBC Live SNR optimiser for their computational efficiency in parallelised computing environments where the network SNR of each point can be computed in parallel using a large number of computing cores. These population-based algorithms all follow the same general steps in optimisation.
 %
@@ -95,7 +84,7 @@ These instructions can vary slightly for optimisation algorithms and we will exp
 
 The optimiser will be passed the template parameters of the event that triggers the SNR optimisation. From these parameters the \textit{bounds} are defined. These bounds represent the minimum or maximum value that the optimiser can explore for a specific parameter, preventing it from searching areas we do not want it to search.
 
-The mass parameter bounds are created by converting $m_{1}$ and $m_{2}$ into chirp mass, $\mathcal{M}$, and symmetric mass ratio, $\eta$; this combination leads to a more physically meaningful difference in waveform when changed. The $\mathcal{M}$ bounds are calculated
+The mass parameter bounds are created by converting $m_{1}$ and $m_{2}$ into chirp mass, $\mathcal{M}$, and symmetric mass ratio, $\eta$; this combination leads to a more physically meaningful difference in waveform when changed. The $\mathcal{M}$ bounds are calculated,
 %
 \begin{align}
     \mathcal{M}_{\min} &= 
@@ -120,7 +109,7 @@ The remaining parameter bounds are set to
 %
 independent of initial event parameters.
 
-Upon creating an instance of the optimiser a population of candidate solutions is randomly initialised. The first hyperparameter we consider is population size, $N$, determining the number of points in the population. Each point is a 4-dimensional vector, $\textbf{x}_{i}$, given a random value for each parameter inside the bounds, $\textbf{x}_{i} = (\mathcal{M}_{i}, \eta_{i}, s_{1z, i}, s_{2z, i}$), this is our initial population, $\textbf{x}_{N}$.
+Upon creating an instance of the optimiser, a population of candidate solutions is randomly initialised. The first hyperparameter we consider is population size, $N$, determining the number of points in the population. Each point is a 4-dimensional vector, $\textbf{x}_{i}$, given a random value for each parameter inside the bounds, $\textbf{x}_{i} = (\mathcal{M}_{i}, \eta_{i}, s_{1z, i}, s_{2z, i}$), this is our initial population, $\textbf{x}_{N}$.
 
 \subsection{\label{7:sec:original_de}The original SNR optimiser}
 
@@ -155,7 +144,7 @@ where \( \mathbf{x}_{r1} \) and \( \mathbf{x}_{r2} \) are distinct random indivi
 %
 Here, \( u_{ij} \) is the \( j \)-th parameter of the trial candidate \( u_i \), \( v_{ij} \) is the \( j \)-th parameter of the mutation vector \( v_i \), and \( x_{ij} \) is the \( j \)-th parameter of the target individual \( x_i \). \( r_j \) is generated uniformly in the interval \([0, 1)\). If \( r_j < R \), the mutation vector value is used; otherwise, the original target individual's value is retained. One exception is that the final parameter (4th) \textbf{always} takes its value from the mutation vector, ensuring that no individual remains completely unchanged in the new population.
 
-Once all trial candidates have been generated, their network SNRs are calculated and compare to the target individual SNR. If a trial candidate has a higher network SNR than the original target individual, it replaces the target. If not, the trial candidate is discarded. The process of creating mutation vectors and generating trial candidates is repeated until the maximum number of iterations is reached or another stopping criterion is satisfied.
+Once all trial candidates have been generated, their network SNRs are calculated and compare to the target individual SNR. If a trial candidate has a higher network SNR than the original target individual, it replaces the target. If not, the trial candidate is discarded. The process of creating mutation vectors and generating trial candidates is repeated until the maximum number of iterations is reached, or another stopping criterion is satisfied.
 
 \subsection{\label{7:sec:de_hyperparameter_tuning}Tuning hyperparameters}
 
@@ -170,20 +159,20 @@ The initial research into the PyCBC Live SNR optimiser involved tuning the four 
 %
 a balance must be struck between SNR and computing time. To maximise network SNR we would use larger population sizes, more iterations, higher mutation factors and a lower recombination rate but this will widen the effective search radius and increase the amount of time taken to find an optimised value.
 
-As shown previously the original values for the hyperparameters were able to recover the $3\%$ missing SNR from any template mismatch therefore, we chose to tune hyperparameters to reduce the time to run the programme. The computing time is directly related to both the population size and maximum number of iterations, which had initial values $N = 200$ and $\texttt{maxiter} = 100$. Using a simple grid search over these two hyperparameters for a number of events we were able to maintain the SNR recovery while reducing the computing time by ${\sim}25\%$ on average using $N = 100$ and $\texttt{maxiter} = 50$. These were the first set of improvements for the PyCBC Live SNR optimiser.
+As shown previously, the original values for the hyperparameters were able to recover the $3\%$ missing SNR from any template mismatch therefore, we chose to tune hyperparameters to reduce the time to run the programme. The computing time is directly related to both the population size and maximum number of iterations, which had initial values $N = 200$ and $\texttt{maxiter} = 100$. Using a simple grid search over these two hyperparameters for a number of events we were able to maintain the SNR recovery while reducing the computing time by ${\sim}25\%$ on average using $N = 100$ and $\texttt{maxiter} = 50$. These were the first set of improvements for the PyCBC Live SNR optimiser.
 
 
 
 
 \section{\label{7:sec:exploring_alt_opts}Exploring alternate optimisation algorithms}
 
-After tuning the differential evolution optimisation algorithm we began to investigate other optimisation algorithms that could be used to greater success for the PyCBC Live problem space. The SciPy package has an entire module dedicated to optimisers, \texttt{scipy.optimize}, and after testing we discovered that differential evolution was still the best suited for the job of optimising SNR in PyCBC Live.
+After tuning the differential evolution optimisation algorithm we began to investigate other optimisation algorithms that could be used to greater success for the PyCBC Live problem space. The SciPy package has an entire module dedicated to optimisers, \texttt{SciPy.optimize}, and after testing we discovered that differential evolution was still the best suited for the job of optimising SNR in PyCBC Live.
 
 Looking outside of SciPy we identified the particle swarm optimisation (PSO) algorithm~\cite{pso:1995} as a candidate for the PyCBC Live SNR optimiser. This algorithm was being used for \gwadj searches as shown by~\cite{pso_search_1:2018} and more recently~\cite{pso_search_2:2023}. This made it a good candidate for optimising network SNR in PyCBC Live.
 
 
 
-\subsection{\label{7:sec:pso}The optimal algorithm---Particle Swarm Optimisation}
+\subsection{\label{7:sec:pso}Particle Swarm Optimisation}
 
 We can describe the particle swarm optimisation (PSO) algorithm similar to how we previously described the differential evolution algorithm. PSO has the hyperparameters:
 %
@@ -195,9 +184,9 @@ We can describe the particle swarm optimisation (PSO) algorithm similar to how w
     \item Social learning rate, $c_{2}$
 \end{itemize}
 %
-the number of particles and maxmimum number of iterations are identical to the differential evolution hyperparameters. The personal and social learning rates can be considered as acceleration coefficients of the particle.
+the number of particles and maximum number of iterations are identical to the differential evolution hyperparameters. The personal and social learning rates can be considered as acceleration coefficients of the particle.
 
-Once again, we are maximising the network SNR of the PyCBC Live event, adjusting the template parameters ($m_{1}$, $m_{2}$, $s_{1z}$ and $s_{2z}$) to find the optimal values to give the maximum network SNR. PSO will initialise a ``swarm'' of particles, each with a unique combination of template parameters which can be considered the position of the particle in the parameter space, $\mathbf{x}_{i}$, the particle will also be given a random velocity, $\mathbf{v}_{i}$. The network SNR of each particle is calculated and the personal best of every particle is set, $\textbf{p}_{i}$ (as this is the only position the particle has occupied). From the swarm the global best position is determine, $\textbf{g}$.
+Once again, we are maximising the network SNR of the PyCBC Live event, adjusting the template parameters ($m_{1}$, $m_{2}$, $s_{1z}$ and $s_{2z}$) to find the optimal values to give the maximum network SNR. PSO will initialise a ``swarm'' of particles, each with a unique combination of template parameters which can be considered the position of the particle in the parameter space, $\mathbf{x}_{i}$, the particle will also be given a random velocity, $\mathbf{v}_{i}$. The network SNR of each particle is calculated and the personal best of every particle is set, $\textbf{p}_{i}$ (as this is the only position the particle has occupied). From the swarm the global best position is determined, $\textbf{g}$.
 
 Next, we update the velocity of each particle
 %
@@ -206,7 +195,7 @@ Next, we update the velocity of each particle
     \label{7:eq:pso_velocity_equation}
 \end{equation}
 %
-where $w$ is the inertial velocity of the particle, $c_{1}$ is the personal learning rate, $c_{2}$ is the social learning rate, $r_{1}$ and $r_{2}$ are random numbers uniformly distributed in $\left[0, 1\right]$, $\textbf{p}_{i}$ is the personal best position of particle $i$ and $\textbf{g}$ is the global best position of the swarm. We can break equation~\ref{7:eq:pso_velocity_equation} down into three distinct contributions to the velocity of the particle at iteration $t + 1$: $w \cdot \textbf{v}_{i}(t)$, how much weight is placed on the previous velocity of the particle, adjusted using the inertia weight hyperparameter; $c_{1} \cdot r_{1} \cdot \left(\textbf{p}_{i} - \textbf{x}_{i}(t)\right)$, how strongly the particle pulls toward its personal best, adjusted using the personal learning weight hyperparameter; $c_{2} \cdot r_{2} \cdot \left(\textbf{g} - \textbf{x}_{i}(t)\right)$, how strongly the particle pulls toward the global best, adjusted using the social learning weight hyperparameter.
+where $w$ is the inertial velocity of the particle, $c_{1}$ is the personal learning rate, $c_{2}$ is the social learning rate, $r_{1}$ and $r_{2}$ are random numbers uniformly distributed in $\left[0, 1\right]$, $\textbf{p}_{i}$ is the personal best position of the particle $i$ and $\textbf{g}$ is the global best position of the swarm. We can break Equation~\ref{7:eq:pso_velocity_equation} down into three distinct contributions to the velocity of the particle at iteration $t + 1$: $w \cdot \textbf{v}_{i}(t)$, how much weight is placed on the previous velocity of the particle, adjusted using the inertia weight hyperparameter; $c_{1} \cdot r_{1} \cdot \left(\textbf{p}_{i} - \textbf{x}_{i}(t)\right)$, how strongly the particle pulls toward its personal best, adjusted using the personal learning weight hyperparameter; $c_{2} \cdot r_{2} \cdot \left(\textbf{g} - \textbf{x}_{i}(t)\right)$, how strongly the particle pulls toward the global best, adjusted using the social learning weight hyperparameter.
 
 After the velocity of each particle is calculated the particle positions are updated
 %
@@ -216,7 +205,7 @@ After the velocity of each particle is calculated the particle positions are upd
 %
 and the network SNR of each particle is calculated again. The particle personal bests and the global best are re-evaluated and updated if they have changed and the iterative process repeats. Upon reaching the number of iterations or if there is convergence in the network SNR value, the algorithm is stopped and the optimal template parameter values are returned which maximise the network SNR.
 
-Upon testing the particle swarm optimisation algorithm was found to be superior to the differential evolution algorithm in both SNR recovery and computing time.
+Upon testing, the particle swarm optimisation algorithm was found to be superior to the differential evolution algorithm in both SNR recovery and computing time.
 
 \subsection{\label{7:sec:additional-improvements}Additional improvements}
 
@@ -224,11 +213,11 @@ The PyCBC programme \texttt{pycbc\_optimize\_snr} has been under irregular but c
 
 \subsubsection{Initial point in the population}
 
-The SNR optimiser can miss the maximum SNR of the parameter space if it is not searched with a fine enough set of particles. Not only can the maximum point be missed but the maximum can be found below the SNR recovered by the initial PyCBC Live event. To prevent this we can set a floor on the optimiser SNR by including our initial guess into the initial swarm (or population). Including this initial template into the swarm will set the best position allowing for a faster convergence on the maximum SNR.
+The SNR optimiser can miss the maximum SNR of the parameter space if it is not searched with a fine enough set of particles. Not only can the maximum point be missed but the maximum can be found below the SNR recovered by the initial PyCBC Live event. To prevent this we can set a floor on the optimiser SNR by including our initial guess into the initial swarm (or population). Including this initial template into the swarm will set the best position, allowing for a faster convergence on the maximum SNR.
 
 \subsubsection{Astrophysical spin bounds}
 
-The bounds described in section~\ref{7:sec:original_bounds} are very general and cover a wide parameters space. The PyCBC Live search is capable of detecting \gwadj signals from binary black hole, binary neutron star and, neutron star - black holes. We know that neutron stars have a physical limit on spin~\cite{Harry_Lundgren:2012} therefore we can impose more astrophysically informed spin bounds on objects with masses consistent with neutron stars
+The bounds described in Section~\ref{7:sec:original_bounds} are very general and cover a wide parameters space. The PyCBC Live search is capable of detecting \gwadj signals from binary black hole, binary neutron star and, neutron star — black holes. We know that neutron stars have a physical limit on spin~\cite{Harry_Lundgren:2012} therefore we can impose more astrophysically informed spin bounds on objects with masses consistent with neutron stars
 %
 \begin{align}
     \text{spin bounds} &= 
@@ -260,7 +249,7 @@ A higher mass \gwadj event will merge at lower frequencies and therefore have a 
 
 We also improve the $\eta$ bounds by imposing a minimum mass of any component object $\text{min}(m) = 0.99$ and calculating the maximum mass of $m_{1}$ using the maximum $\mathcal{M}$. Using this we can calculate the \textit{minimum} value of $\eta$, again by using the minimum mass of any component and the maximum mass of $m_{1}$. Then using the same maximum $\eta$ previously defined we are able to define the upper mass bound on $m_{2}$.
 
-These changes to the parameter bound calculation give us the boundaries for $\mathcal{M}$ and $\eta$ as
+These changes to the parameter bound calculation give us the boundaries for $\mathcal{M}$ and $\eta$ as,
 %
 \begin{align}
     \left(\frac{A_{0}}{\tau_{0} + 2.0}\right)^{\frac{3}{5}} &\ge \mathcal{M} \ge \left(\frac{A_{0}}{\tau_{0} - 2.0}\right)^{\frac{3}{5}}, \\[10pt]
@@ -271,11 +260,11 @@ which allow for less time to be wasted in computing regions of the parameter spa
 
 \section{\label{7:sec:results}Results}
 
-To evaluate the performance of the SNR optimiser in the PyCBC Live search we analyse the events uploaded by the PyCBC Live search to GraceDB. There is a \gwadj mock-data challenge (MDC) that runs continuously to enable live search pipelines to test pipelines and changes to the pipelines prior to enabling them on the real \gwadj data. The MDC replays $40$ days of third observing run \gwadj data with simulated injections continuously providing a much larger rate of signals to test changes on.
+To evaluate the performance of the SNR optimiser in the PyCBC Live search we analyse the events uploaded by the PyCBC Live search to GraceDB. There is a \gwadj mock-data challenge (MDC) that runs continuously to enable live search pipelines to test pipelines and changes to the pipelines prior to enabling them on the real \gwadj data. The MDC replays $40$ days of third observing run \gwadj data with simulated injections continuously, providing a much larger rate of signals to test changes on.
 
 We query GraceDB for all PyCBC `grace events'\footnote{Grace event refers to an individual event uploaded by a pipeline. The initial PyCBC upload and the SNR optimiser upload are separate grace events.} uploaded by the PyCBC full bandwidth MDC search between the dates \texttt{2024-05-30} and \texttt{2024-07-16} and retrieve $10270$ grace events, of which $5091$ were uploaded by the SNR optimiser. Each grace event has an associated `super event' to which multiple pipelines (and multiple grace events from each pipeline) are assigned, of the SNR optimised grace events, $5008$ were assigned a preferred grace event uploaded by PyCBC Live. Finally, of these PyCBC preferred super events, $4600$ had SNR optimised grace events as the preferred events. In $91.85\%$ of cases, when the SNR optimiser has uploaded a grace event, it is preferred over the original PyCBC Live uploaded grace event.
 
-Figure~\ref{7:fig:snr-diffs} shows the change in SNR between original upload and SNR optimised upload for all these SNR optimised events and figure~\ref{7:fig:latencies} shows the latency between original upload and SNR optimised upload.
+Figure~\ref{7:fig:snr-diffs} shows the change in SNR between original upload and SNR optimised upload for all these SNR optimised events and Figure~\ref{7:fig:latencies} shows the latency between original upload and SNR optimised upload.
 %
 \begin{figure}
     \centering
@@ -298,27 +287,27 @@ The average change in SNR optimised events is a $+1.64\%$ increase in SNR. We ca
 % Broader Impact: How does this optimisation contribute to the broader field of gravitational wave detection?
 % Future Work: Mention potential improvements or future research directions that could enhance the SNR optimisation process further.
 
-The SNR optimiser will increase the SNR obtained by the PyCBC Live search pipeline for a \gwadj event in the vast majority of cases with an average $1.64\%$ increase. This will lead to more accurate sky maps and improved parameter estimation for the \gwadj events. However, as identified by figure~\ref{7:fig:snr-diffs}, we have a large number of events ($8.15\%$) where the SNR optimiser has \textbf{not} increased the found SNR. We have identified that this is true when the parameter space is more complex, in the case of signals with high mass ratio, non-aligned spins or long duration templates. We have a latency requirement on our optimiser and so are unable to necessarily allow the deep exploration of these parameter spaces.
+The SNR optimiser will increase the SNR obtained by the PyCBC Live search pipeline for a \gwadj event in the vast majority of cases, with an average $1.64\%$ increase. This will lead to more accurate sky maps and improved parameter estimation for the \gwadj events. However, as identified by Figure~\ref{7:fig:snr-diffs}, we have a large number of events ($8.15\%$) where the SNR optimiser has \textbf{not} increased the found SNR. We have identified that this is true when the parameter space is more complex, in the case of signals with high mass ratio, non-aligned spins or long duration templates. We have a latency requirement on our optimiser and so are unable to necessarily allow the deep exploration of these parameter spaces.
 
 % Summary: Recap the importance of the SNR optimiser and its role in improving gravitational wave detection.
 % Final Thoughts: Reflect on the significance of this work in the context of the PyCBC pipeline and real-time gravitational wave detection efforts.
 
-The implementation of the SNR optimiser in PyCBC Live has improved the prospects of \gwadj detection in low-latency and will enable higher quality science in the post-detection regime. Providing more accurate sky maps for low-latency events will allow better multi-messenger followup of these events. The SNR optimiser has many areas of potential improvement that if more time were available I would invest my time in researching. In this subsection I will discuss some of the improvements that could be made to the SNR optimiser.
+The implementation of the SNR optimiser in PyCBC Live has improved the prospects of \gwadj detection in low-latency and will enable higher quality science in the post-detection regime. Providing more accurate sky maps for low-latency events will allow better multi-messenger follow-up of these events. The SNR optimiser has many areas of potential improvement that if more time were available, we would seek to investigate and implement. In this subsection, I will discuss some of the improvements that could be made to the SNR optimiser.
 
 \subsubsection{Template bank initial population positions}
 
 % 
 
-The two optimisers that are currently implemented---differential evolution and particle swarm optimisation---rely on spawning an initial random population of points to explore the template parameter space. We have prior knowledge about the parameter space from our templates bank and can place this initial population of points at the points of our template bank, the points will be drawn toward the best matching point from the template bank and hopefully explore the area between template bank points more deeply. If the parameter space bounds are large for an event this will place the population approximately at the correct density for the parameter space as defined by the stochastic template bank placement algorithm (described in section~\ref{2:sec:template-bank}), more densely covered areas of the template bank will be assigned more initial points to explore that space.
+The two optimisers that are currently implemented---differential evolution and particle swarm optimisation---rely on spawning an initial random population of points to explore the template parameter space. We have prior knowledge about the parameter space from our templates bank and can place this initial population of points at the points of our template bank, the points will be drawn toward the best matching point from the template bank and hopefully explore the area between template bank points more deeply. If the parameter space bounds are large for an event this will place the population approximately at the correct density for the parameter space as defined by the stochastic template bank placement algorithm (described in Section~\ref{2:sec:template-bank}), more densely covered areas of the template bank will be assigned more initial points to explore that space.
 
 \subsubsection{Template dependent optimisers and hyperparameters}
 
-We have adjusted the parameter space bounds according to the initial template parameters, the mass bounds are dependent on the template chirp time and the spin bounds are dependent on the component object (black hole or neutron star). We could apply further options to both optimisers and the hyperparameters of the optimisers depending on the template. If high-mass BBH signals require fewer iterations we can adjust that hyperparameter, if low-mass signals require a finer exploration of the parameter space we can change the mutation factor and recombination factor or the inertia and learning rates. We might be able to find optimisers that respond better to specific regions of the parameter space, similar to how the template banks are composed using different techniques for different regions.
+We have adjusted the parameter space bounds according to the initial template parameters, the mass bounds are dependent on the template chirp time and the spin bounds are dependent on the component object (black hole or neutron star). We could apply further options to both optimisers and the hyperparameters of the optimisers, depending on the template. If high-mass BBH signals require fewer iterations we can adjust that hyperparameter, if low-mass signals require a finer exploration of the parameter space we can change the mutation factor and recombination factor or the inertia and learning rates. We might be able to find optimisers that respond better to specific regions of the parameter space, similar to how the template banks are composed using different techniques for different regions.
 
 
 \subsubsection{Machine learning optimisers and hyperparameter tuning}
 
-Since starting this PhD in 2020 the rise of machine learning has been relentless, techniques that were considered novel and cutting-edge have fallen by the wayside and newer, more efficient and effective techniques have replaced them. The SNR optimiser can benefit heavily from this catalogue of machine learning based events that could be highly optimised for an SNR optimisation problem. We have a large number of historical events to train such a model on to allow enhanced parameter space exploration which can allow either a faster optimisation or a deeper optimisation, especially for low-mass signals.
+Since starting this PhD in 2020 the rise of machine learning has been relentless, techniques that were considered novel and cutting-edge have fallen by the wayside and newer, more efficient and effective techniques have replaced them. The SNR optimiser can benefit heavily from this catalogue of machine learning based events that could be highly optimised for an SNR optimisation problem. We have a large number of historical events to train such a model on to allow enhanced parameter space exploration, which can allow either a faster optimisation or a deeper optimisation, especially for low-mass signals.
 
 Another area in which machine learning can help is with hyperparameter tuning. Optimising the SNR optimiser hyperparameters will return instant reward for the current configuration of the optimiser, the hyperparameters chosen initially or after our initial optimisation may not still be the correct choice in the fourth observing run and in the future. We generate a template bank for each observing run so we should optimise the hyperparameters too.
 

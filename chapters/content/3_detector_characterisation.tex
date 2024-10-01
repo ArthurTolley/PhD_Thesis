@@ -1,17 +1,17 @@
 %%%%%%%%%% %%%%%%%%%% %%%%%%%%%%
 
 % Purpose of the chapter
-In this thesis we have made improvements to the search for \gws by improving the quality of the detector data and understanding the noise background of the detectors. 
+In this thesis, we have made improvements to the search for \gws by improving the quality of the detector data and understanding the noise background of the detectors. 
 
 % Section by section of chapter
-This chapter is laid out as follows: we briefly repeat our the state of the current \gwadj detector network in section~\ref{3:sec:gw_detectors}, in section~\ref{3:sec:detchar_calib} we define the research area of detector characterisation, the systematic sources of noise faced in the detectors is described in section~\ref{3:sec:detector-analysis}, some commonly detector data noise transients in section~\ref{3:sec:noise-transients} and finally, the detector characterisation tools most commonly used and referred to throughout this thesis in section~\ref{3:sec:detchar-tools}.
+This chapter is laid out as follows: we briefly repeat the state of the current \gwadj detector network in Section~\ref{3:sec:gw_detectors}, in Section~\ref{3:sec:detchar_calib} we define the research area of detector characterisation, the systematic sources of noise faced in the detectors are described in Section~\ref{3:sec:detector-analysis}, some common detector data noise transients in Section~\ref{3:sec:noise-transients} and finally, the detector characterisation tools most commonly used and referred to throughout this thesis in Section~\ref{3:sec:detchar-tools}.
 
 \section{\label{3:sec:gw_detectors}\Gwadj detectors}
 
 % To understand the importance of Detector Characterisation we must understand the detectors
-\Gwadj astronomy in the present day is performed by ground-based detectors at different locations globally: the LIGO-Livingston and LIGO-Hanford detectors are located in the United States of America, the Virgo interferometer in Italy and, the KAGRA telescope in Japan. We will primarily reference the LIGO detectors in the United States of America when discussing the challenges faced in detector characterisation. 
+\Gwadj astronomy in the present day is performed by ground-based detectors at different locations globally: the LIGO-Livingston and LIGO-Hanford detectors are located in the United States of America, the Virgo interferometer in Italy, and the KAGRA telescope in Japan. We will primarily reference the LIGO detectors in the United States of America when discussing the challenges faced in detector characterisation. 
 
-As described in chapter~\ref{chapter:1-gravitational-waves}, the LIGO detectors work on the principle of laser interferometry to detect \gwadj signals. The sensitivity~\cite{aLIGO_design_curve:2018} of \gwadj detectors is limited by fundamental sources of noise~\cite{PSD_var:2020} such as seismic noise~\cite{Glanzer:2023}, thermal noise~\cite{thermal_noise:2018} and quantum noise~\cite{quantum_noise:2003}. Additionally, we have non-Gaussian noise~\cite{Noise_Guide:2020} which manifests as transient noise bursts in the data which can contribute to false positives in \gwadj searches and the obscuring of real \gwadj signals~\cite{GW170817:2017, GW150914_noise:2016}.
+As described in Chapter~\ref{chapter:1-gravitational-waves}, the LIGO detectors work on the principle of laser interferometry to detect \gwadj signals. The sensitivity~\cite{aLIGO_design_curve:2018} of \gwadj detectors is limited by fundamental sources of noise~\cite{PSD_var:2020} such as seismic noise~\cite{Glanzer:2023}, thermal noise~\cite{thermal_noise:2018} and quantum noise~\cite{quantum_noise:2003}. Additionally, we have non-Gaussian noise~\cite{Noise_Guide:2020}, which manifests as transient noise bursts in the data, which can contribute to false positives in \gwadj searches and the obscuring of real \gwadj signals~\cite{GW170817:2017, GW150914_noise:2016}.
 
 \subsection{\label{3:sec:detector-analysis}Detector analysis}
 
@@ -20,16 +20,16 @@ As described in chapter~\ref{chapter:1-gravitational-waves}, the LIGO detectors 
 %    Seismic, thermal, shot, radiation pressure
 %    Noise Curve
 
-Systematic sources of noise are the dominating limit in the sensitivity of ground-based detectors. The sources of noise with the greatest contributions are
+Systematic sources of noise are the dominating limitation in the sensitivity of ground-based detectors. The sources of noise with the greatest contributions are
 %
 \begin{itemize}
-    \item Seismic noise~\cite{Glanzer:2023}: the vibrations of the ground causes a coupled vibration motion in the mirrors of the interferometer. Higher frequency seismic noise ($1-10$Hz) is often caused by local ground movements typically anthropomorphic in nature or greater magnitude earthquakes~\cite{Nuttall:2018}. Lower frequency seismic noise ($<1$Hz) is caused by larger-scale geophysical processes such as: ocean waves, tidal effects, or smaller local earthquakes~\cite{aLIGO:2015}. Seismic noise can be mitigated with advanced suspension systems to isolate mirrors and end-station components from the ground to prevent coupling to seismic motion~\cite{seismic_isolation:2015}.
+    \item Seismic noise~\cite{Glanzer:2023}: the vibrations of the ground causes a coupled vibration motion in the mirrors of the interferometer. Higher frequency seismic noise ($1-10$Hz) is often caused by local ground movements typically anthropogenic in nature, or greater magnitude earthquakes~\cite{Nuttall:2018}. Lower frequency seismic noise ($<1$Hz) is caused by larger-scale geophysical processes such as ocean waves, tidal effects, or smaller local earthquakes~\cite{aLIGO:2015}. Seismic noise can be mitigated with advanced suspension systems to isolate mirrors and end-station components from the ground to prevent coupling to seismic motion~\cite{seismic_isolation:2015}.
     \item Thermal noise~\cite{thermal_noise:2018}: the thermal energy of interferometer components will cause them to vibrate. This noise can be reduced with new mirror materials with resonant frequencies outside the sensitive regions or with cryogenically cooled mirrors such as those used by KAGRA~\cite{KAGRA:2021}.
-    \item Shot noise~\cite{quantum_noise:2003}: the distribution in the number of photons observed by the interferometer photodetector in any time interval is Poisson distributed and the error in the photon count places limits on the sensitivity. The error is proportional to the square-root of the count ($\sigma \propto \sqrt{\lambda}$) therefore, the simplest way to reduce this error is to increase the laser power and increase the photon count in the time interval.
-    \item Radiation pressure~\cite{quantum_noise:2003}: the pressure exerted by the photons hitting the end mirrors will decrease search sensitivity. To reduce this noise the laser power can be reduced however, this will increase the shot noise.
+    \item Shot noise~\cite{quantum_noise:2003}: the distribution in the number of photons observed by the interferometer photodetector in any time interval is Poisson distributed, and the error in the photon count places limits on the sensitivity. The error is proportional to the square-root of the count ($\sigma \propto \sqrt{\lambda}$) therefore, the simplest way to reduce this error is to increase the laser power and increase the photon count in the time interval.
+    \item Radiation pressure~\cite{quantum_noise:2003}: the pressure exerted by the photons hitting the end mirrors will decrease search sensitivity. To reduce this noise the laser power can be reduced; however, this will increase the shot noise.
 \end{itemize}
 
-It can be seen that the laser power must be calibrated to balance the impact of increasing the photon count which will decrease shot noise but simultaneously increase radiation pressure noise. A figure displaying these systematic noise sources and their limitations in the LIGO detector case can be seen in figure~\ref{3:fig:aLIGO_noise}.
+It can be seen that the laser power must be calibrated to balance the impact of increasing the photon count which will decrease shot noise but simultaneously increase radiation pressure noise. A figure displaying these systematic noise sources and their limitations in the LIGO detector case can be seen in Figure~\ref{3:fig:aLIGO_noise}.
 %
 \begin{figure}
     \centering
@@ -42,7 +42,7 @@ It can be seen that the laser power must be calibrated to balance the impact of 
 % Sensitivity Analysis
 %    BNS Distance
 %    Sensitivity Measurement
-To monitor detector sensitivity the binary neutron star inspiral range is calculated. This is the range at which a binary neutron star signal, with both components having a mass of $1.4$ M$_{\odot}$, will be detected given the characteristic noise (PSD) of the data. The PSD is calculated by taking an average of the detector noise in the previous minute~\cite{range_calculation:2003, ota:2023}. Figure~\ref{3:fig:bns_range} shows an example of the binary neutron star range for a day of LIGO-Hanford during the fourth observing run.
+To monitor detector sensitivity, the binary neutron star inspiral range is calculated. This is the range at which a binary neutron star signal, with both components having a mass of $1.4$ M$_{\odot}$, will be detected given the characteristic noise (PSD) of the data. The PSD is calculated by taking an average of the detector noise in the previous minute~\cite{range_calculation:2003, ota:2023}. Figure~\ref{3:fig:bns_range} shows an example of the binary neutron star range for a day of LIGO-Hanford during the fourth observing run.
 %
 \begin{figure}
     \centering
@@ -56,7 +56,7 @@ To monitor detector sensitivity the binary neutron star inspiral range is calcul
 
 % Introduction to Noise Transients
 
-Noise transients, commonly referred to as glitches, are short duration bursts of noise found in \gwadj data. The systematic sources of noise described in section~\ref{3:sec:detector-analysis} limit the sensitivity of the detector to a certain frequency range, glitches appear within this sensitivity frequency range. The specific noise transients investigated by detector characterisation are non-Gaussian noise artefacts that have the ability to obscure~\cite{GW170817:2017} or mimic \gwadj signals~\cite{GWMimicking:2010} producing false-alarms in our \gwadj search pipelines. Understanding these glitches is crucial for \gwadj detection, they have the potential to reduce the sensitivity and hinder the reliability of the detectors.
+Noise transients, commonly referred to as glitches, are short duration bursts of noise found in \gwadj data. The systematic sources of noise described in Section~\ref{3:sec:detector-analysis} limit the sensitivity of the detector to a certain frequency range, glitches appear within this sensitivity frequency range. The specific noise transients investigated by detector characterisation are non-Gaussian noise artefacts that have the ability to obscure~\cite{GW170817:2017} or mimic \gwadj signals~\cite{GWMimicking:2010}, producing false-alarms in our \gwadj search pipelines. Understanding these glitches is crucial for \gwadj detection; they have the potential to reduce the sensitivity and hinder the reliability of the detectors.
 %
 % GW170817 Obscured
 %
@@ -67,11 +67,11 @@ There are at least $27$~\cite{gravityspy:2023, gravityspy:2024} different classe
 
 % Common Sources of Noise Transients
 
-Glitches originate from either environmental sources, instrumental sources or a coupling of the two. As mentioned previously, seismic noise limits the sensitivity of the detectors below ${\sim}10 \, \text{Hz}$, but the coupling of seismic motion into interferometer components can cause one of the more common glitches---\scl. Other environmental noise sources are heavy winds, lightning, and human activity (traffic, construction, trains, the daily commute). A historical glitch identified at LIGO-Livingston was caused by an air conditioning compressor cycling, these glitches were seen by both a magnetometer and the \gwadj strain channel. Other instrumental glitches might be caused by mirror suspensions, electronics, control systems or laser fluctuations.
+Glitches originate from either environmental sources, instrumental sources, or a coupling of the two. As mentioned previously, seismic noise limits the sensitivity of the detectors below ${\sim}10 \, \text{Hz}$, but the coupling of seismic motion into interferometer components can cause one of the more common glitches---\scl. Other environmental noise sources are heavy winds, lightning, and human activity (traffic, construction, trains). A historical glitch identified at LIGO-Livingston was caused by an air conditioning compressor cycling, these glitches were seen by both a magnetometer and the \gwadj strain channel. Other instrumental glitches might be caused by mirror suspensions, electronics, control systems or laser fluctuations.
 
 % Other examples of some common glitches
 
-The most common glitches are: blips~\cite{blips:2019}, \scl~\cite{ArchEnemy:2023} and whistles~\cite{glitschen:2021}, Omega scans of these glitches can be seen in figure~\ref{3:fig:glitches_subset}. The sources of these glitches have been studied, for example, whistles are caused by the beating of radio frequencies in the detector, however, some glitches are from unknown sources such as blips. \Scl has been found from many different sources in the detector and great effort has been made to reduce the presence of \scl in the data~\cite{reducing_scattering:2020} but as of the fourth observing run some \scl still remains.
+The most common glitches are: blips~\cite{blips:2019}, \scl~\cite{ArchEnemy:2023} and whistles~\cite{glitschen:2021}, Omega scans of these glitches can be seen in Figure~\ref{3:fig:glitches_subset}. The sources of these glitches have been studied. For example, whistles are caused by the beating of radio frequencies in the detector; however, some glitches come from unknown sources, such as blips. \Scl has been found from many sources in the detector and great effort has been made to reduce the presence of \scl in the data~\cite{reducing_scattering:2020} but as of the fourth observing run some \scl still remains.
 %
 \begin{figure}
     \centering
@@ -83,18 +83,18 @@ The most common glitches are: blips~\cite{blips:2019}, \scl~\cite{ArchEnemy:2023
 
 % Detection and Characterisation of Noise Transients
 
-An number of algorithms and tools have been developed to detect and characterise noise transients in \gwadj data~\cite{ArchEnemy:2023, reducing_scattering:2020, Glanzer:2023, gravityspy:2017, gravityspy:2021, gravityspy:2023, glitschen:2021,  BayesWave:2015, gwadaptive:2022, O3_subtraction:2022, Powell:2016, glitschen:2021}. The primary aim of these tools is the identification of glitches and analysis of properties of the glitches (amplitude, frequency, duration, waveform shape) to determine the source of the noise. Once the noise source has been identified improvements to the detector can be made to eliminate it. Other tools focus on modelling noise transients for the purpose of subtracting them from affected \gwadj data~\cite{ArchEnemy:2023, BayesWave:2015, glitschen:2021, antiglitch:2023}.
+A number of algorithms and tools have been developed to detect and characterise noise transients in \gwadj data~\cite{ArchEnemy:2023, reducing_scattering:2020, Glanzer:2023, gravityspy:2017, gravityspy:2021, gravityspy:2023, glitschen:2021,  BayesWave:2015, gwadaptive:2022, O3_subtraction:2022, Powell:2016, glitschen:2021}. The primary aim of these tools is the identification of glitches and analysis of properties of the glitches (amplitude, frequency, duration, waveform shape) to determine the source of the noise. Once the noise source has been identified improvements to the detector can be made to eliminate it. Other tools focus on modelling noise transients for the purpose of subtracting them from affected \gwadj data~\cite{ArchEnemy:2023, BayesWave:2015, glitschen:2021, antiglitch:2023}.
 %
 % GravitySpy figure of a bunch of glitch classes
 %
 
 % Auxiliary Channels
 
-Another tool to use in the identification and classification of glitches in the thousands of auxiliary channels alongside the main strain channel~\cite{iDQ:2020} which monitor the many subsystems of the detector and can be used to find noise correlations between the different parts of the instrument~\cite{DQ_vetoes:2017}. The auxiliary channels which are not sensitive to \gws are very useful in identifying any correlations between noise in the gravitational strain channel and noise also seen in another channel which cannot observe \gws, an example of this is the magnetometer recording the same glitch as seen in the \gwadj strain channel when the air conditioning compressor was cycling at LIGO-Livingston~\cite{Nuttall:2018}.
+Another tool used in the identification and classification of glitches is the thousands of auxiliary channels alongside the main strain channel~\cite{iDQ:2020}, which monitor the many subsystems of the detector and can be used to find noise correlations between the different parts of the instrument~\cite{DQ_vetoes:2017}. The auxiliary channels which are not sensitive to \gws are very useful in identifying any correlations between noise in the gravitational strain channel and noise also seen in another channel which cannot observe \gws, an example of this is the magnetometer recording the same glitch as seen in the \gwadj strain channel when the air conditioning compressor was cycling at LIGO-Livingston~\cite{Nuttall:2018}.
 
 \section{\label{3:sec:detchar_calib}Detector characterisation and calibration}
 
-Detector characterisation is a field of study which assess and improves the performance of \gwadj detectors to ensure accurate and reliable detection of \gws. \Gwadj detector calibration determines how the response of the detector translates to astrophysical signals, ensuring accuracy in extracted astrophysical information. Detector characterisation is responsible for identifying and mitigating the many sources of noise that can obscure or mimic real signals. The optimisation of detector sensitivity is also studied whereby different designs and components can be fine-tuned to increase sensitivity. Another responsibility of detector characterisation is the monitoring of detector performance in real-time to assess sensitivity changes.
+Detector characterisation is a field of study which assess and improves the performance of \gwadj detectors to ensure accurate and reliable detection of \gws. \Gwadj detector calibration determines how the response of the detector translates to astrophysical signals, ensuring accuracy in extracted astrophysical information. Detector characterisation is responsible for identifying and mitigating the many sources of noise that can obscure or mimic real signals. The optimisation of detector sensitivity is also studied, whereby different designs and components can be fine-tuned to increase sensitivity. Another responsibility of detector characterisation is the monitoring of detector performance in real-time to assess sensitivity changes.
 
 Overall, effective detector characterisation ensures that \gwadj observatories can operate at maximum potential and provide accurate and reliable observations of \gws. The \gwadj detector organisations have dedicated working groups for detector characterisation and calibration~\cite{O2O3_DetChar:2021, VirgoDetChar:2023}. In this thesis, chapter~\ref{chapter:4-archenemy} is a direct contribution to the field of detector characterisation with a contribution to the LIGO detector characterisation working group.
 
@@ -104,7 +104,7 @@ The detector characterisation group has the important task of verifying data qua
 
 \paragraph{Omega scans}
 
-are two-dimensional time-frequency representations of \gwadj data used very commonly to display \gwadj data in a human interpretable fashion which contains more information that a simple spectrogram and can reveal time-frequency relationships that are virtually impossible for humans to see in the time series. Example Omega scans can be seen in figure~\ref{3:fig:glitches_subset} for a number of glitches.
+are two-dimensional time-frequency representations of \gwadj data used very commonly to display \gwadj data in a human interpretable fashion, which contains more information than a simple spectrogram and can reveal time-frequency relationships that are virtually impossible for humans to see in the time series. Example Omega scans can be seen in Figure~\ref{3:fig:glitches_subset} for a number of glitches.
 
 Detector characterisation uses Omega scans to highlight glitches which can have sharp and localised features in the time-frequency plane. Omega scans calculate the amplitude of strain power at each pixel using the \textit{Q-transform}~\cite{qscan:2004}, where for each point in time and frequency a number of wavelets are created with a varying \textit{quality factor} ($Q$). $Q$ is calculated using
 %
@@ -128,7 +128,7 @@ and the Omega scan algorithm will select the wavelet which produces the greatest
 
 \paragraph{GravitySpy}
 
-is a citizen science machine learning tool for classifying glitches found in \gwadj data~\cite{gravityspy:2017}. GravitySpy has been trained by volunteers at the project website: at~\href{https://www.zooniverse.org/projects/zooniverse/gravity-spy}{https://www.zooniverse.org/projects/zooniverse/gravity-spy}, hosted on the Zooniverse~\cite{zooniverse}.
+is a citizen science machine learning tool for classifying glitches found in \gwadj data~\cite{gravityspy:2017}. GravitySpy has been trained by volunteers at the project website:~\href{https://www.zooniverse.org/projects/zooniverse/gravity-spy}{https://www.zooniverse.org/projects/zooniverse/gravity-spy}, hosted on the Zooniverse~\cite{zooniverse}.
 
 GravitySpy has uploaded more than $1.4$ million of Omega scans of \gwadj data which have been found to contain bursts of power which could be caused by glitches. The Omega scans are published on the GravitySpy project and volunteers are given these images and the option for which glitch they think is contained within the image. Once these images have been classified the machine learning algorithm is trained and it can go further to classify the images without the need of volunteers~\cite{gravityspy:2021}.
 

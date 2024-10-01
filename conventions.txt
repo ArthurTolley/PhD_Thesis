@@ -15,6 +15,8 @@ PyCBC Live
 PyCBC Live early warning/full bandwidth
 \texttt{} not \verb||
 reweighted
+focuses
+downranked
 
 
 %~~~% Text commands %~~~%
@@ -47,7 +49,7 @@ reweighted
 FINAL CHECKS:
 - Equations with units $number \, \text{unit}$
 - Punctuation in all equations (where needed)
-- Compound adjectives with hypens (gravitational-wave signal)
+- Compound adjectives with hyphens (gravitational-wave signal)
 - Sentence case in section titles
 - Section, Subsection, Figure, Equation, Table (capitals!)
 - Define acronyms the first time they appear and check for consistency (e.g., use either "SNR" or "signal-to-noise ratio" uniformly).
