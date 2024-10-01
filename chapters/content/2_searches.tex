@@ -44,7 +44,7 @@ The primary objective of \gwadj search pipelines is to extract $h(t)$ from $s(t)
 
 \section{\label{2:sec:search-methods}Searching through \gwadj data}
 
-Detecting \gws from \cbcs requires sophisticated search methods capable of sifting through vast amounts of data collected by \gwadj detectors. This section details the search techniques used to identify and characterize \gwadj signals. There many pipelines which search for \gws~\cite{pipelines} and in this section we will focus on the PyCBC search~\cite{PyCBC:2016, PyCBC:2017, PyCBC_package:2021}
+Detecting \gws from \cbcs requires sophisticated search methods capable of sifting through vast amounts of data collected by \gwadj detectors. This section details the search techniques used to identify and characterize \gwadj signals. There are many pipelines which search for \gws~\cite{pipelines, PyCBC:2017, GstLAL:2020, SPIIR:2020, MBTA:2021, cWB:2020, oLIB:2015, MLy:2020qax} and in this section we will focus on the PyCBC search~\cite{PyCBC:2016, PyCBC:2017, PyCBC_package:2021}
 
 We begin with the single detector search techniques to identify potential \gwadj events and then detail the tests and techniques used to combine single detector detections to identify coincidentally found \gwadj signals.
 
@@ -76,10 +76,10 @@ If the detector noise is Gaussian we can compute the probability densities
 and the likelihood ratio (equation~\ref{2:eq:likelihood_ratio})
 %
 \begin{equation}
-    \Lambda(\mathcal{H}_{1}|s) = \frac{{\rm e}^{-(s-h|s-h)/2}}{{\rm e}^{-(s|s)/2}} = {\rm e}^{(s|h)}{\rm e}^{-(h|h)/2},
+    \Lambda(\mathcal{H}_{1}|s) = \frac{{\rm e}^{-(s-h|s-h)/2}}{{\rm e}^{-(s|s)/2}} = {\rm e}^{(s|h)}{\rm e}^{-(h|h)/2}.
 \end{equation}
 %
-where it is sensible to take the logarithm to obtain the log-likelihood ratio
+The exponential scaling of the likelihood values can introduce numerical instability when computing the likelihood ratio. Therefore, we take the logarithm, resulting in the log-likelihood ratio
 %
 \begin{equation}
     \log \Lambda(\mathcal{H}_{1}|s) = (s|h) - \frac{(h|h)}{2}.
@@ -179,7 +179,7 @@ having made the assumption that $\tilde{h}_{\pi/2}(f) = i\tilde{h}_{0}(f)$ which
 
 We have demonstrated that the matched filter can be used to analytically and efficiently maximise over the amplitude, time of arrival and phase of a known signal. We acknowledge that for a real search for \gws we will not know the $15$ parameters of the signal. The search is performed by creating many realisations of the \gwadj signal and searching over the data with each of them. However, we need to discuss how the realisation parameter values are chosen to ensure a sufficiently covered parameter space.
 
-When a signal is found by a template\footnote{A realisation of the \gwadj signal waveform.} with parameters not equal to the true values we will expect to see a fraction loss in the expected SNR. The closer the template parameters are to the signal parameters, the closer to the maximum SNR we will see. 
+When a signal is found by a template\footnote{A realisation of the \gwadj signal waveform.} with parameters not equal to the true values we will expect to see a fractional loss in the expected SNR. The closer the template parameters are to the signal parameters, the closer to the maximum SNR we will see. 
 
 We can define a signal with parameters $\lambda$
 %
@@ -204,11 +204,9 @@ where we can define $\mathcal{A}$ as the ambiguity function
     \mathcal{A}(\lambda;\lambda + \Delta \lambda) := (u(\lambda)|u(\lambda + \Delta \lambda)),
 \end{equation}
 %
-which tells us how well our nearby template matches to the true signal\footnote{Templates are assumed to be normalised such that $(u(\lambda)|u(\lambda)) = 1$.}. If the ambiguity value is large then we have a small fraction loss and the template is a good match to the true signal, if the value is small then the template is a poor description of the signal template.
+which tells us how well our nearby template matches to the true signal\footnote{Templates are assumed to be normalised such that $(u(\lambda)|u(\lambda)) = 1$.}. If the ambiguity value is large then we have a small fractional loss and the template is a good match to the true signal, if the value is small then the template is a poor description of the signal template.
 
-% CHANGE ALL OF THIS TO BE NOT METRIC BASED
-
-$\lambda$ contains both the \textit{intrinsic} and \textit{extrinsic} parameters of the signal, we can define the \textit{overlap} between two templates $h_{1}$ and $h_{2}$ considering only the intrinsic parameters,
+$\lambda$ contains both the \textit{intrinsic} and \textit{extrinsic} parameters of the signal, we can define the \textit{overlap} between two templates $h_{1}$ and $h_{2}$ considering only the intrinsic parameters when we maximise over the extrinsic parameters,
 %
 \begin{equation}
     \mathcal{O}(h_{1}, h_{2}) := (h_{1} | h_{2}) = \frac{(h_{1} | h_{2})}{\sqrt{(h_{1} | h_{1})(h_{2} | h_{2})}}.
@@ -220,7 +218,9 @@ For a signal $h_{1}$, the overlap represents the fraction of SNR recovered by ma
     \mathcal{M}(h_{1}, h_{2}) = \underset{\phi_0, t_{c}}{max}(\hat{h}_{1}|\hat{h}_{2}(\phi_{c}, t_{c})).
 \end{equation}
 %
-We can then construct a bank of templates with a requirement that any signal, when matched filtered by the whole bank, can be recovered with a maximum of $3\%$~\cite{Owen_Sathya:1999} loss. This corresponds to a mismatch, $1 - \mathcal{M}$, of $0.03$, at least one template in the template bank must have a maximised overlap of at least $0.97$ with the true signal waveform.
+We then require that any signal can be recovered with a maximum $3\%$~\cite{Owen_Sathya:1999} SNR loss, corresponding to a mismatch, $1 - \mathcal{M}$, of $0.03$, at least one template in must have a maximised overlap of at least $0.97$ with the true signal waveform. We can then construct a bank of templates with this requirement. Template banks can be constructed using two primary approaches: geometrically~\cite{geom_bank_1:1991, geom_bank_2:1992, geom_bank_3:1995, geom_bank_4:1995, Owen_Sathya:1999} or stochastically~\cite{Harry_sbank:2009, Stochastic_tb:2008}.
+
+In a geometric approach, a lattice is defined within the template parameter space, with each lattice point corresponding to a unique template. In the stochastic approach randomly generated templates are placed in the bank and their match to existing templates is calculated. A new template is retained if its maximum match with any existing template is less than $0.97$ and discarded if the match is greater than or equal to $0.97$.
 
 \subsection{\label{2:sec:signal-consistency}Signal consistency tests}
 
@@ -277,7 +277,7 @@ We define a detection threshold such that a template found at a time with SNR ab
 
 \subsection{\label{2:sec:auto-gating}Auto-gating}
 
-Some glitches are too loud to be suppressed by the signal consistency tests and will produce very large SNR values when matched-filtered with the template bank. Glitches which resemble delta-functions can produce not only a very high SNRs but can also cause a \textit{ringing} effect where the matched filter will continue to produce high SNR triggers for a short time.
+When matched filtering the template bank and the data glitches will produce triggers which are suppressed by the signal-consistency tests. Very loud glitches which resemble delta-functions will produce very large SNR triggers and will cause a \textit{ringing} effect where the matched filter will continue to produce high SNR triggers for a short time.
 
 These glitches are identified by looking for excess power in the whitened\footnote{Whitened data has a flat power spectral density with no frequency-dependent noise.} data and are handled by applying a windowing function around the data. This process is known as \textit{gating} and the window is applied such that a smooth transition between data and zeroing is made to avoid discontinuities in the data which can introduce more data artefacts. Figure~\ref{2:fig:autogating} shows an example of a glitch which has been gated.
 %
@@ -289,7 +289,7 @@ These glitches are identified by looking for excess power in the whitened\footno
 \end{figure}
 %
 
-Gating occurs automatically in \gwadj searches in a process called `auto-gating'. Auto-gating in PyCBC Live zeroes only $0.25$ seconds of data with a taper of $0.25$ seconds on either side.
+Gating occurs automatically in \gwadj searches in a process called `auto-gating'. Auto-gating in PyCBC Live zeroes only $0.25$ seconds of data with a taper of $0.25$ seconds on either side. Auto-gating will completely remove the delta-function glitch and will prevent the ringing effect, removing the triggers caused by the glitch.
 
 \subsection{\label{2:sec:coincidence-test}Coincidence tests}
 
@@ -306,12 +306,12 @@ In a two detector example, for example LIGO-Hanford and LIGO-Livingston, the sig
     \label{2:fig:observatories}
 \end{figure}
 %
-Therefore, we can expect a maximum delay between single-detector detections of $10 \, \text{ms}$. For the coincidence test we must allow a window between single detector triggers of this light travel time. Additionally, it is only sensible to make the requirement that the intrinsic parameters of the two single detector triggers are the same, i.e. they have seen the same gravitational waveform.
+Therefore, we can expect a maximum delay between single-detector detections of $10 \, \text{ms}$. For the coincidence test we must allow a window between single detector triggers of this light travel time. An additional coincidence requirement in PyCBC is the intrinsic parameters of the two single detector triggers being the same, i.e. they have seen the same gravitational waveform.
 
 
 \subsection{\label{2:sec:ranking-statistic}Ranking statistic}
 
-Finally, we can combine all these components to create a ranking statistic which we treat as the optimal detection statistic for identifying \gwadj signals from \gwadj detector data. The optimal detection statistic is the likelihood ratio~\cite{Biswas:2012}
+Finally, we can combine all these components to create a ranking statistic to use as the detection statistic for identifying \gwadj signals from \gwadj detector data. The optimal detection statistic is the likelihood ratio~\cite{Biswas:2012}
 %
 \begin{equation}
     \Lambda(\vec{\kappa}) = \frac{r_{n}(\vec{\kappa})}{r_{s}(\vec{\kappa})},
@@ -341,24 +341,24 @@ Again, it is natural to use the log-likelihood ratio due to the order of magnitu
     R(\vec{\kappa}) = \log \Lambda(\vec{\kappa}) = \log r_{s}(\vec{\kappa}) - \log r_{n}(\vec{\kappa}).
 \end{equation}
 %
-We call the log-likelihood detection statistic the ranking statistic which is constructed from a noise model and signal model. The PyCBC noise and signal models have changed over the course of the \gwadj search history. For this reason we will focus primarily on the models used in one of the first searches for \cbcs---\texttt{ihope}~\cite{IHOPE:2012zx}
+We call the log-likelihood detection statistic the ranking statistic which is constructed from a noise model and signal model. The PyCBC noise and signal models have changed over the course of the \gwadj search history. We will describe the models used in~\cite{PyCBC:2016}, the first iteration of the \texttt{PyCBC} search for \cbcs.
 
-\subsubsection{\label{2:sec:ihope}ihope}
+\subsubsection{\label{2:sec:pycbc-2016}PyCBC}
 
-The \texttt{ihope} search pipeline ranked single detector triggers by their SNR and $\chi^{2}$ values to create a re-weighted SNR, $\hat{\rho}$ for each detector. The ranking statistic noise model used by the \texttt{ihope} search pipeline was a simple quadrature sum of single detector re-weighted SNRs
+The \texttt{PyCBC} search pipeline ranked single detector triggers by their SNR and $\chi^{2}$ values to create a re-weighted SNR, $\hat{\rho}$ for each detector. The ranking statistic noise model used by the \texttt{PyCBC} search pipeline was a simple quadrature sum of single detector re-weighted SNRs
 %
 \begin{equation}
     \hat{\rho}^{2} = \sqrt{\hat{\rho}^{2}_{d_{1}} + \hat{\rho}^{2}_{d_{2}}}.
-    \label{2:eq:IHOPE_noise_model}
+    \label{2:eq:PyCBC_noise_model}
 \end{equation}
 %
-The \texttt{ihope} search pipeline had no signal model and so the ranking statistic was simply the noise model presented above. As detailed in~\cite{IHOPE:2012zx}, this ranking statistic was shown to `downrank' all triggers below a re-weighted SNR of $6$ in both a Gaussian noise simulation and the $5^{th}$ science run of LIGO~\cite{S5:2012}. We note that in this case there are $0$ real signals in the data and therefore this noise model has been applied to only noise triggers.
+The \texttt{PyCBC} search pipeline had no signal model and so the ranking statistic was simply the noise model presented above. As detailed in~\cite{PyCBC:2016}, this ranking statistic was shown to `downrank' all triggers below a re-weighted SNR of $6$ in both a Gaussian noise simulation and the $6^{th}$ science run of LIGO~\cite{rw_snr_eq:2012}. We note that in this case there are $0$ real signals in the data and therefore this noise model has been applied to only noise triggers.
 
 \subsection{\label{2:sec:background-estimation}Candidate event significance}
 
-We can define some threshold at which a coincident trigger with ranking statistic value above this threshold can be preliminary considered to be a \gwadj event, we refer to these coincident triggers as \textit{candidates}. We define the \textit{significance} of the candidate use the \textit{false-alarm rate}. False alarms are coincident triggers that have been cause entirely by noise, with no astrophysical origin. The rate of false alarms depends on the search pipeline's response to detector noise and must be measured empirically.
+We can define some threshold at which a coincident trigger with ranking statistic value above this threshold can be preliminary considered to be a \gwadj event, we refer to these coincident triggers as \textit{candidates}. We define the \textit{significance} of the candidate as the \textit{false-alarm rate}. False alarms are coincident triggers that have been cause entirely by noise, with no astrophysical origin. The rate of false alarms depends on the search pipeline's response to detector noise and must be measured empirically.
 
-The PyCBC search pipeline measures the false-alarm rate using `time slides'. As discussed in section~\ref{2:sec:coincidence-test}, a coincident trigger can only be formed if the triggers are within the light travel time window. Therefore, if a coincident is made between two single detector triggers outside of this window it \textbf{must} be caused by detector noise and not an astrophysical signal. To measure the background rate of coincident triggers we can take the triggers from the first detector and count all the coincidences made with the triggers from the second detector after shifting the time in the second detector by greater than the light travel time window. This ensures that any coincidences made cannot possibly have been due to a real signal because the coincidences will have occurred outside of the light travel time window. An example of a background coincidence by these time slides for the three detector case can be seen in figure~\ref{2:fig:timeslides}.
+The PyCBC search pipeline measures the false-alarm rate using `time slides'. As discussed in section~\ref{2:sec:coincidence-test}, a coincident trigger can only be formed if the triggers are within the light travel time window. Therefore, if a coincidence is made between two single detector triggers outside of this window it \textbf{must} be caused by detector noise and not an astrophysical signal. To measure the background rate of coincident triggers we can take the triggers from the first detector and count all the coincidences made with the triggers from the second detector after shifting the time in the second detector by greater than the light travel time window. This ensures that any coincidences made cannot possibly have been due to a real signal because the coincidences will have occurred outside of the light travel time window. An example of a background coincidence by these time slides for the three detector case can be seen in figure~\ref{2:fig:timeslides}.
 %
 \begin{figure}
     \centering
@@ -370,7 +370,7 @@ The PyCBC search pipeline measures the false-alarm rate using `time slides'. As 
 
 The time sliding procedure is repeated many times to produce a large sample of false-alarm coincidences which are used to compute the false-alarm rate as a function of the ranking statistic.
 
-To measure the significance of each candidate event we assign a p-value. In our pipeline the p-value of a candidate event is the probability that there are one or more false-alarm event that have a ranking statistic value greater than or equal to the ranking statistic of the detector value, $p_{b} = P(R_{FA} \ge R_{CE})$. The p-values of candidates events are calculated under the null hypothesis that \textit{all} triggers are seen due to noise. To confidently claim the candidate event as real, we must demonstrate that the null hypothesis given the candidate event ranking statistic value is highly improbable (the p-value is small).
+To measure the significance of each candidate event we assign a p-value. In our pipeline the p-value of a candidate event is the probability that there are one or more false-alarm events that have a ranking statistic value greater than or equal to the ranking statistic of the detector value, $p_{b} = P(R_{FA} \ge R_{CE})$. The p-values of candidates events are calculated under the null hypothesis that \textit{all} triggers are seen due to noise. To confidently claim the candidate event as real, we must demonstrate that the null hypothesis given the candidate event ranking statistic value is highly improbable (the p-value is small).
 
 We can do this by measuring the number of noise background events, $n_{b}$, that have a ranking statistic value higher than the candidate event. If we do this for all ranking statistic values we can build up a mapping of ranking statistic to false-alarm rate. The function $n_{b}(R)$ gives the number of background events with a ranking statistic value higher than $R$, the ranking statistic value. The probability that one or more background events are found above $R$ given the observing time $T$ and the background time $T_{b}$ is~\cite{PyCBC:2016}
 %
@@ -401,89 +401,73 @@ and the false-alarm rate at the ranking statistic value $R^{*}$ is being calcula
 
 \section{\label{2:sec:gw-pipelines}\Gwadj search pipelines}
 
-We can develop the idea of a \gwadj search pipeline by describing the structure of the \texttt{ihope}~\cite{IHOPE:2012zx} search pipeline and how \gwadj events are identified from the initial \gwadj data using all the techniques described previously in this chapter.
+We can develop the idea of a \gwadj search pipeline by describing the structure of the \texttt{PyCBC}~\cite{PyCBC:2016} search pipeline and how \gwadj events are identified from the initial \gwadj data using all the techniques described previously in this chapter.
 
-\subsection{\label{2:sec:searching-for-gw-with-ihope}\texttt{ihope}}
-The flow chart describing the structure of the \texttt{ihope} pipeline has been taken from the \texttt{ihope} paper and can be seen in figure~\ref{2:fig:ihope-flowchart}. We follow this flowchart in our description of the search pipeline.
+\subsection{\label{2:sec:searching-for-gw-with-pycbc}\texttt{PyCBC}}
+The flow chart describing the structure of the \texttt{PyCBC} pipeline has been taken from the \texttt{PyCBC} paper and can be seen in figure~\ref{2:fig:pycbc-flowchart}. We follow this flowchart in our description of the search pipeline.
 %
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\linewidth]{images/2_searches/ihope_flowchart.pdf}
-    \caption{The structure of the \texttt{ihope} search pipeline for \gws. Taken from~\cite{IHOPE:2012zx}.}
-    \label{2:fig:ihope-flowchart}
+    \includegraphics[width=1.0\linewidth]{images/2_searches/pycbc_flowchart.pdf}
+    \caption{The structure of the \texttt{PyCBC} search pipeline for \gws. Taken from~\cite{PyCBC:2016}.}
+    \label{2:fig:pycbc-flowchart}
 \end{figure}
 
-\subsubsection{Data conditioning}
 
-Science data is \gwadj data that is collected during periods when the detector is functioning optimally and is capable detecting \gws. Science quality data is identified and split into $2048 \, \text{second}$ blocks, the LIGO data is initially sampled at $16,384 \, \text{Hz}$ and is down-sampled to $4096 \, \text{Hz}$ due to higher frequencies being dominated by detector noise and not containing any measurable \gwadj signal. The \texttt{ihope} pipeline also imposed a high-pass of $40 \, \text{Hz}$ due to low-frequency noise dominating below this. A $2048 \, \text{s}$ block will then be split into $15$ segments $256 \, \text{s}$ long where neighbouring segments overlap by $128 \, \text{s}$. The power spectral density (PSD) for a block of data is estimated by computing the PSD for each segment (equation~\ref{2:eqn:psd}), these are then median averaged to get the PSD for the whole block.
+
+
+
+
 
 \subsubsection{Template bank generation}
 
 A key consideration for \gwadj search pipelines is computational cost. A greater computational cost requires more time to analyse \gwadj data alongside greater monetary cost and carbon emission cost. The dominant cost for modelled searches is matched filtering. Therefore, the number of templates in the template bank is proportional to the computational cost of the search. The number of templates is tuned to balance a minimal loss in matched filter SNR with the computational cost.
 
-The \texttt{ihope} template bank is placed with a minimum match of $0.97$ between any signal and the template bank. The loss in sensitivity due to this minimum match limit is equal to the minimum match$^{3}$ and is $\simeq 10\%$. Calculating the match between templates is the bank is simpler when using a flat parameter space such as ``chirp times'' $\tau_{0}$ and $\tau_{3}$~\cite{Droz:1999}
+The template bank in the PyCBC search is shared between all detectors to allow a coincidence requirement of triggers sharing the same template between detectors. The template bank is generated given a power spectral density (PSD) and therefore we must create a PSD that is averaged over time for all detectors. The PSD is measured every $2048 \, \text{seconds}$ independently in each detector using Welch's method and taking the median average, this gives $N$ power spectra $S_{n}$ for each detector. The harmonic mean PSD for a single detector across all analysis time is then found
 %
 \begin{equation}
-    \tau_{0} = \frac{5}{256\pi f_{low}\eta}\left(\frac{\pi G M f_{low}}{c^{3}}\right)^{-\frac{5}{3}},
+    S_{n}^{\text{harmonic}}(f_{k}) = N / \sum^{N}_{i = 1} \frac{1}{S^{i}_{n}(f_{k})},
 \end{equation}
 %
-\begin{equation}
-    \tau_{3} = \frac{5}{8 f_{low}\eta}\left(\frac{\pi G M f_{low}}{c^{3}}\right)^{-\frac{2}{3}},
-\end{equation}
-%
-where $M$ is the total mass, $\eta$ is the symmetric mass ratio and $f_{low}$ is the lower frequency cutoff used in template generation. The template bank used by \texttt{ihope} during the later LIGO science runs was generated in the $\tau_{0}$-$\tau_{3}$ parameter space and contained approximately $6,000$ templates. The template bank depends on the noise curve of the data and therefore was generated per data block.
+and using the same method we average across all detector harmonic mean PSDs to get an estimated PSD across all time and detectors to use for template bank generation. This PSD estimate only need to be re-generated when the detector's noise PSD has changed significantly which will typically only happen when the detectors are physically changed or upgraded.
+
+The \texttt{PyCBC} template bank is placed with a minimum match of $0.97$ between any signal and the template bank. The loss in sensitivity due to this minimum match limit is equal to the minimum-match cubed and is ${\simeq}10\%$. The template bank covers a four dimensional parameter space of two component masses and aligned spins. The PyCBC template bank was generated using a combined geometric-based aligned-spin algorithm~\cite{Harry_Lundgren:2012, Harry_precession:2013} and a stochastic algorithm~\cite{Ajith:2012, Privitera:2013}, described in~\cite{pycbc_template_bank:2016}.
+
+A third observing run template bank can be seen plotted in the $m_{1}\text{--}m_{2}$ parameter space in figure~\ref{2:fig:pycbc-o3-template-bank} which contains $428,725$ unique templates.
 %
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{images/2_searches/ihope_template_bank.pdf}
-    \caption{An example of a template bank used by the \texttt{ihope} search pipeline that has been generated from a single block of data and has been created in the chirp time parameter space, $\tau_{0}$-$\tau_{3}$. Comprises of approximately $6,000$ templates. Taken from~\cite{IHOPE:2012zx}.}
-    \label{2:fig:ihope-template-bank}
+    \includegraphics[width=0.75\linewidth]{images/2_searches/H1L1V1-PLOT_BANK.pdf}
+    \caption{An example of a template bank used by the \texttt{PyCBC} search pipeline that has been generated from a single block of data and has been created in the four dimensional component mass and aligned spin parameter space. Comprises of $428,725$ templates.}
+    \label{2:fig:pycbc-o3-template-bank}
 \end{figure}
 %
 
-\subsubsection{Matched filtering}
 
-The matched filter between template bank and data is performed on each block of data to create a list of single detector triggers. Triggers are only stored if their matched filter SNR is greater than $5.5$. Suppose we have a trigger with an SNR of $10.0$, according to our template bank minimum match we should have at least one additional trigger (and indeed have many) above the SNR threshold for a nearby template. To prevent the recording of multiple triggers from different templates for the same candidate event we use a \textit{time clustering} algorithm which selects and keeps only the highest SNR trigger in a predefined time window. Another clustering algorithm, called \textit{TrigScan}, is employed to trigger across the template bank to prevent the triggering of a loud glitch in one region of the template bank from subduing a real signal trigger in a completely different region.
 
-\subsubsection{Coincidence tests}
 
-Single detector triggers are combined and evaluated based on their trigger times and template parameters, triggers that have been found within the maximum light travel time between the two detectors ($10 \, \text{ms}$ for LIGO-Hanford and LIGO-Livingston) with similar masses can be considered to originate from the same \gwadj signal~\cite{Robinson:2008}. The result of this process is a list of coincident triggers found with SNR above the threshold in two or more detectors with consistent template parameters across detectors.
 
-\subsubsection{Matched filter again with signal consistency tests}
 
-We note that this method has been heavily disfavoured in more modern search pipelines but we explain it briefly for completeness. The intention of the second template bank search is to save computational processing power used for the signal consistency tests.
+\subsubsection{Matched filtering and clustering}
 
-The templates responsible for the coincident triggers found by the initial matched filter and coincidence test are used to create a \textit{triggered template bank} which is used to matched filter the data again. This time the $\chi^{2}$ test~\cite{Allen_Chi:2005} and an $r^{2}$ test are performed alongside consistency in relative signal amplitude and \textit{data-quality vetoes}.
+The matched filter between template bank and data is performed on each block of data to create a list of single detector triggers. Triggers are only stored if their matched filter SNR is greater than $5.5$. Suppose we have a trigger with an SNR of $10.0$, according to our template bank minimum match we should have at least one additional trigger (and indeed have many) above the SNR threshold for a nearby template. To prevent the recording of multiple triggers from different templates for the same candidate event we use a \textit{time clustering} algorithm which selects and keeps only the highest SNR trigger in a predefined time window. Another clustering algorithm, is employed to trigger across the template bank to prevent the triggering of a loud glitch in one region of the template bank from subduing a real signal trigger in a completely different region.
 
-The $\chi^{2}$ test values are calculated for each new SNR trigger found by the triggered template bank (equation~\ref{2:eq:reduced_chisq}). The \( r^{2} \) test assesses the sharpness of the SNR peak surrounding a large SNR trigger, under the premise that real \gwadj signals will exhibit a distinct peak, while non-astrophysical glitches will display a broader structure. The test counts the number of samples above a specified SNR threshold. An example of the SNR time series from a loud signal can be seen in figure~\ref{2:fig:ihope-snr-timeseries}.
+\subsubsection{Signal consistency test}
+
+The triggers then have the $\chi^{2}$ test~\cite{Allen_Chi:2005} applied to ensure consistency in the signal power distribution. The $\chi^{2}$ test values are calculated for each new SNR trigger found by the template bank (equation~\ref{2:eq:reduced_chisq}) and used to re-weight SNR values to obtain new SNR values for each triggers. An example of the SNR and $\chi^{2}$ time seriess from a loud signal can be seen in figure~\ref{2:fig:snr-timeseries}.
 %
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{images/2_searches/ihope_snr_timeseries.pdf}
     \caption{An SNR time series and $\chi^{2}$ time series for a simulated compact binary coalescence injected into S5~\cite{S5:2012} data with an SNR of $300$. Taken from~\cite{IHOPE:2012zx}.}
-    \label{2:fig:ihope-snr-timeseries}
+    \label{2:fig:snr-timeseries}
 \end{figure}
 %
-The \( r^{2} \) test sets an upper threshold on the amount of time prior to the trigger as \(\chi^{2} \ge p r^{2}\), where \( p \) is the number of \(\chi^{2}\) sub-templates, with both the time window and \( r \) being determined empirically. The amount of time, $\Delta T$, threshold is a function of SNR
-%
-\begin{equation}
-    \Delta T < 
-    \begin{cases}
-        2 \times 10^{-4} \, \text{s} \quad \text{for} \quad \rho < 12, \\
-        \rho^{9/8} \times 7.5 \times 10^{3} \, \text{s} \quad \text{for} \quad \rho \ge 12.
-    \end{cases}
-\end{equation}
-%
-The amplitude consistency tests suppose the ratio of detector SNRs for true \gwadj signals should equal the ratio of detector sensitivities. We quantify detector sensitivity using the \textit{effective distance} $D_{eff, A}$, which is the distance at which an optimally located and oriented source would give the SNR observed by detector A. With an amplitude ratio threshold, $\mathfrak{A}^{*}$, we can construct another noise trigger discriminator
-%
-\begin{equation}
-    \mathfrak{A} = 2 \frac{|D_{eff, A} - D_{eff, B}|}{D_{eff, A} + D_{eff, B}} \le \mathfrak{A}^{*}.
-\end{equation}
-%
-The empirically determined threshold was found $\mathfrak{A}^{*} = 0.6$. We can also have the requirement that if a trigger is loud enough in detector A that we \textbf{should} have seen it in detector B, but we didn't, then we remove those triggers from the list. We note that historically this test was applied to the LIGO-Hanford-1 and LIGO-Hanford-2 detector combination which shared the same vacuum tubes at the LIGO-Hanford site, this test was not applied to another other combination of detector due to the different locations and orientations of the detectors producing any possible ratio of effective distances.
 
-The final addition to this step is the inclusion of data quality vetoes where periods of increased glitch rate in the detectors have been removed from the analysis using data quality (DQ) flags~\cite{Slutsky:2010}. The detector's have many auxiliary channels which record environmental and instrumental information such as seismic noise monitors. These DQ flags are created automatically when periods of heightened detector noise is detected in these channel. The severity of the veto is divided into four categories where category 1 vetoes indicate data is entirely unusable and category 4 refers to good, science quality, data.
+\subsubsection{Coincidence tests}
 
-\subsubsection{Calculation of ranking statistic, false-alarm rates and search sensitivity}
+Single detector triggers are combined and evaluated based on their trigger times and template parameters, triggers that have been found within the maximum light travel time between the two detectors ($10 \, \text{ms}$ for LIGO-Hanford and LIGO-Livingston) with an exactly matching template can be considered to originate from the same \gwadj signal~\cite{Robinson:2008}. The result of this process is a list of coincident triggers found with SNR above the threshold in two or more detectors with exact template parameters across detectors.
 
-The ranking statistic and false-alarm rates are calculated for each of these triggers as described in the previous section. The sensitivity of the search pipeline can be evaluated by injection a large number of simulated \gwadj signals into the data and recovering them with the search pipeline. The most realistic injections are hardware injections~\cite{Brown:2003, Biwer:2016} in which an actuator exerts a force on the end test mass to simulate the response of a real \gwadj signal. These injections are rarely performed because the data is now contaminated and cannot be used to search for real \gwadj signals. The injections used for large scale injection campaigns are software injections, in which the \gwadj signal is added to the data. These injections are added to add detectors with the correct time, phase and amplitude differences and are placed so as to probe the full population of potential \gwadj events. The injection campaigns are a very powerful tool that can reveal search pipeline sensitivity and we have used them extensively throughout this thesis to test the sensitivity increase of changes made to search pipelines.
+\subsubsection{Generate background, rank triggers, establish significance and estimate search sensitivity}
+
+The ranking statistic and false-alarm rates are calculated for each of these triggers as described in the previous section, using a quadrature sum of the reweighted SNR in each detector. The sensitivity of the search pipeline can be evaluated by injection a large number of simulated \gwadj signals into the data and recovering them with the search pipeline. The most realistic injections are hardware injections~\cite{Brown:2003, Biwer:2016} in which an actuator exerts a force on the end test mass to simulate the response of a real \gwadj signal. These injections are rarely performed because the data is now contaminated and cannot be used to search for real \gwadj signals. The injections used for large scale injection campaigns are software injections, in which the \gwadj signal is added to the data. These injections are added to add detectors with the correct time, phase and amplitude differences and are placed so as to probe the full population of potential \gwadj events. The injection campaigns are a very powerful tool that can reveal search pipeline sensitivity and we have used them extensively throughout this thesis to test the sensitivity increase of changes made to search pipelines.

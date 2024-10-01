@@ -14,6 +14,7 @@ in text hyphens ---
 PyCBC Live
 PyCBC Live early warning/full bandwidth
 \texttt{} not \verb||
+reweighted
 
 
 %~~~% Text commands %~~~%

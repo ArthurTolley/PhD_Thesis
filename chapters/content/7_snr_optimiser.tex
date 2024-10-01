@@ -270,38 +270,57 @@ These changes to the parameter bound calculation give us the boundaries for $\ma
 which allow for less time to be wasted in computing regions of the parameter space which we know will not contain the maximum point.
 
 \section{\label{7:sec:results}Results}
-% Performance Gains: Present quantitative results showing how the optimiser improved the SNR detection in PyCBC Live.
-% Comparison with Previous Methods: Compare the final results with the performance of earlier non-optimised or less-optimised techniques.
-% Error Reduction and Accuracy: Discuss the improvement in false positive rates or computational efficiency.
-% Impact on Real-time Detection: How did the optimiser improve the real-time performance of the detection pipeline?
 
+To evaluate the performance of the SNR optimiser in the PyCBC Live search we analyse the events uploaded by the PyCBC Live search to GraceDB. There is a \gwadj mock-data challenge (MDC) that runs continuously to enable live search pipelines to test pipelines and changes to the pipelines prior to enabling them on the real \gwadj data. The MDC replays $40$ days of third observing run \gwadj data with simulated injections continuously providing a much larger rate of signals to test changes on.
 
+We query GraceDB for all PyCBC `grace events'\footnote{Grace event refers to an individual event uploaded by a pipeline. The initial PyCBC upload and the SNR optimiser upload are separate grace events.} uploaded by the PyCBC full bandwidth MDC search between the dates \texttt{2024-05-30} and \texttt{2024-07-16} and retrieve $10270$ grace events, of which $5091$ were uploaded by the SNR optimiser. Each grace event has an associated `super event' to which multiple pipelines (and multiple grace events from each pipeline) are assigned, of the SNR optimised grace events, $5008$ were assigned a preferred grace event uploaded by PyCBC Live. Finally, of these PyCBC preferred super events, $4600$ had SNR optimised grace events as the preferred events. In $91.85\%$ of cases, when the SNR optimiser has uploaded a grace event, it is preferred over the original PyCBC Live uploaded grace event.
 
-% How many events were PyCBC preferred SNR optimised
-% How many of these events wouldn't have been preferred if we didn't have the SNR optimiser
-% Average SNR % increase + Computing time
-% Histograms of these
+Figure~\ref{7:fig:snr-diffs} shows the change in SNR between original upload and SNR optimised upload for all these SNR optimised events and figure~\ref{7:fig:latencies} shows the latency between original upload and SNR optimised upload.
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/7_snr_optimiser/snr_diffs.pdf}
+    \caption{The percentage change in SNR between the optimised SNR and original SNR for GraceDB super events found between \texttt{2024-05-30} and \texttt{2024-07-16} that were found with PyCBC Live and have an SNR optimised grace event in the \gwadj data third observing run replay mock-data challenge.}
+    \label{7:fig:snr-diffs}
+\end{figure}
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/7_snr_optimiser/latencies.pdf}
+    \caption{The time after original grace event upload for the SNR optimiser to upload an SNR optimised grace event for GraceDB super events found between \texttt{2024-05-30} and \texttt{2024-07-16} that were found with PyCBC Live and have an SNR optimised grace event in the \gwadj data third observing run replay mock-data challenge.}
+    \label{7:fig:latencies}
+\end{figure}
+%
+The average change in SNR optimised events is a $+1.64\%$ increase in SNR. We can see many events which have lost significant amounts of SNR when optimised, these are caused by the bounds of the SNR optimisation parameter space not overlapping with the template bank parameter space or the super event being caused by an exceptional event. As an example, the event with the highest loss in SNR had a negative change in SNR of $-45.67\%$, the original grace event parameters were: $m_{1} = 68.91 M_{\odot}$, $m_{2} = 1.08 M_{\odot}$, $s_{1z} = 0.994$, $s_{2z} = 0.0$, this event is very significantly precessing and has a very large mass ratio making the parameter space difficult to optimise over. Complicated parameter spaces are difficult for the optimiser to explore in the number of iterations. When the SNR optimiser uploads a grace event it will achieve an average increase in SNR of $1.64\%$ with an average latency between uploads of $36.97 \, \text{seconds}$
 
-
-
-
-\section{\label{7:sec:discussion}Discussion}
+\section{\label{7:sec:conclusion}Conclusion and future improvements}
 % Limitations: Discuss any limitations of the current optimiser (e.g., computational bottlenecks, situations where the optimisation struggles).
 % Broader Impact: How does this optimisation contribute to the broader field of gravitational wave detection?
 % Future Work: Mention potential improvements or future research directions that could enhance the SNR optimisation process further.
 
+The SNR optimiser will increase the SNR obtained by the PyCBC Live search pipeline for a \gwadj event in the vast majority of cases with an average $1.64\%$ increase. This will lead to more accurate sky maps and improved parameter estimation for the \gwadj events. However, as identified by figure~\ref{7:fig:snr-diffs}, we have a large number of events ($8.15\%$) where the SNR optimiser has \textbf{not} increased the found SNR. We have identified that this is true when the parameter space is more complex, in the case of signals with high mass ratio, non-aligned spins or long duration templates. We have a latency requirement on our optimiser and so are unable to necessarily allow the deep exploration of these parameter spaces.
 
-
-\section{\label{7:sec:conclusion}Conclusion and future improvements}
 % Summary: Recap the importance of the SNR optimiser and its role in improving gravitational wave detection.
 % Final Thoughts: Reflect on the significance of this work in the context of the PyCBC pipeline and real-time gravitational wave detection efforts.
 
+The implementation of the SNR optimiser in PyCBC Live has improved the prospects of \gwadj detection in low-latency and will enable higher quality science in the post-detection regime. Providing more accurate sky maps for low-latency events will allow better multi-messenger followup of these events. The SNR optimiser has many areas of potential improvement that if more time were available I would invest my time in researching. In this subsection I will discuss some of the improvements that could be made to the SNR optimiser.
+
 \subsubsection{Template bank initial population positions}
 
-% Other optimisers
-%  With the vast growth of ML during this PhD you can do a million things
-% GPU acceleration
 % 
+
+The two optimisers that are currently implemented---differential evolution and particle swarm optimisation---rely on spawning an initial random population of points to explore the template parameter space. We have prior knowledge about the parameter space from our templates bank and can place this initial population of points at the points of our template bank, the points will be drawn toward the best matching point from the template bank and hopefully explore the area between template bank points more deeply. If the parameter space bounds are large for an event this will place the population approximately at the correct density for the parameter space as defined by the stochastic template bank placement algorithm (described in section~\ref{2:sec:template-bank}), more densely covered areas of the template bank will be assigned more initial points to explore that space.
+
+\subsubsection{Template dependent optimisers and hyperparameters}
+
+We have adjusted the parameter space bounds according to the initial template parameters, the mass bounds are dependent on the template chirp time and the spin bounds are dependent on the component object (black hole or neutron star). We could apply further options to both optimisers and the hyperparameters of the optimisers depending on the template. If high-mass BBH signals require fewer iterations we can adjust that hyperparameter, if low-mass signals require a finer exploration of the parameter space we can change the mutation factor and recombination factor or the inertia and learning rates. We might be able to find optimisers that respond better to specific regions of the parameter space, similar to how the template banks are composed using different techniques for different regions.
+
+
+\subsubsection{Machine learning optimisers and hyperparameter tuning}
+
+Since starting this PhD in 2020 the rise of machine learning has been relentless, techniques that were considered novel and cutting-edge have fallen by the wayside and newer, more efficient and effective techniques have replaced them. The SNR optimiser can benefit heavily from this catalogue of machine learning based events that could be highly optimised for an SNR optimisation problem. We have a large number of historical events to train such a model on to allow enhanced parameter space exploration which can allow either a faster optimisation or a deeper optimisation, especially for low-mass signals.
+
+Another area in which machine learning can help is with hyperparameter tuning. Optimising the SNR optimiser hyperparameters will return instant reward for the current configuration of the optimiser, the hyperparameters chosen initially or after our initial optimisation may not still be the correct choice in the fourth observing run and in the future. We generate a template bank for each observing run so we should optimise the hyperparameters too.
 
 
 

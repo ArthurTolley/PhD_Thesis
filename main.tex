@@ -106,7 +106,7 @@ minnames=1
 % Define the custom quote formatting with the author on the second line, aligned to the right
 \newcommand{\chapterquote}[2]{
   \begin{quote}
-    \color{mediumgray}\itshape #1 \\[1ex] % Adds a line break between the quote and the author
+    \color{darkgray}\itshape #1 \\[1ex] % Adds a line break between the quote and the author
     \raggedleft % Aligns the author's name to the right
     \textemdash\ #2
   \end{quote}
@@ -277,6 +277,8 @@ minnames=1
 %---% General Relativity %---%
 \chapter[Gravitational Waves]{\label{chapter:1-gravitational-waves}Gravitational Waves}
 \chapterquote{``This little manoeuvre's gonna cost us 51 years.''}{Joseph Cooper, Interstellar}
+In this thesis we focus on improving the capabilities of \gwadj search pipelines to detect \gwadj signals from compact binary coalescences (CBCs). As an introduction to the research chapters later in this thesis we will briefly discuss gravitational radiation, its detection using laser interferometry and, the \gwadj signals we expect to see from CBCs.
+
 \input{chapters/content/1_general_relativity}
 
 %---% Searches %---%
@@ -299,7 +301,6 @@ I am first author on a peer-reviewer and published work carrying the name \texti
 \chapter[Improving the PyCBC Live Ranking Statistic]{\label{chapter:5-pycbc-live}Improving the PyCBC Live Ranking Statistic}
 \chapterquote{``Have patience, all will be explained.''}{Guthix, The World Wakes}
 This work will be published as part of the PyCBC Live fourth observing run methods paper which is currently being drafted.
-
 \input{chapters/content/5_pycbclive}
 
 %---% Early Warning Ranking Statistic %---%
@@ -308,7 +309,7 @@ This work will be published as part of the PyCBC Live fourth observing run metho
 \input{chapters/content/6_earlywarning}
 
 %---% Other Work %---%
-\chapter[Optimising Detection Statistic in PyCBC Live]{\label{chaper:7-snr-optimizer}Optimising Detection Statistic in PyCBC Live}
+\chapter[Optimising Detection Statistic in PyCBC Live]{\label{chapter:7-snr-optimiser}Optimising Detection Statistic in PyCBC Live}
 \chapterquote{``''}{Hat Films}
 \input{chapters/content/7_snr_optimiser}
 

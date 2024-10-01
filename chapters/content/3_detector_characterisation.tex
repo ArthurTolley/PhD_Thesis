@@ -1,7 +1,7 @@
 %%%%%%%%%% %%%%%%%%%% %%%%%%%%%%
 
 % Purpose of the chapter
-In this thesis we have made improvements to the search for \gws using a detector characterisation context by improving the quality of the detector data and understanding the noise background of the detectors. 
+In this thesis we have made improvements to the search for \gws by improving the quality of the detector data and understanding the noise background of the detectors. 
 
 % Section by section of chapter
 This chapter is laid out as follows: we briefly repeat our the state of the current \gwadj detector network in section~\ref{3:sec:gw_detectors}, in section~\ref{3:sec:detchar_calib} we define the research area of detector characterisation, the systematic sources of noise faced in the detectors is described in section~\ref{3:sec:detector-analysis}, some commonly detector data noise transients in section~\ref{3:sec:noise-transients} and finally, the detector characterisation tools most commonly used and referred to throughout this thesis in section~\ref{3:sec:detchar-tools}.
@@ -11,15 +11,7 @@ This chapter is laid out as follows: we briefly repeat our the state of the curr
 % To understand the importance of Detector Characterisation we must understand the detectors
 \Gwadj astronomy in the present day is performed by ground-based detectors at different locations globally: the LIGO-Livingston and LIGO-Hanford detectors are located in the United States of America, the Virgo interferometer in Italy and, the KAGRA telescope in Japan. We will primarily reference the LIGO detectors in the United States of America when discussing the challenges faced in detector characterisation. 
 
-As described in chapter~\ref{chapter:1-gravitational-waves}, the LIGO detectors work on the principle of laser interferometry to detect \gwadj signals. The sensitivity~\cite{aLIGO_design_curve:2018} of \gwadj detectors is limited by fundamental sources of noise such as seismic noise~\cite{Glanzer:2023}, thermal noise~\cite{thermal_noise:2018} and quantum noise~\cite{quantum_noise:2003}. These are the non-stationary sources of noise~\cite{PSD_var:2020}. Additionally, we have non-Gaussian noise~\cite{Noise_Guide:2020} which manifests as transient noise bursts in the data which can contribute to false positives in \gwadj searches and the obscuring of real \gwadj signals~\cite{GW170817:2017, GW150914_noise:2016}.
-
-\section{\label{3:sec:detchar_calib}Detector characterisation and calibration}
-
-Detector characterisation is a field of study which assess and improves the performance of \gwadj detectors to ensure accurate and reliable detection of \gws. \Gwadj detector calibration determines how the response of the detector translates to astrophysical signals, ensuring accuracy in extracted astrophysical information. Detector characterisation is responsible for identifying and mitigating the many sources of noise that can obscure or mimic real signals. The optimisation of detector sensitivity is also studied whereby different designs and components can be fine-tuned to increase sensitivity. Another responsibility of detector characterisation is the monitoring of detector performance in real-time to assess sensitivity changes.
-
-Overall, effective detector characterisation ensures that \gwadj observatories can operate at maximum potential and provide accurate and reliable observations of \gws. The \gwadj detector organisations have dedicated working groups for detector characterisation and calibration~\cite{O2O3_DetChar:2021, VirgoDetChar:2023}. In this thesis, chapter~\ref{chapter:4-archenemy} is a direct contribution to the field of detector characterisation with a contribution to the LIGO detector characterisation working group.
-
-The detector characterisation group has the important task of verifying data quality when a \gwadj signal is detected by live detection pipelines, giving the confirmation that the \gwadj signal isn't a false alarm potentially caused by noise transients or poor data quality immediately surrounding the \gwadj signal.
+As described in chapter~\ref{chapter:1-gravitational-waves}, the LIGO detectors work on the principle of laser interferometry to detect \gwadj signals. The sensitivity~\cite{aLIGO_design_curve:2018} of \gwadj detectors is limited by fundamental sources of noise~\cite{PSD_var:2020} such as seismic noise~\cite{Glanzer:2023}, thermal noise~\cite{thermal_noise:2018} and quantum noise~\cite{quantum_noise:2003}. Additionally, we have non-Gaussian noise~\cite{Noise_Guide:2020} which manifests as transient noise bursts in the data which can contribute to false positives in \gwadj searches and the obscuring of real \gwadj signals~\cite{GW170817:2017, GW150914_noise:2016}.
 
 \subsection{\label{3:sec:detector-analysis}Detector analysis}
 
@@ -50,7 +42,7 @@ It can be seen that the laser power must be calibrated to balance the impact of 
 % Sensitivity Analysis
 %    BNS Distance
 %    Sensitivity Measurement
-To monitor detector sensitivity the binary neutron star inspiral range is calculated. This is the range at which (in Mpc) a binary neutron star signal, with both components having a mass of $1.4$ M$_{\odot}$, will be detected given the characteristic noise (PSD) of the data. The PSD is calculated by taking an average of the detector noise in the previous minute~\cite{range_calculation:2003, ota:2023}. Figure~\ref{3:fig:bns_range} shows an example of the binary neutron star range for a day of LIGO-Hanford during the fourth observing run.
+To monitor detector sensitivity the binary neutron star inspiral range is calculated. This is the range at which a binary neutron star signal, with both components having a mass of $1.4$ M$_{\odot}$, will be detected given the characteristic noise (PSD) of the data. The PSD is calculated by taking an average of the detector noise in the previous minute~\cite{range_calculation:2003, ota:2023}. Figure~\ref{3:fig:bns_range} shows an example of the binary neutron star range for a day of LIGO-Hanford during the fourth observing run.
 %
 \begin{figure}
     \centering
@@ -100,6 +92,14 @@ An number of algorithms and tools have been developed to detect and characterise
 
 Another tool to use in the identification and classification of glitches in the thousands of auxiliary channels alongside the main strain channel~\cite{iDQ:2020} which monitor the many subsystems of the detector and can be used to find noise correlations between the different parts of the instrument~\cite{DQ_vetoes:2017}. The auxiliary channels which are not sensitive to \gws are very useful in identifying any correlations between noise in the gravitational strain channel and noise also seen in another channel which cannot observe \gws, an example of this is the magnetometer recording the same glitch as seen in the \gwadj strain channel when the air conditioning compressor was cycling at LIGO-Livingston~\cite{Nuttall:2018}.
 
+\section{\label{3:sec:detchar_calib}Detector characterisation and calibration}
+
+Detector characterisation is a field of study which assess and improves the performance of \gwadj detectors to ensure accurate and reliable detection of \gws. \Gwadj detector calibration determines how the response of the detector translates to astrophysical signals, ensuring accuracy in extracted astrophysical information. Detector characterisation is responsible for identifying and mitigating the many sources of noise that can obscure or mimic real signals. The optimisation of detector sensitivity is also studied whereby different designs and components can be fine-tuned to increase sensitivity. Another responsibility of detector characterisation is the monitoring of detector performance in real-time to assess sensitivity changes.
+
+Overall, effective detector characterisation ensures that \gwadj observatories can operate at maximum potential and provide accurate and reliable observations of \gws. The \gwadj detector organisations have dedicated working groups for detector characterisation and calibration~\cite{O2O3_DetChar:2021, VirgoDetChar:2023}. In this thesis, chapter~\ref{chapter:4-archenemy} is a direct contribution to the field of detector characterisation with a contribution to the LIGO detector characterisation working group.
+
+The detector characterisation group has the important task of verifying data quality when a \gwadj signal is detected by live detection pipelines, giving the confirmation that the \gwadj signal isn't a false alarm potentially caused by noise transients or poor data quality immediately surrounding the \gwadj signal.
+
 \subsection{\label{3:sec:detchar-tools}Detector characterisation tools}
 
 \paragraph{Omega scans}
@@ -134,12 +134,4 @@ GravitySpy has uploaded more than $1.4$ million of Omega scans of \gwadj data wh
 
 GravitySpy has been run on data from the second and third observing runs, where it was able to classify 24 different glitch categories. The downsides of GravitySpy are the constantly changing noise background of the \gwadj detectors and the new glitch types emerging which need to be trained on with volunteering again~\cite{gravityspy:2023}.
 
-\paragraph{Data Quality Vetoes}
-
-are used by the \gwadj searches and are a flag applied to periods of data which contain potential data quality issues~\cite{DQ_vetoes:2017}. These periods of data are identified using the ${\sim}200,000$ auxiliary channels~\cite{DQ_vetoes:2017} and when applied to the searches there is a significant reduction in the number of high SNR triggers that would've been found during these times.
-
-The data quality vetoes are constructed using auxiliary channel information which has been found to be strongly correlated to instrumental noise. An example is a significantly elevated transient noise rate in the strain channel five days prior to GW150914~\cite{GW150914:2016} which was traced back to the 45MHz electro-optic modulator driver system used to generate optical cavity control feedback signals~\cite{aLIGO:2015}. The noise caused by this channel was given a category 1 veto data quality flag and removed 2.62\% of the total coincident time from the analysis period.
-
-\paragraph{iDQ}
-
-
+\paragraph{Data Quality Vetoes} are a flag applied to periods of data which contain potential data quality issues~\cite{DQ_vetoes:2017}. These periods of data are identified using the ${\sim}200,000$ auxiliary channels~\cite{DQ_vetoes:2017}, an example is a significantly elevated transient noise rate in the strain channel five days prior to GW150914~\cite{GW150914:2016} which was traced back to the $45 \, \text{MHz}$ electro-optic modulator driver system used to generate optical cavity control feedback signals~\cite{aLIGO:2015}. The noise caused by this channel was given a category 1 veto data quality flag and removed 2.62\% of the total coincident time from the analysis period. While there is a significant reduction in the number of high SNR triggers that would've been found during these times, these flags fallen out of favour in the fourth observing run due to removing large amounts of data.

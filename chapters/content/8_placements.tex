@@ -1,46 +1,21 @@
-As a DISCnet funded PhD student I was required to undertake two 3-month placements in industry companies. These placements were instrumental to my success as a PhD student: the skills, knowledge and change in environment drove me to learn more in those $6$ months than some years in the PhD. These placements also helped inform my career decisions and what I want to do post-PhD.
+As a DISCnet-funded PhD student, I was required to undertake two 3-month placements in industry. These placements were instrumental to my success as a PhD student: the skills, knowledge, and change in environment drove me to learn more in those six months than in some years of my PhD. The placements also helped inform my career decisions and clarified my post-PhD direction.
 
-In this chapter I will briefly describe the details of my employment and projects undertaken during the two placements. Due to non-disclosure agreements, private information and the passing of time I am not able to provide many details or figures representing exactly what I did during my time. Section~\ref{8:sec:shell} details my time at Shell Research UK and section~\ref{8:sec:MCA} my time at the Maritime and Coastguard Agency, a civil service agency within the UK Government.
+In this chapter, I will briefly describe the details of my employment and the projects I undertook during these placements. Due to non-disclosure agreements, confidentiality, and the passing of time, I am unable to provide extensive details or specific figures from my work. Section~\ref{8:sec:shell} covers my time at Shell Research UK, while Section~\ref{8:sec:MCA} discusses my work at the Maritime and Coastguard Agency, a UK Government civil service agency.
 
 \section{\label{8:sec:shell}Shell Research UK}
 
-% Job role
-%  What was I hired to do
-% Department
-%  What are they tasked with doing
-I was hired as a Data Scientist Intern at Shell and placed within the Predictive Maintenance team. The broad remit of the team is to use advanced data science techniques to predict the maintenance requirements of the many machines located at Shell sites globally to prevent the down-time associated with unplanned disruptions caused by failing machine components.
+I was hired as a Data Scientist Intern at Shell and placed within the Predictive Maintenance team. The team’s primary focus is to use advanced data science techniques to predict maintenance needs for the many machines at Shell sites globally, helping to prevent unplanned disruptions caused by failing components.
 
-% Description of what predictive maintenance is
-A machine may refer to something as simple as a pump to something as complex as an entire refinery. Each component of these machines contains many sensors for different operating parameters and each value being measured forms a dimension in the data set pertaining to the operational health of a machine. A simple relationship between temperature change over a long period of time might indicate a failure mode of the machine with a predicted timeline to failure. The primary technique using (at the time) to identify the components of these machines that were going to fail was machine learning and more specifically a reconstruction error approach to data processing.
+Predictive maintenance aims to anticipate equipment failures by analyzing operational data. A machine may refer to anything from a simple pump to a complex refinery system. Components in these machines are fitted with sensors that monitor parameters like temperature, pressure, and vibration. These readings form a high-dimensional dataset reflecting the machine's operational health. For example, a long-term rise in temperature may indicate wear or degradation, signaling an impending failure.
 
-% What is reconstruction error
+We employed a reconstruction error approach to identify failure patterns. This method involves training machine learning models to understand the normal behavior of a machine. Reconstruction error measures how closely the model's predictions match actual sensor readings. Significant deviations between predicted and observed values---i.e., a high reconstruction error---can indicate abnormal behavior and possible component failure.
 
-% What ML algorithms is this
-
-% What did I do: PCA
-
-% What did I learn
+The machine learning algorithms used in this approach fall under unsupervised learning, which does not rely on labeled data for classification. During my time at Shell, I developed and implemented Principal Component Analysis (PCA) as part of the predictive maintenance pipeline for monitoring machine components.
 
 \section{\label{8:sec:MCA}Maritime and Coastguard Agency}
 
-% Job Role
-%  What was I hired to do
-% Department
-%  What are they tasked with doing
+I worked as a Data Scientist Intern at the Maritime and Coastguard Agency (MCA), which is responsible for maritime safety, environmental protection, and coordinating search and rescue operations under the UK Department for Transport.
 
-% What is wrong with maritime data
+I was tasked with on-boarding a new Automatic Identification System (AIS) dataset, containing billions of data points tracking every vessel in UK coastal waters over the past four years. This dataset contained numerous errors and anomalies that needed to be processed efficiently and in parallel to ensure the data was usable by other teams within the agency.
 
-% PySpark and Databricks
-%  Distributed computing in the cloud
-
-% What did I develop: geospatial pipelines
-
-% What did I learn
-
-% \section{\label{8:sec:post-phd}Post-PhD Career}
-
-% What skills do I have
-
-% What would I like to do
-
-% What are my interests
+At the MCA, I extensively used PySpark---a Python API for Apache Spark that supports large-scale data processing in distributed environments---and Databricks, a cloud platform that provides these environments. With these tools, I developed scalable pipelines to process billions of geospatial data points, impute missing values, calculate new information, and identify errors in the dataset. The unique nature of working with geospatial data allowed me to focus on identifying vessels moving anomalously over land, analyzing historical traffic trends in protected areas, and preventing vessel collisions at sea.
