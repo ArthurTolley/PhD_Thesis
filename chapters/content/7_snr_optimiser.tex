@@ -43,9 +43,9 @@ In Section~\ref{7:sec:optimising_snr_in_low_latency} we discuss how the SNR opti
 
 \section{\label{7:sec:optimising_snr_in_low_latency}Optimising SNR in low-latency}
 
-The PyCBC Live search will matched filter the entire template bank with the data ring buffer every analysis stride (see chapter~\ref{chapter:5-pycbc-live} for greater detail). The matched filter will produce SNR triggers when any template has been found with a matched filter above an SNR of $4.5$. The PyCBC Live search will then pass these triggers to the ranking statistic, taking into account any signal-consistency test values or other ranking statistic components, to find the most significant coincident set of triggers. After the uploading of an event to GraceDB, the PyCBC Live search will spawn a subprocess and the PyCBC programme \texttt{pycbc\_optimize\_snr} is initialised. This programme takes the \gwadj data and is given the event template parameters to run a finer search over the parameter space specifically optimising for the network SNR. This finer search is performed not using a template bank approach but with an optimisation function, a process that finds the `best' possible solution by maximising for a particular objective given input parameters that can be tuned. For PyCBC Live the objective being maximised is the network SNR and the tunable input parameters are the template bank parameters: primary component mass $m_{1}$, secondary component mass $m_{2}$, primary spin z-component $s_{1z}$ and, secondary spin z-component $s_{2z}$. Boundaries are applied to the input parameters which are calculated using the initial event parameter values.
+The PyCBC Live search will matched filter the entire template bank with the data ring buffer every analysis stride (see chapter~\ref{chapter:5-pycbc-live} for greater detail). The matched filter will produce SNR triggers when any template has been found with a matched filter above an SNR of $4.5$. The PyCBC Live search will then pass these triggers to the ranking statistic, taking into account any signal-consistency test values or other ranking statistic components, to find the most significant coincident set of triggers. After the uploading of an event to GraceDB, the PyCBC Live search will spawn a subprocess and the PyCBC programme \texttt{pycbc\_optimize\_snr} is initialised. This programme takes the \gwadj data and is given the event template parameters to run a finer search over the parameter space, specifically optimising for the network SNR. This finer search is performed not using a template bank approach but with an optimisation function, a process that finds the `best' possible solution by maximising for a particular objective given input parameters that can be tuned. For PyCBC Live the objective being maximised is the network SNR and the tunable input parameters are the template bank parameters: primary component mass $m_{1}$, secondary component mass $m_{2}$, primary spin z-component $s_{1z}$ and, secondary spin z-component $s_{2z}$. Boundaries are applied to the input parameters which are calculated using the initial event parameter values.
 
-We run this SNR optimisation to produce bettwe sky maps for the GraceDB `super event' (the \gwadj signal each pipeline event has observed). An example for a recent \gwadj signal (S240924a~\cite{superevent_S240924a}) can be seen in Figure~\ref{7:fig:gracedb_pref_event}.
+We run this SNR optimisation to produce better sky maps for the GraceDB `super event' (the \gwadj signal each pipeline event has observed). An example for a recent \gwadj signal (S240924a~\cite{superevent_S240924a}) can be seen in Figure~\ref{7:fig:gracedb_pref_event}.
 %
 \begin{figure}
     \centering
@@ -285,11 +285,11 @@ and the network SNR of each particle is calculated again. The particle personal 
 
 \subsection{\label{7:sec:tuning-pso}Tuning and evaluating the PSO optimiser}
 
-The PSO optimiser has not been used in the PyCBC Live search on either the MDC or real data but we have implemented it into PyCBC Live to allow the possibility of it being used in the future. We have tested PSO on the Chapter~\ref{chapter:6-earlywarning} injection set (described in Table~\ref{6:tab:ew_inj_params}) which focuses on the low-mass parameter space, the region which the optimiser has struggled to search over.
+The PSO optimiser has not been used in the PyCBC Live search on either the MDC or real data, but we have implemented it into PyCBC Live to allow the possibility of it being used in the future. We have tested PSO on the Chapter~\ref{chapter:6-earlywarning} injection set (described in Table~\ref{6:tab:ew_inj_params}) which focuses on the low-mass parameter space, the region which the optimiser has struggled to search over.
 
 Using \texttt{optuna}~\cite{optuna:2019}, a hyperparameter tuner, we tune the five hyperparameters of the PSO optimiser to achieve the greatest SNR for a single \gwadj injection from the injection set. We get rounded hyperparameter values: $\text{iterations} = 50$, $\text{particles} = 150$, $\text{inertia weight} = 0.2$, $\text{personal learning rate} = 0.75$, $\text{social learning rate} = 1.0$. Using these hyperparameter values we search through $21,600 \, \text{seconds}$ of \gwadj data containing \gwadj injections every ${\sim}100 \, \text{seconds}$, with both the current differential evolution optimiser and the PSO optimiser. The differential evolution optimiser achieves an average percent increase in SNR of $0.512 \%$ in an average time of $30.489 \, \text{seconds}$ whereas the PSO optimiser achieves an average increase in SNR of $0.543\%$ in an average time of $32.058 \, \text{seconds}$. The PSO optimiser achieves a greater average SNR increase with a slightly longer average optimisation time. We perform the same test and cut the number of iterations to $25$, leading to an average optimisation time of  $14.638 \, \text{seconds}$ while maintaining an average SNR increase of $0.543\%$.
 
-These tests prove that the PSO optimiser has potential to replace the differential evolution optimiser in PyCBC Live and with greater hyperparameter tuning we can produce an SNR optimiser which explores the low-mass parameter space effectively.
+These tests indicate that the PSO optimiser has the potential to replace the differential evolution optimiser in PyCBC Live and with greater hyperparameter tuning we can produce an SNR optimiser which explores the low-mass parameter space effectively.
 
 \section{\label{7:sec:conclusion}Conclusion and future improvements}
 % Limitations: Discuss any limitations of the current optimiser (e.g., computational bottlenecks, situations where the optimisation struggles).
@@ -307,22 +307,14 @@ The implementation of the SNR optimiser in PyCBC Live has improved the prospects
 
 \subsubsection{Template bank initial population positions}
 
-% 
-
 The two optimisers that are currently implemented---differential evolution and particle swarm optimisation---rely on spawning an initial random population of points to explore the template parameter space. We have prior knowledge about the parameter space from our templates bank and can place this initial population of points at the points of our template bank, the points will be drawn toward the best matching point from the template bank and hopefully explore the area between template bank points more deeply. If the parameter space bounds are large for an event this will place the population approximately at the correct density for the parameter space as defined by the stochastic template bank placement algorithm (described in Section~\ref{2:sec:template-bank}), more densely covered areas of the template bank will be assigned more initial points to explore that space.
 
 \subsubsection{Template dependent optimisers and hyperparameters}
 
 We have adjusted the parameter space bounds according to the initial template parameters, the mass bounds are dependent on the template chirp time and the spin bounds are dependent on the component object (black hole or neutron star). We could apply further options to both optimisers and the hyperparameters of the optimisers, depending on the template. If high-mass BBH signals require fewer iterations we can adjust that hyperparameter, if low-mass signals require a finer exploration of the parameter space we can change the mutation factor and recombination factor or the inertia and learning rates. We might be able to find optimisers that respond better to specific regions of the parameter space, similar to how the template banks are composed using different techniques for different regions.
 
-
 \subsubsection{Machine learning optimisers and hyperparameter tuning}
 
 Since starting this PhD in 2020 the rise of machine learning has been relentless, techniques that were considered novel and cutting-edge have fallen by the wayside and newer, more efficient and effective techniques have replaced them. The SNR optimiser can benefit heavily from this catalogue of machine learning based events that could be highly optimised for an SNR optimisation problem. We have a large number of historical events to train such a model on to allow enhanced parameter space exploration, which can allow either a faster optimisation or a deeper optimisation, especially for low-mass signals.
 
 Another area in which machine learning can help is with hyperparameter tuning. Optimising the SNR optimiser hyperparameters will return instant reward for the current configuration of the optimiser, the hyperparameters chosen initially or after our initial optimisation may not still be the correct choice in the fourth observing run and in the future. We generate a template bank for each observing run so we should optimise the hyperparameters too.
-
-
-
-
-

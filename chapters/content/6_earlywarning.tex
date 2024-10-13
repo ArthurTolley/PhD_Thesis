@@ -125,7 +125,7 @@ Even with an accurate sky map and dedicated electromagnetic telescopes (for exam
 % What has been scaled back
 To identify potential \gwadj signals prior to the merger of the compact objects, the PyCBC Live search pipeline has created an optimised early warning search for pre-merger gravitational waveforms. In this section we describe the design choices which allow the early warning search to operate in the early warning regime.
 
-We use two terms when referring to search detection times: latency refers to time taken by the search to identify a \gwadj template and produce a \gwadj event; warning refers to the time prior to the \gwadj signal's merger that the event was identified. The early warning attempts to maximise the warning time, which is improved by decreasing the latency between detection and event production.
+We use two terms when referring to search detection times: latency refers to the time taken by the search to identify a \gwadj template and produce a \gwadj event; warning refers to the time prior to the \gwadj signal's merger that the event was identified. The early warning attempts to maximise the warning time, which is improved by decreasing the latency between detection and event production.
 
 % What has been optimized
 We can divide the latency of detection into three contributing components: firstly, the analysis stride of the early warning search is one second, therefore a signal will have to wait until the entire second has arrived before it can be processed; secondly, when highpassing and overwhitening\footnote{Dividing the data by the PSD~\cite{FINDCHIRP:2012}.} our data we introduce corruption to the edge samples, we pad the data by an extra $1.5 \, \text{seconds}$ to account for this, which the signal has to wait for; thirdly, we need to analyse the data to detect the signal, we impose a strict analysis time requirement of less than the analysis stride, so data does not build up in the processing queue. In total, we have a minimum latency of $2.5 \, \text{seconds}$ (if the signal appears in the final few samples of the analysis stride) and a maximum latency of $3.5 \, \text{seconds}$ (if the signal appears in the first few samples of the analysis stride). Figure~\ref{6:fig:latency_plot} shows minimum and maximum latencies of both the full bandwidth and early warning search.
@@ -256,7 +256,7 @@ By implementing an early warning search in PyCBC Live we are capable of identify
 
 The early warning search has been operating throughout the fourth observing run, and is yet to see any early warning events. A Mock Data Challenge, which cyclically re-runs $40$ days of third observing run data, is being used to test the capabilities of the early warning search and has suggested that the search is not running optimally.
 
-To thoroughly evaluate this search pipeline's performance, we want to carry out the first large scale injection study of early warning-like \gwadj signals to directly test the efficacy of the search. By performing this injection study we will identify any problems and improvements that can be made to enable to greatest possibility of detecting multi-messenger events via early warning in current and future observing runs.
+To thoroughly evaluate this search pipeline's performance, we want to carry out the first large scale injection study of early warning-like \gwadj signals to directly test the efficacy of the search. By performing this injection study, we will identify any problems and improvements that can be made to enable the greatest possibility of detecting multi-messenger events via early warning in current and future observing runs.
 
 In this section we describe the injection study of the early warning search, detailing the parameters of the injection set used and the results of the study; the total number of injections found with at least one candidate event and the total number of candidate events found for all injections.
 
@@ -578,84 +578,12 @@ We find that $997$ injections had non-monotonically increasing SNR between all s
 % Total number of injections with non-monotonic SNRs above threshold: 120
 % Fraction of total injections: 0.368052999631947
 
-
-
 \section{\label{6:sec:conclusion}Conclusion}
 
 We injected $32,599$ simulated \gwadj signals into $40$ days of simulated \gwadj data and searched through this data using the PyCBC Live early warning search. The PyCBC Live early warning search found $175,219$ candidate events, $174,008$ of these candidate events can be associated with an injection in our injection set and after removing extra unexpected candidate events from duplicate frequency events and false-alarms we obtain $156,438$ candidate events for all injections.
 
-The more significant problem identified by this injection study is the missed events that we should've seen but were didn't due to the inadequate allowed coincidence timing window between coincident triggers. We identify $873$ injections that were missing at least one expected candidate event and $120$ more which missed the coincident event but found a far less significant coincidence with a significant deviation from the expected monotonic SNR increase. In total we missed $1,766$ injections completely however, of these we have been unable to estimate those missed due to the coincidence timing window.
+The more significant problem identified by this injection study is the missed events that we should've seen but were didn't due to the inadequate allowed coincidence timing window between coincident triggers. We identify $873$ injections that were missing at least one expected candidate event and $120$ more which missed the coincident event but found a far less significant coincidence with a significant deviation from the expected monotonic SNR increase. In total, we missed $1,766$ injections completely however, of these we have been unable to estimate those missed due to the coincidence timing window.
 
-To prevent \gwadj signals being missed by the PyCBC Live early warning search a configuration change is needed to increase this window alongside an improved phase-time-amplitude histogram which accounts for coincident \gwadj triggers at these extended time differences. 
+To prevent \gwadj signals from being missed by the PyCBC Live early warning search a configuration change is needed to increase this window alongside an improved phase-time-amplitude histogram which accounts for coincident \gwadj triggers at these extended time differences. 
 
 In conclusion, the early warning search is more than capable of observing \gwadj signals tens of seconds prior to the merger of the \gwadj event. We are able to disseminate information about this event to the international scientific community however, a statistic change is required in the current and future observing runs to enable the identification of \gwadj signals with time differences between detectors outside the current allowed coincidence timing window.
-
-% \section{\label{6:sec:potential-improvements}Potential Improvements}
-
-% While I am not including the improvements that are suggested here into the early warning search, due to time constraints, I will delve into some of the improvements that can be made and the positives and negatives of their effect upon the search.
-
-% \subsection{\label{6:subsec:ranking-statistic}Additions to the Ranking Statistic}
-
-% The ranking statistic, as mentioned in previous chapters, is the way in which we can evaluate the likelihood of a particular candidate being 'real'. Therefore, if we include more and more components into the ranking statistic, we can build up a more confident picture of what determines the realness of a candidate and whether we should share this candidate with the wider research community.
-
-% The current ranking statistic used by the early warning search is very very simple, in the single detector triggers it is a simple ranking of `newsnr' where the chi squared tests are used to determine if the correct amount of power is located in each bin of the template. For the coincident ranking statistic we used `phasetd' which is another simple check of phase and amplitude consistency between detectors in the time domain.
-
-% We have two careful consideration with regards to the ranking statistic. Number 1, computation time and avoiding introducing any lag into the early warning search. The early warning search has a stride length of one second, if any complicate computational steps are added to the ranking statistic we might risk delaying any detected early warning candidates and defeating the purpose of the search. Number 2, eliminating potential candidates before we send them out. No ranking statistic is perfect and the resulting quantitative analysis from the ranking statistic, the false alarm rate, is cut off at a human chosen number (typically one or two per year). Therefore, if we introduce more and more complicated components to the ranking statistic we might risk eliminating early warning candidates which don't meet the PyCBC threshold of a confident event but, other non-IGWN people might take that risk and perform their observations or analyses using our non-confident predictions. Therefore we might actually want to either keep our ranking statistic fairly simple, to not lose these rare events, or lower our threshold when using a complicated ranking statistic so that we still disperse these events but with a big asterisk that we do not think they're real and might fall below someone's threshold.
-
-% If we wanted to make some improvements to the ranking statistic we can consider including some early warning specific information which we would know at the time of the search. This is either historical information based on the previous results produced by the early warning search, something similar to the template fits used in offline and the full bandwidth live search, or maybe even an astrophysical analysis of what we expect to see based on a population model, something like the KDE statistic (I think??).
-
-% Real time information that could be used in the search pertains to the state of the detector at that very time, inclusion of iDQ and DQ, it could also include the detected candidates that have already been found and are being kept in a rolling buffer. We do expect that for a real \gwadj signal that can be found in early warning, to see a cascade of events uploaded with subsequent frequencies getting higher and higher. We could check if any previous frequencies were uploaded, or in posterity whether any further frequencies were uploaded. If a candidate has been found first at 38Hz, does this mean we missed a 29Hz and a 32Hz signal or were these too quiet? Can we spin up a small job to do a deep dive on whether these lower frequencies are in-fact there? There are many small changes that can be made to the early warning search to iteratively improve upon it and make it more robust and confident in detecting these rare events.
-
-% \subsection{More Frequency Truncations per Template}
-% We currently have five frequency truncations per template in our bank. This is to prevent a massive amount of templates in the bank and is a good balance for shorter templates which might transition between frequency truncations faster than the search stride time when reaching higher frequencies.
-
-% We could produce a template bank with a number of different configurations and requirements:
-% - Greater number of frequency truncations for all templates
-% - Template dependent frequency truncations, longer duration templates will have more frequency truncations
-% - Equal truncations per template but sigma dependent spacing
-% - Time before merger spacing of templates, 1 template every 3/4/5 seconds or something. Or 8 templates per duration
-
-% \subsection{Great parameter distribution in template bank}
-% The distribution of template parameters is conservative in the early warning search. We only want to find and report on signals that have a potential electromagnetic counterpart however our template bank could be too conservative and by allowing a greater parameter distributions of templates we could discover some templates on the edge of the bank with a greater SNR or templates that previously we wouldn't have seen.
-
-% To test a larger template bank we would need to produce an injection set containing a larger number of signals that we might consider EM bright, recent literature has highlighted previously unknown signals that could have EM counterparts~SOURCE SOURCE SOURCE.
-
-% \subsection{Adding Spins to the Template Bank}
-% Currently the template bank is limited to aligned 0 spin templates. We tested the search with an injection set of slightly spinning templates and this spin will not be seen by the early warning search. It is known that neutron stars have theoretical spins up to +-0.4 so there is a potential for us to be missing spinning neutron star signals and therefore precessing signals in our search. While precessing signals are more difficult to see due to difficulties in including the many more parameters requires this search is very light weight currently and more computing power could be added to balance out the lag increase from introducing more complicated template banks to the search.
-
-% \subsection{Approximants with greater physics}
-% Due to the small number of templates and them being only generated once for the live search we might be able to use a more expensive template model which includes physics which can capture some unique properties of low mass signals like tidal deformation or orbital eccentricity, using a better equation of state, higher order modes or high order PN terms.
-
-
-
-
-
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section*{Appendix}
-% \section{Problems Faced when producing Injection Data}
-
-% One of the problems experienced while doing the data analysis of this project is an issue caused by the method of creating the data initially. The PyCBC function used was \texttt{pycbc_condition_strain} which takes an input for the power spectrum density of the noise you with to simulate. We used an analytical PSD (NAME, REF, CITE) which produced discontinuities at the boundaries between our data segments and therefore negative effects on the matched filtering being performed by the live search. An example of one of these discontinuities and an injection missing some candidates can be seen in Figure~REMOVED.
-% % %
-% % \begin{figure}
-% %        \centering
-% %     \includegraphics[width=\textwidth]{}
-% %     \caption{}
-% %     \label{fig:ew_boundary_problem}
-% % \end{figure}
-% % %
-% The bug can be explained by the analytical PSD not cutting off naturally when tending towards 0Hz and instead takes on values incompatible with a real PSD. This 'bug' has since been reported and a user-based solution has been found, to include a new argument to condition strain to perform a highpass on all frequencies below 10Hz. Unfortunately we did include a highpass argument on the data originall when creating the data but it was the wrong one!
-
-% Since discovering this boundary issue the same data has been re-created with the same PSD but the correct highpass argument has been given and therefore the boundary issue has been resolved and we have re-performed the initial data analysis with the new data.
-
-
-% \section{Existing Limitations}
-
-% \subsection{Computational Limitations}
-
-% The early warning search is heavily optimised to the point it runs on a single dedicated machine with $10$ processes and $2$ threads per process. Just as the with full bandwidth search, the template bank is parallelised over these processes using MPI so each process will be performing the matched filter for only a few hundred templates before the message passing interface receives all the results and the coicidences are found by the rank 0 process. The search can be badly affected by other processes running on the same machines so this machine is exclusively used by the PyCBC Live early warning search.
-
-% The search can suffer heavily from other non-PyCBC processes such as file storage, data frame delivery or GraceDB uploads. These can be mitigated slightly with reserved local storage on the dedicated machine or subprocess multiprocessing for the GraceDB uploads so the search isn't waiting on GraceDB to continue processing, especially at times where multiple events are being uploaded for a single signal and across multiple searches from other pipelines.
-
-% Another consideration and computational limitation is the limit in introducing new computationally complex processes to the search that might introduce lag to individual processes. Potential changes to the ranking statistic could be challenging to implement without slowing down individual processes or the coincidence rank 0 process. With a data stride of one second we need to be sure that the data processing for the current second is completed before the next second of data arrives or we will slowly build up a debt of data which the search can never get on top of.
-
