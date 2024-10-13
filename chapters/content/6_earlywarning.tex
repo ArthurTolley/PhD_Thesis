@@ -1,14 +1,10 @@
-% Make a complete abstract
-
-% ADD INFORMATION ON WHERE MY WORK MIGHT BE PUBLISHED
-
 The PyCBC Live early warning search identifies \gwadj signals prior to merger, giving warning to the international astronomy community of an incoming \gwadj event. The early warning search is an adaptation to the PyCBC Live full bandwidth search---discussed heavily in chapter~\ref{chapter:5-pycbc-live}---and we have identified problems relating to search for pre-merger signals which require changes to be made to the early warning infrastructure to improve the sensitivity of the pipeline.
 
 In Section~\ref{6:sec:multi-messenger-astronomy} we discuss the joint detection of astrophysical events with both \gw and electromagnetic observatories, in Section~\ref{6:sec:gw170817} we highlight the only multi-messenger event seen thus far and the timeline of observations. The PyCBC Live early warning search is described in Section~\ref{6:sec:early-warning-search} with the template bank construction in Section~\ref{6:sec:early-warning-template-bank} and how sky localisation for events is obtained in Section~\ref{6:sec:event-localisation}. Section~\ref{6:sec:gw170817-in-ew} uses GW1701817 as an example to demonstrate the capabilities of the early warning search and in Section~\ref{6:sec:injection-tests} we describe a full injection set test performed using the early warning search to identify any problems and the results of this search. Finally, in sections~\ref{6:sec:false-problems} and~\ref{6:sec:missing-cands} we discuss the problems found when testing the early warning search, the cause of the problems and the potential solutions to these problems.
 
 \section{\label{6:sec:multi-messenger-astronomy}Multi-messenger astronomy}
 
-The PyCBC \gwadj search pipeline searches for \gwadj signals from the merger of two compact objects~\cite{PyCBC:2016}. Black holes do not emit electromagnetic radiation and therefore the merger of two black holes can currently only be directly observed with \gwadj detectors~\cite{Ghez:2000}. Neutron stars, on the other hand, are electromagnetically bright themselves and the merger of two neutron stars will produce a kilonova~\cite{Kilonovae:2017}. Kilonovae emit a broad range of electromagnetic radiation across the spectrum~\cite{kilonova_lightcurve:2017} which can be observed with many of the ground and space-based electromagnetic observatories we have on Earth. The combination of \gw and electromagnetic emissions allows us to understand more about these events than either observation could provide alone~\cite{multi_mess_astro:2019}. Astrophysical events which have been observed with more than one type of signal are called multi-messenger events, this can be from any of the three: electromagnetic signals, \gws or neutrinos. We will use the term `multi-messenger event' to describe an event which has been seen with a \gwadj signal and an electromagnetic counterpart.
+The PyCBC \gwadj search pipeline searches for \gwadj signals from the merger of two compact objects~\cite{PyCBC:2016}. Black holes do not emit electromagnetic radiation and therefore the merger of two black holes can currently only be directly observed with \gwadj detectors~\cite{Ghez:2000}. Neutron stars, on the other hand, are electromagnetically bright themselves and the merger of two neutron stars might produce a kilonova~\cite{Kilonovae:2017}. Kilonovae emit a broad range of electromagnetic radiation across the spectrum~\cite{kilonova_lightcurve:2017} which can be observed with many of the ground and space-based electromagnetic observatories we have on Earth. The combination of \gw and electromagnetic emissions allows us to understand more about these events than either observation could provide alone~\cite{multi_mess_astro:2019}. Astrophysical events which have been observed with more than one type of signal are called multi-messenger events, this can be from any of the three: electromagnetic signals, \gws or neutrinos. We will use the term `multi-messenger event' to describe an event which has been seen with a \gwadj signal and an electromagnetic counterpart.
 
 One such quantity that can be measured from observing kilonovae with both \gws and electromagnetic radiation is the Hubble constant~\cite{Schutz:1986}, the measured rate of expansion of the Universe~\cite{hubble:1929}. The Hubble constant is currently determined across two distance scales using purely electromagnetic observations: firstly, the large scale cosmological measurements using the cosmic microwave background~\cite{WMAP_H0:2003} and baryon acoustic oscillations~\cite{BAO_H0:2009} and secondly, the local Universe scale using the astrophysical standard candle Cepheid variable stars~\cite{Cepheids_H0:2001} and type Ia supernovae~\cite{TypeIa_H0:1998}. The Hubble constant values obtained at the different scales do not agree~\cite{H0_tension:2020} so by combining the observation of binary neutron star signals using both \gw and electromagnetic observatories we can provide an independent measurement of the Hubble constant to break this tension.
 
@@ -65,7 +61,7 @@ The \gwadj strain dependence on inclination angle manifests differently in the t
 %
 It can be seen from Equation~\ref{6:eqn:inclin_polarisations} that an edge-on system ($\iota = 90^{\circ}$) will produce a signal entirely in the $h_{+}$ polarisation but a face-on system will produce a mixed signal with contributions from both $h_{+}$ and $h_{\times}$. The inclination angle degeneracy could be broken if we were able to measure $h_{+}$ and $h_{\times}$ independently but the individual \gwadj detectors are sensitive only to a linear combination of the polarisations~\cite{aLIGO:2015}. Multiple \gwadj detectors with different orientations will be sensitive to different linear combinations of $h_{+}$ and $h_{\times}$ and are therefore required to break this degeneracy and fully reconstruct the source orientation~\cite{inclin_degen_2:2019}.
 
-To measure the redshift of the event using the \gwadj signal we can look at the chirp rate of the system. The chirp rate is defined as the rate of change of the \gwadj frequency and is given to Newtonian order as~\cite{Jaranowski:2009}
+To measure the redshift of the event using the \gwadj signal we can look at the chirp rate of the system. The chirp rate is defined as the rate of change of the \gwadj frequency and is given to leading order as~\cite{Jaranowski:2009}
 %
 \begin{equation}
     \frac{df}{dt} = \frac{96}{5} \pi^{8/3} \left(\frac{G\mathcal{M}}{c^{3}}\right)^{5/3} f^{11/3}.
@@ -91,7 +87,7 @@ We can look at other ways to measure the redshift of the event without using the
 
 \section{\label{6:sec:gw170817}GW170817: The only multi-messenger event}
 
-We have described multi-messenger events as those that have been seen with a \gw and an electromagnetic signal, in reality the event will broadcast information across the electromagnetic spectrum at varying timescales so we might see a single \gwadj signal but multiple electromagnetic signals. We have observatories around the globe and in space which span this entire spectrum and can observe counterparts to our \gwadj signal in all the different frequency ranges: from high frequency gamma rays to long wavelength radio waves. 
+We have described multi-messenger events as those that have been seen with a \gw and an electromagnetic signal, in reality the event will broadcast information across the electromagnetic spectrum at varying timescales so we might see a single \gwadj signal but multiple electromagnetic signals. There are observatories around the globe and in space which span this entire spectrum and can observe counterparts to our \gwadj signal in all the different frequency ranges: from high frequency gamma rays to long wavelength radio waves. 
 
 GW170817~\cite{GW170817:2017} is the first and only multi-messenger event we have observed, the Q-scans depicting the \gwadj signal found by the three detectors online at the time of the event can be seen in Figure~\ref{6:fig:gw170817_qscan} and the GCN circular~\cite{gcn_circulars:2024} (rapid astronomical bulletins submitted by and distributed to the global physics community) can be found at: \href{https://gcn.gsfc.nasa.gov/other/G298048.gcn3}{https://gcn.gsfc.nasa.gov/other/G298048.gcn3}. On the 17th August 2017 at precisely 12:41:04 UTC, the \gws from the merger of a binary neutron star system were seen by LVK detectors. Only $1.7$ seconds later, a gamma-ray burst (GRB 170817A~\cite{gw170817_joint:2017}) was seen by Fermi~\cite{Fermi:2022, Fermi_GW170817:2017} and INTEGRAL~\cite{INTEGRAL:2003, INTEGRAL_GW170817:2017}. The kilonova emissions were seen next, visual light by the Hubble Space Telescope (HST)~\cite{HST:2000, HST_GW170817:2021} at 11 hours, infrared by HST, VISTA~\cite{VISTA:2015, VISTA_GW170817:2017} and Spitzer~\cite{Spitzer:2004, Spitzer_GW170817:2018} at 12 hours and UV by Swift's UVOT~\cite{Swift:2004, Swift_GW170817:2017} at 15.3 hours post-merger. The final electromagnetic frequencies to be seen were X-rays by Chandra~\cite{Chandra_GW170817:2017} at 9 days post-merger and radio waves by VLA~\cite{VLA:2019, VLA_GW170817:2017} at 16 days post-merger.
 %
@@ -109,7 +105,16 @@ Using the electromagnetically bright multi-messenger events to constrain the mea
 
 \section{\label{6:sec:early-warning-search}Detecting \gwadj events pre-merger}
 
-\Gwadj signals from low-mass sources merge at frequencies above the sensitive frequency band of the LIGO \gwadj detectors~\cite{aLIGO_design_curve:2018}. The lower sensitive frequency of the LIGO detectors is ${\sim}20 \, \text{Hz}$ meaning the \gwadj signal can exist in the sensitive band for potentially hundreds of seconds before it is identified by the \gwadj search pipelines.
+\Gwadj signals from low-mass sources merge at frequencies above the sensitive frequency band of the LIGO \gwadj detectors~\cite{aLIGO_design_curve:2018}. The lower sensitive frequency of the LIGO detectors is ${\sim}20 \, \text{Hz}$ meaning the \gwadj signal can exist in the sensitive band for potentially hundreds of seconds before it is identified by the \gwadj search pipelines. Figure~\ref{6:fig:snr_accumulation} shows the accumulation of SNR over a $1.4 \, \text{M}_{\odot}{\text{--}}1.4 \, \text{M}_{\odot}$ binary neutron star signal; at $29 \, \text{Hz}$, 
+$31 \, \text{\%}$ of the SNR is accumulated at $83 \, \text{Hz}$ of the total template duration.
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/6_earlywarning/snr_accumulation.pdf}
+    \caption{The accumulation of signal-to-noise ratio over the duration of a $1.4 \, \text{M}_{\odot}{\text{--}}1.4 \, \text{M}_{\odot}$ binary neutron star system. SNR and duration have been normalised such that the SNR and duration at signal frequency $1024 \, \text{Hz}$ is equal to $1$.}
+    \label{6:fig:snr_accumulation}
+\end{figure}
+%
 
 This presents an opportunity to detect the \gwadj signal before it merges, in the inspiral regime of the system. The visible electromagnetic counterpart to the \gwadj signal is produced post-merger, therefore, by disseminating information about an ongoing \gwadj event prior to the merger we are able to give enough warning to electromagnetic observatories to slew their telescopes to the approximate region on the sky in which we will indicate a \gwadj event will occur. Providing this warning pre-merger is commonly referred to as `early warning'. This section details the methodologies used in the PyCBC Live early warning search to achieve the detection of electromagnetically bright \gwadj signals pre-merger.
 
@@ -123,9 +128,7 @@ To identify potential \gwadj signals prior to the merger of the compact objects,
 We use two terms when referring to search detection times: latency refers to time taken by the search to identify a \gwadj template and produce a \gwadj event; warning refers to the time prior to the \gwadj signal's merger that the event was identified. The early warning attempts to maximise the warning time, which is improved by decreasing the latency between detection and event production.
 
 % What has been optimized
-We can divide the latency of detection into three contributing components: firstly, the analysis stride of the early warning search is one second, therefore a signal will have to wait until the entire second has arrived before it can be processed; secondly, when highpassing and overwhitening\footnote{Dividing the data by the PSD~\cite{FINDCHIRP:2012}.} our data we introduce corruption to the edge samples, we pad the data by an extra $1.5 \, \text{seconds}$ to account for this, which the signal has to wait for; thirdly, we need to analyse the data to detect the signal, we impose a strict analysis time requirement of less than the analysis stride, so data does not build up in the processing queue. In total, we have a minimum latency of $2.5 \, \text{seconds}$ (if the signal appears in the final few samples of the analysis stride) and a maximum latency of $3.5 \, \text{seconds}$ (if the signal appears in the first few samples of the analysis stride). This latency is unavoidable and under normal operating conditions is the latency we expect for a signal.
-
-Figure~\ref{6:fig:latency_plot} shows minimum and maximum latencies of both the full bandwidth and early warning search.
+We can divide the latency of detection into three contributing components: firstly, the analysis stride of the early warning search is one second, therefore a signal will have to wait until the entire second has arrived before it can be processed; secondly, when highpassing and overwhitening\footnote{Dividing the data by the PSD~\cite{FINDCHIRP:2012}.} our data we introduce corruption to the edge samples, we pad the data by an extra $1.5 \, \text{seconds}$ to account for this, which the signal has to wait for; thirdly, we need to analyse the data to detect the signal, we impose a strict analysis time requirement of less than the analysis stride, so data does not build up in the processing queue. In total, we have a minimum latency of $2.5 \, \text{seconds}$ (if the signal appears in the final few samples of the analysis stride) and a maximum latency of $3.5 \, \text{seconds}$ (if the signal appears in the first few samples of the analysis stride). Figure~\ref{6:fig:latency_plot} shows minimum and maximum latencies of both the full bandwidth and early warning search.
 %
 \begin{landscape}
 \begin{figure}
@@ -143,7 +146,7 @@ To ensure the processing time for the triggers is completed in less than one sec
 
 \subsection{\label{6:sec:early-warning-template-bank}Frequency truncated template bank}
 
-The template bank used by the PyCBC Live early warning search is composed of frequency truncated templates. These are \gwadj templates which start at a lower frequency and end in the inspiral phase at a upper frequency cutoff. The bank contains six different frequency cutoffs at: $29$, $32$, $38$, $44$, $49$ and $56 \, \text{Hz}$, these frequencies correspond to approximately $60$, $46$, $29$, $20$, $15$ and $10$ seconds before merger for a $1.4 \, \text{M$_\odot$}$\text{--}$1.4\, \text{M$_\odot$}$ binary neutron star signal.
+The template bank used by the PyCBC Live early warning search is composed of frequency truncated templates. These are \gwadj templates which start at a lower frequency and end in the inspiral phase at a upper frequency cutoff. The bank contains six different frequency cutoffs at: $29$, $32$, $38$, $44$, $49$ and $56 \, \text{Hz}$. These frequencies correspond to approximately $60$, $46$, $29$, $20$, $15$ and $10$ seconds before merger for a $1.4 \, \text{M$_\odot$}$\text{--}$1.4\, \text{M$_\odot$}$ binary neutron star signal.
 
 The PyCBC Live early warning template bank is constructed by generating six separate template banks (one for each frequency cutoff) using a geometric placement algorithm~\cite{Harry_Lundgren:2012} with a minimal match between templates of $0.97$. The template parameters of the bank are chosen to represent potentially electromagnetically bright signals, these are produced by the merger of low mass binary neutron star or neutron star black hole systems. The masses of the two compact objects is limited between $1\text{--}3 \, \text{M$_\odot$}$ and to reduce the size and complexity of the template bank we use zero-spin on both components. The PSD used to generate the template bank is representative of the Advanced LIGO design curve that includes estimates for the main fundamental noises of the interferometer, in particular: seismic noise, thermal noise and quantum noise~\cite{aLIGO_design_curve:2018} with a binary neutron star range of $140 \, \text{Mpc}$~\cite{ligo_prospects:2016}. The six early warning template banks combined contain $9180$ templates.
 %
@@ -209,7 +212,7 @@ We can do the same for an injection placed at a distance such that the full band
 
 \section{\label{6:sec:gw170817-in-ew}Detecting GW170817 in early warning}
 
-GRB 170817A was seen by Fermi $1.7$ seconds after GW170817 was seen by LVK. Fermi observes the complete sky over a ${\sim}90 \, \text{minute}$ period~\cite{Fermi:2022} and can enter a pointing mode to re-point toward high profile events, such as those reported by \gwadj detectors. With the GRB counterpart being the soonest confirmation of a multi-messenger event, it is even more important that \gwadj observatories provide as much warning for an event to allow other telescopes to be in position for detecting electromagnetic counterparts. The \gwadj signal from GW170817 could have been detected by a $29 \, \text{Hz}$ template $67$ seconds pre-merger, that is $67$ seconds warning we can provide to electromagnetic observatories.
+GRB 170817A was seen by Fermi $1.7$ seconds after GW170817 was seen by LVK. Fermi observes the complete sky over a ${\sim}90 \, \text{minute}$ period~\cite{Fermi:2022} and can enter a pointing mode to re-point toward high profile events, such as those reported by \gwadj detectors. With the GRB counterpart being the earliest confirmation of a multi-messenger event, it is even more important that \gwadj observatories provide as much warning for an event to allow other telescopes to be in position for detecting electromagnetic counterparts. The \gwadj signal from GW170817 could have been detected by a $29 \, \text{Hz}$ template $67$ seconds pre-merger, that is $67$ seconds warning we can provide to electromagnetic observatories.
 
 GW170817 was seen by \gwadj searches and the initial GCN circular was distributed $27$ minutes after merger time. The LIGO-Livingston data contained a very loud glitch which had to be removed before a sky map could be made, leading to a sky map latency of $5$ hours and $14$ minutes. The Q-scan containing the glitch can be seen in Figure~\ref{6:fig:gw170817_glitch}~\cite{GW170817:2017}. The original event was uploaded to GraceDB (the Gravitational Wave Candidate Event Database~\cite{ligo_gracedb:2024}) and can be seen at on this web page: \href{https://gracedb.ligo.org/events/G298048}{https://gracedb.ligo.org/events/G298048}.
 %
@@ -251,13 +254,15 @@ By implementing an early warning search in PyCBC Live we are capable of identify
 
 \section{\label{6:sec:injection-tests}Testing the early warning search}
 
-The PyCBC Live early warning search was designed to detect \gwadj signals from compact binary coalescences before the merger occurs, providing rapid early warning alerts of astrophysical events to electromagnetic observatories. While the search is operational in the fourth observing run we have identified several critical cases in which the early warning search is detecting an increased number of false alarms, recovering events with irregular significance or outright missing events that it should detect.
+The early warning search has been operating throughout the fourth observing run, and is yet to see any early warning events. A Mock Data Challenge, which cyclically re-runs $40$ days of third observing run data, is being used to test the capabilities of the early warning search and has suggested that the search is not running optimally.
 
-In this section we will discuss the evaluation of the early warning search pipeline's performance to categorise the failure modes of the pipeline, with detailed case studies of some of the more problematic events identified by the search pipeline. Addressing these issues is critical because delays in early warning notifications or reduced sensitivity to electromagnetically bright signals could hinder the ability to provide early warning to the astronomy community.
+To thoroughly evaluate this search pipeline's performance, we want to carry out the first large scale injection study of early warning-like \gwadj signals to directly test the efficacy of the search. By performing this injection study we will identify any problems and improvements that can be made to enable to greatest possibility of detecting multi-messenger events via early warning in current and future observing runs.
+
+In this section we describe the injection study of the early warning search, detailing the parameters of the injection set used and the results of the study; the total number of injections found with at least one candidate event and the total number of candidate events found for all injections.
 
 \subsection{\label{6:sec:injection-set}Searching for thousands of \gwadj injections}
 
-To test the capabilities of the early warning search an injection campaign was performed, similar to the injection campaigns performed in chapters~\ref{chapter:4-archenemy} and~\ref{chapter:5-pycbc-live}. The injection parameter value ranges match the early warning template bank therefore, the injection set used in this test contains exclusively signals that should be seen by the early warning search. The injection set contains $32,599$ unique injections placed every ${\sim}100$ seconds, encompassing $3,456,000$ seconds or exactly $40$ days worth of data. The signal parameters and value ranges can be seen in Table~\ref{6:tab:ew_inj_params}.
+To test the capabilities of the early warning search an injection campaign was performed, similar to the injection campaigns performed in chapters~\ref{chapter:4-archenemy} and~\ref{chapter:5-pycbc-live}. The injection parameter value ranges match the early warning template bank, therefore, the injection set used in this test contains exclusively signals that should be seen by the early warning search. The injection set contains $32,599$ unique injections placed every ${\sim}100$ seconds, encompassing $3,456,000$ seconds or exactly $40$ days worth of data. The signal parameters and value ranges can be seen in Table~\ref{6:tab:ew_inj_params}.
 %
 \begin{table}[ht]
     \centering
@@ -300,21 +305,21 @@ We first simulate the injections to create the injection set. The injections are
 
 We expect injections can be seen by up to six templates corresponding to the six different frequency cutoffs. With $32,599$ injections in the injection set we could expect a maximum of $195,594$ candidate events in the results. We can expect some deviation to this number due to false events caused by random noise and the lower frequency cutoff templates not finding events for low SNR injections---some injections are just too quiet to be seen.
 
-We create and run the early warning search on the $40$ days of data containing the injections for both LIGO-Hanford and LIGO-Livingston to find two-detector coincidences. This is consistent with the PyCBC Live early warning search which currently doesn't use Virgo data to identify candidate events. The total number of candidate events found is $175,288$, we can correlate a candidate event's time of coalescence with the known injection times to eliminate $1,211$ injections which were not found within a short $2 \, \text{second}$ window of an injection time of coalescence. The total number of candidate events found for all injections is $174,077$, Figure~\ref{6:fig:cand_hist} shows a histogram of the number of candidate events found per injection.
+We create and run the early warning search on the $40$ days of data containing the injections for both LIGO-Hanford and LIGO-Livingston to find two-detector coincidences. This is consistent with the PyCBC Live early warning search which currently doesn't use Virgo data to identify candidate events. The total number of candidate events found is $175,219$, we can correlate a candidate event's time of coalescence with the known injection times to eliminate $1,211$ candidate events which were not found within a short $2 \, \text{second}$ window of an injection time of coalescence. The total number of candidate events found for all injections is $174,008$, Figure~\ref{6:fig:cand_hist_dupes} shows a histogram of the number of candidate events found per injection.
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\textwidth]{images/6_earlywarning/results/count_histogram.pdf}
+    \includegraphics[width=1.0\textwidth]{images/6_earlywarning/results/count_histogram_dupes.pdf}
     \caption{A histogram showing the number of injections (Count) found with varying numbers of candidate events (Number of Candidates) by the PyCBC Live early warning search. The exact number of counts is displayed on top of the histogram bars.}
-    \label{6:fig:cand_hist}
+    \label{6:fig:cand_hist_dupes}
 \end{figure}
 %
 
-Upon inspection of Figure~\ref{6:fig:cand_hist} we immediately identify an issue with the early warning search; the histogram shows us a large number of injections which have been found with greater than six candidate events. This is unexpected and we will explore the cause of this in the following sections, as well as others identified issues.
+Upon inspection of Figure~\ref{6:fig:cand_hist_dupes} we immediately identify an issue with the early warning search; the histogram shows us a large number of injections which have been found with greater than six candidate events. This is unexpected and we will explore the cause of this in the following sections, as well as other identified issues.
 
 \section{\label{6:sec:false-problems}False events}
 
-In this section we will identify the problem with the early warning search that we have discovered during the injection test. We will diagnose the source of each problem, evaluate the impact on the search results, estimate how many of the injections are affected and describe possible solutions. We begin with the problem identified by Figure~\ref{6:fig:cand_hist}, where the early warning search is identifying too many candidate events for some injections.
+With these results we can evaluate the performance of the early warning search and identify the problems that we initially set out to find. For each identified problem, we describe its source, estimate the number of injections affected, and detail potential solutions to be implemented into the early warning search to prevent the problem from occurring in future observing runs. We will begin with the problem identified by Figure~\ref{6:fig:cand_hist_dupes}, where the early warning search is identifying too many candidate events for some injections.
 
 \subsection{\label{6:sec:duplicate-frequency-cands}Finding duplicate frequency cutoff candidates}
 
@@ -351,7 +356,7 @@ Figure~\ref{6:fig:candidates_across_boundaries} is a demonstration of this possi
 %
 \begin{figure}
        \centering
-    \includegraphics[width=0.75\textwidth]{images/6_earlywarning/identified-problems/trigs_across_bounds.pdf}
+    \includegraphics[width=0.8\textwidth]{images/6_earlywarning/identified-problems/trigs_across_bounds.pdf}
     \caption{An illustration of two coincident candidate events being uploaded for the same frequency cutoff. The L1 trigger for the coincidence arrives in the analysis stride and the H1 trigger arrives in the next analysis stride. The early warning search has found a low significance H1 trigger in the first analysis stride and made a low significance coincidence. When the second analysis stride is analysed the correct coincidence will be found and the same L1 trigger is uploaded again with another coincident trigger at the same frequency cutoff.}
     \label{6:fig:triggers_across_boundaries}
 \end{figure}
@@ -370,11 +375,21 @@ This is an unavoidable failure mode of the early warning search, we require the 
 
 % Total number of injections with duplicate frequencies: 13098
 % Fraction of total injections: 40.172984909827015
-We find that $13,098$ injections ($40.17\%$ of the total) were found with at least one duplicate frequency. Candidate events are all treated independently and while the additional events on GraceDB may be confusing \gwadj signals on GraceDB commonly have multiple events uploaded per pipeline with multiple pipelines, the event with the highest SNR will simply be chosen as the preferred event until a higher SNR event is identified.
+We find that $13,098$ injections ($40.17\%$ of the total) were found with at least one duplicate frequency and $17,432$ duplicate frequencies can be removed from our results leaving $156,576$ unique candidate events remaining. Figure~\ref{6:fig:cand_hist_dupes_removed} recreates Figure~\ref{6:fig:cand_hist_dupes} where the duplicate candidate events have not been included.
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/6_earlywarning/results/count_histogram_dupes_removed.pdf}
+    \caption{A histogram showing the number of injections (Count) found with varying numbers of candidate events (Number of Candidates) by the PyCBC Live early warning search. The exact number of counts is displayed on top of the histogram bars.}
+    \label{6:fig:cand_hist_dupes_removed}
+\end{figure}
+%
+
+Candidate events are all treated independently and while the additional events uploaded to GraceDB may be confusing, \gwadj signals on GraceDB commonly have multiple events uploaded per pipeline with multiple pipelines. Therefore, the event with the highest SNR will be preferred until a higher SNR event is identified. 
 
 \subsection{\label{6:sec:false-alarms}Low significance candidate events}
 
-We have discussed false alarm candidate events that do not have times of coalescence consistent with any known injection time of coalescence and have removed $1,211$ candidates from our final results. There is a possibility of a false alarm candidate event to have a time of coalescence that falls nearby to an injection. These are easy to identify because those that appear at a lower frequency will not have the corresponding candidates from the next frequencies in the template bank. This is not something the early warning search can take into account in low-latency, but it is something that can definitely be used post-detection to confirm the legitimacy of an event.
+We have discussed false alarm candidate events that do not have times of coalescence consistent with any known injection time of coalescence and have removed $1,211$ candidates from our final results. There is a possibility of a false alarm candidate event to have a time of coalescence that falls nearby to an injection. These are easy to identify because those that appear at a lower frequency will not have the corresponding candidates from the next frequencies in the template bank. This is not something the early warning search can take into account in low-latency, but it is something that can be used post-detection to confirm the legitimacy of an event.
 %
 \begin{figure}
        \centering
@@ -385,9 +400,16 @@ We have discussed false alarm candidate events that do not have times of coalesc
 %
 The injection set used in this search was made using a PSD representative of the advanced LIGO noise curve~\cite{aLIGO_design_curve:2018} and therefore is coloured Gaussian noise, not containing any non-Gaussian noise transients. This means that when we identify a false-alarm candidate it has been caused by Gaussian noise triggers aligning in between the two detectors and finding a coincidence, a demonstration of this can be seen in Figure~\ref{6:fig:low_significance_candidates}.
 
-We can identify further false-alarm candidate events in two ways: look for injections with single candidates that have frequency cutoffs not equal to the highest cutoff in the template bank ($56 \, \text{Hz}$); and by comparing the injection template and the candidate event template. We observed $99$ injections with single candidates and a further $39$ injections with a mismatch between template $\mathcal{M}$ of ${\pm}1\%$.
+We can identify further false-alarm candidate events in two ways: look for injections with single candidates that have frequency cutoffs not equal to the highest cutoff in the template bank ($56 \, \text{Hz}$); and by comparing the injection template and the candidate event template. We observed $99$ injections with single candidates and a further $39$ candidate events with a mismatch between template $\mathcal{M}$ and injection $\mathcal{M}$ of ${\pm}1\%$.
 
-Of the original $32,599$ injections $13,225$ have been identified with additional unexpected candidate events caused by the three problems described in this section leaving $19,368$ to be further investigated in the next section.
+Of the original $174,088$ candidate events identified and we have been able to eliminate $17,570$ candidate events that were caused by boundary issues or false-alarms, leaving $156,438$ candidate events identified by the early warning search during the injection study. Figure~\ref{6:fig:cand_hist_all_removed} shows the distribution of the number of candidate events found per injection, where $13,225$ injections have additional unexpected candidate events.
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{images/6_earlywarning/results/count_histogram_all_removed.pdf}
+    \caption{A histogram showing the number of injections (Count) found with varying numbers of candidate events (Number of Candidates) by the PyCBC Live early warning search. The exact number of counts is displayed on top of the histogram bars.}
+    \label{6:fig:cand_hist_all_removed}
+\end{figure}
 
 \section{\label{6:sec:outside-coinc-window}Candidate events we did not see}
 
@@ -463,9 +485,9 @@ where the waveform $\hat{h}$ is normalised such that $\int \frac{|\hat{h}(f)|^{2
     \label{6:tab:timing_errors}
 \end{table}
 %
-Using an SNR of $8$ (and a lower frequency of $17$ Hz) yields timing errors from $5.89$ to $1.89$ milliseconds for the early warning frequency cutoffs, where higher frequencies have smaller timing errors. The current allowed error is $3 \, \text{ms}$ therefore we do not expect to miss candidates from the $44$, $48$ and $56 \, \text{Hz}$ templates. However, we will miss some candidate event from $29$, $32$ and, $38 \, \text{Hz}$ frequency cutoff templates when the timing error places coincident triggers outside the current allowed coincidence time window. This can be remedied with a widening of the window which could be done on a template dependent basis, with a timing accuracy error dependent on the frequency cutoff.
+Using an SNR of $8$ (and a lower frequency of $17$ Hz) yields $1$ sigma timing errors from $5.89$ to $1.89$ milliseconds for the early warning frequency cutoffs, where higher frequencies have smaller timing errors. The current allowed error is $3 \, \text{ms}$ therefore we can expect to miss candidates from all the frequency cutoff templates when the timing error places coincident triggers outside the current allowed coincidence time window. This can be remedied with a widening of the window which could be done on a template dependent basis, with a timing accuracy error dependent on the frequency cutoff.
 
-The PyCBC Live early warning search uses a sample rate of $256 \, \text{Hz}$ which contributes to a worse timing accuracy. The time between samples is $3.9 \, \text{ms}$ and a trigger found by another detector $3$ samples later will be within the allowed window of $13 \, \text{ms}$ but being $4$ samples later equals a time difference of $15.6  \, \text{ms}$; falling outside the window. We can perform a subsample interpolation within the coincidence window to recover the correct trigger time within the allowed window.
+The PyCBC Live early warning search uses a sample rate of $256 \, \text{Hz}$ which contributes to a worse timing accuracy. The time between samples is $3.9 \, \text{ms}$ and a trigger found by another detector $3$ samples later will be within the allowed window of $13 \, \text{ms}$ but being $4$ samples later equals a time difference of $15.6  \, \text{ms}$; falling outside the window. We can perform a subsample interpolation between samples to recover the correct trigger time within the allowed window.
 
 \subsubsection{\label{6:sec:ew_phasetd}Early warning tuned Phase-Time-Amplitude histogram}
 % Great, we've made the window bigger
@@ -486,11 +508,11 @@ Increasing the allowed coincidence time window allows the early warning search t
 
 For a two detector coincidence the likelihood value is found by sampling from a pre-created \texttt{phasetd} 3-dimensional histogram in amplitude, time, and phase space. The file is created by simulating \gwadj signals from an isotropic distribution of sources where each signal is assigned a random sky location (right ascension, declination, and inclination) and polarisation. The detector responses to the signal are calculated, from which we get the amplitudes, time, and phases for each injection in each detector. For a pair of detectors the time difference, phase difference and relative signal amplitude are then binned into discrete bins which represent different combinations of amplitude, time, and phase difference. An example of the phase-time histogram (marginalised over amplitude) can be seen in Figure~\ref{6:fig:phase-time-histogram}~\cite{PyCBC:2017} where the density of sources at time differences greater or less than $13 \, \text{ms}$ is extremely low. Therefore, when we sample from the histogram with large time difference we will receive very low value of the signal rate. The timing accuracy error will need to be taken account explicitly in the time difference on both trigger times.
 
-Another improvement that can be made in the generation of the \texttt{phasetd} statistic files is including the sample rate of the search as a parameter. For a Monte Carlo simulation the trigger time differences are as accurate as a \texttt{float64} parameter can be. Whereas the timing difference between triggers in the PyCBC Live search will only take discrete values of the time difference dependent on the sample rate, for example, the early warning search has a sample rate of $256$Hz and therefore the time difference between samples is approximately $3.9$ milliseconds. Therefore, our \texttt{phasetd} file will only ever been sampled from using time difference that are $n$-multiples of this time between samples. We can create \texttt{phasetd} files with bins in the time difference parameter space which represent the sample rate of the search and therefore can be sampled more accurately.
+Another improvement that can be made in the generation of the \texttt{phasetd} statistic files is including the sample rate of the search as a parameter. For a Monte Carlo simulation the trigger time differences are as accurate as a \texttt{float64} parameter can be. Whereas the timing difference between triggers in the PyCBC Live search will only take discrete values of the time difference dependent on the sample rate, for example, the early warning search has a sample rate of $256 \, \text{Hz}$ and therefore the time difference between samples is approximately $3.9$ milliseconds. Therefore, our \texttt{phasetd} file will only ever been sampled from using time difference that are $n$-multiples of this time between samples. We can create \texttt{phasetd} files with bins in the time difference parameter space which represent the sample rate of the search and therefore can be sampled more accurately.
 
 \subsubsection{\label{6:sec:missing-cands}Missing candidates}
 
-We know now that the $32$Hz triggers exist, but they fall outside the allowed coincidence timing window and therefore a coincident event was never formed. Figure~\ref{6:fig:missing-freq-eg} shows an example of an injection which has been found with all but $1$ final frequency cutoff template. 
+We know now the search will produce triggers that fall outside the allowed coincidence timing window and fail to form a coincident event. Figure~\ref{6:fig:missing-freq-eg} shows an example of an injection which has been found with all but $1$ final frequency cutoff template. 
 %
 \begin{figure}
     \centering
@@ -560,16 +582,13 @@ We find that $997$ injections had non-monotonically increasing SNR between all s
 
 \section{\label{6:sec:conclusion}Conclusion}
 
-We injected $32,599$ simulated \gwadj signals into $40$ days of simulated \gwadj data and searched through this data using the PyCBC Live early warning search. The PyCBC Live early warning search found $175,288$ candidate events, $174,077$ of these candidate events can be associated with an injection in our injection set and $1,667$ injections were found with no candidate events.
+We injected $32,599$ simulated \gwadj signals into $40$ days of simulated \gwadj data and searched through this data using the PyCBC Live early warning search. The PyCBC Live early warning search found $175,219$ candidate events, $174,008$ of these candidate events can be associated with an injection in our injection set and after removing extra unexpected candidate events from duplicate frequency events and false-alarms we obtain $156,438$ candidate events for all injections.
 
-Of the $30,932$ injections found with candidate events, $13,098$ were found with a duplicate frequency cutoff candidate event, $138$ were found with to low significance random noise candidate events not consistent with the injection parameters, $873$ injections are missing at least one expected candidate event and $120$ are found with a significant deviation from the expected monotonic SNR increase. Some injections can experience multiple problems, the number of injections that experience at least one problem is $14,190$, $45.9\%$ of all found injections.
+The more significant problem identified by this injection study is the missed events that we should've seen but were didn't due to the inadequate allowed coincidence timing window between coincident triggers. We identify $873$ injections that were missing at least one expected candidate event and $120$ more which missed the coincident event but found a far less significant coincidence with a significant deviation from the expected monotonic SNR increase. In total we missed $1,766$ injections completely however, of these we have been unable to estimate those missed due to the coincidence timing window.
 
-$993$ injections were affected by the insufficiently long allowed coincidence timing window, a configuration change of the PyCBC Live search to increase this window is required alongside an improved phase-time-amplitude histogram which accounts for coincident \gwadj triggers at this extended time differences. 
+To prevent \gwadj signals being missed by the PyCBC Live early warning search a configuration change is needed to increase this window alongside an improved phase-time-amplitude histogram which accounts for coincident \gwadj triggers at these extended time differences. 
 
 In conclusion, the early warning search is more than capable of observing \gwadj signals tens of seconds prior to the merger of the \gwadj event. We are able to disseminate information about this event to the international scientific community however, a statistic change is required in the current and future observing runs to enable the identification of \gwadj signals with time differences between detectors outside the current allowed coincidence timing window.
-
-
-
 
 % \section{\label{6:sec:potential-improvements}Potential Improvements}
 
