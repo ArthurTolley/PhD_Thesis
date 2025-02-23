@@ -26,10 +26,10 @@ Systematic sources of noise are the dominating limitation in the sensitivity of 
     \item Seismic noise~\cite{Glanzer:2023}: the vibrations of the ground causes a coupled vibration motion in the mirrors of the interferometer. Higher frequency seismic noise ($1-10$Hz) is often caused by local ground movements typically anthropogenic in nature, or greater magnitude earthquakes~\cite{Nuttall:2018}. Lower frequency seismic noise ($<1$Hz) is caused by larger-scale geophysical processes such as ocean waves, tidal effects, or smaller local earthquakes~\cite{aLIGO:2015}. Seismic noise can be mitigated with advanced suspension systems to isolate mirrors and end-station components from the ground to prevent coupling to seismic motion~\cite{seismic_isolation:2015}.
     \item Thermal noise~\cite{thermal_noise:2018}: the thermal energy of interferometer components will cause them to vibrate. This noise can be reduced with new mirror materials with resonant frequencies outside the sensitive regions or with cryogenically cooled mirrors such as those used by KAGRA~\cite{KAGRA:2021}.
     \item Shot noise~\cite{quantum_noise:2003}: the distribution in the number of photons observed by the interferometer photodetector in any time interval is Poisson distributed, and the error in the photon count places limits on the sensitivity. The error is proportional to the square-root of the count ($\sigma \propto \sqrt{\lambda}$) therefore, the simplest way to reduce this error is to increase the laser power and increase the photon count in the time interval.
-    \item Radiation pressure~\cite{quantum_noise:2003}: the pressure exerted by the photons hitting the end mirrors will decrease search sensitivity. To reduce this noise the laser power can be reduced; however, this will increase the shot noise.
+    \item Radiation pressure~\cite{quantum_noise:2003}: the pressure exerted by the photons hitting the end mirrors will decrease search sensitivity. To reduce this noise, the laser power can be reduced; however, this will increase the shot noise.
 \end{itemize}
 
-It can be seen that the laser power must be calibrated to balance the impact of increasing the photon count which will decrease shot noise but simultaneously increase radiation pressure noise. A figure displaying these systematic noise sources and their limitations in the LIGO detector case can be seen in Figure~\ref{3:fig:aLIGO_noise}.
+It can be seen that the laser power must be calibrated to balance the impact of increasing the photon count, which will decrease shot noise but simultaneously increase radiation pressure noise. A figure displaying these systematic noise sources and their limitations in the LIGO detector case can be seen in Figure~\ref{3:fig:aLIGO_noise}.
 %
 \begin{figure}
     \centering
@@ -42,7 +42,7 @@ It can be seen that the laser power must be calibrated to balance the impact of 
 % Sensitivity Analysis
 %    BNS Distance
 %    Sensitivity Measurement
-To monitor detector sensitivity, the binary neutron star inspiral range is calculated. This is the range at which a binary neutron star signal, with both components having a mass of $1.4$ M$_{\odot}$, will be detected given the characteristic noise (PSD) of the data. The PSD is calculated by taking an average of the detector noise in the previous minute~\cite{range_calculation:2003, ota:2023}. Figure~\ref{3:fig:bns_range} shows an example of the binary neutron star range for a day of LIGO-Hanford during the fourth observing run.
+To monitor detector sensitivity, the binary neutron star inspiral range is calculated. This is the range at which a binary neutron star signal, with both components having a mass of $1.4 \, \text{M}_{\odot}$, will be detected given the characteristic noise (PSD) of the data. The PSD is calculated by taking an average of the detector noise in the previous minute~\cite{range_calculation:2003, ota:2023}. Figure~\ref{3:fig:bns_range} shows an example of the binary neutron star range for a day of LIGO-Hanford during the fourth observing run.
 %
 \begin{figure}
     \centering
@@ -63,7 +63,7 @@ Noise transients, commonly referred to as glitches, are short duration bursts of
 
 % Characteristics of Noise Transients
 
-There are at least $27$~\cite{gravityspy:2023, gravityspy:2024} different classes of glitch which all manifest with different durations (typically in the millisecond to second range), amplitudes, and glitch morphology. Glitches populate the whole sensitive frequency range of the detectors with some glitches being broadband, affecting up to the whole frequency bandwidth, to others being narrowband and affecting only specific frequency ranges. Glitches are commonly characterised and studied in 2-dimensional time-frequency representations of the one-dimensional strain time series that the detector outputs. The typical time-frequency representation used is the OmegaScan~\cite{qscan:2004} (referred to as `Omega scan' or `Q-scan') which is described later in this chapter.
+There are at least $27$~\cite{gravityspy:2023, gravityspy:2024} different classes of glitch which all manifest with different durations (typically in the millisecond to second range), amplitudes, and glitch morphology. Glitches populate the whole sensitive frequency range of the detectors, with some glitches being broadband, affecting up to the whole frequency bandwidth, to others being narrowband and affecting only specific frequency ranges. Glitches are commonly characterised and studied in 2-dimensional time-frequency representations of the one-dimensional strain time series that the detector outputs. The typical time-frequency representation used is the OmegaScan~\cite{qscan:2004} (referred to as `Omega scan' or `Q-scan') which is described later in this chapter.
 
 % Common Sources of Noise Transients
 
@@ -75,7 +75,7 @@ The most common glitches are: blips~\cite{blips:2019}, \scl~\cite{ArchEnemy:2023
 %
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\linewidth]{images/3_detector_characterisation/glitches_subset.pdf}
+    \includegraphics[width=1.0\linewidth]{images/3_detector_characterisation/glitches_subset.png}
     \caption{Six classes of glitch commonly found in LIGO detector data. Taken from~\cite{GlitchPlot:2024, gravityspy:2023}.}
     \label{3:fig:glitches_subset}
 \end{figure}
@@ -83,7 +83,7 @@ The most common glitches are: blips~\cite{blips:2019}, \scl~\cite{ArchEnemy:2023
 
 % Detection and Characterisation of Noise Transients
 
-A number of algorithms and tools have been developed to detect and characterise noise transients in \gwadj data~\cite{ArchEnemy:2023, reducing_scattering:2020, Glanzer:2023, gravityspy:2017, gravityspy:2021, gravityspy:2023, glitschen:2021,  BayesWave:2015, gwadaptive:2022, O3_subtraction:2022, Powell:2016, glitschen:2021}. The primary aim of these tools is the identification of glitches and analysis of properties of the glitches (amplitude, frequency, duration, waveform shape) to determine the source of the noise. Once the noise source has been identified improvements to the detector can be made to eliminate it. Other tools focus on modelling noise transients for the purpose of subtracting them from affected \gwadj data~\cite{ArchEnemy:2023, BayesWave:2015, glitschen:2021, antiglitch:2023}.
+A number of algorithms and tools have been developed to detect and characterise noise transients in \gwadj data~\cite{ArchEnemy:2023, reducing_scattering:2020, Glanzer:2023, gravityspy:2017, gravityspy:2021, gravityspy:2023, glitschen:2021,  BayesWave:2015, gwadaptive:2022, O3_subtraction:2022, Powell:2016, glitschen:2021}. The primary aim of these tools is the identification of glitches and analysis of properties of the glitches (amplitude, frequency, duration, waveform shape) to determine the source of the noise. Once the noise source has been identified, improvements to the detector can be made to eliminate it. Other tools focus on modelling noise transients for the purpose of subtracting them from affected \gwadj data~\cite{ArchEnemy:2023, BayesWave:2015, glitschen:2021, antiglitch:2023}.
 %
 % GravitySpy figure of a bunch of glitch classes
 %
@@ -124,13 +124,13 @@ and so a wider frequency bandwidth will lead to a shorter duration for the wavel
     H(\tau, f, Q) = \int^{\infty}_{-\infty} h(t) w(t - \tau, f, Q) dt,
 \end{equation}
 %
-and the Omega scan algorithm will select the wavelet which produces the greatest amount of power ($|H(\tau, f, Q)|^{2}$) per pixel. As an example, a short-duration glitch (like a blip) would be better tiled with multiple low-frequency bandwidth, high-Q tiles which will resolve the glitch in greater definition than a low-Q tile which captures the whole glitch in one tile.
+and for each pixel the Omega scan algorithm will calculate the power of every wavelet, $|H(\tau, f, Q)|^{2}$, and select the one with the greatest amount of power. As an example, a short-duration glitch (like a blip) would be better tiled with multiple low-frequency bandwidth, high-Q tiles which will resolve the glitch in greater definition than a low-Q tile which captures the whole glitch in one tile.
 
 \paragraph{GravitySpy}
 
 is a citizen science machine learning tool for classifying glitches found in \gwadj data~\cite{gravityspy:2017}. GravitySpy has been trained by volunteers at the project website:~\href{https://www.zooniverse.org/projects/zooniverse/gravity-spy}{https://www.zooniverse.org/projects/zooniverse/gravity-spy}, hosted on the Zooniverse~\cite{zooniverse}.
 
-GravitySpy has uploaded more than $1.4$ million of Omega scans of \gwadj data which have been found to contain bursts of power which could be caused by glitches. The Omega scans are published on the GravitySpy project and volunteers are given these images and the option for which glitch they think is contained within the image. Once these images have been classified the machine learning algorithm is trained and it can go further to classify the images without the need of volunteers~\cite{gravityspy:2021}.
+GravitySpy has uploaded more than $1.4$ million of Omega scans of \gwadj data which have been found to contain bursts of power which could be caused by glitches. The Omega scans are published on the GravitySpy project and volunteers are given these images and the option for which glitch they think is contained within the image. Once these images have been classified, the machine learning algorithm is trained, and it can go further to classify the images without the need of volunteers~\cite{gravityspy:2021}.
 
 GravitySpy has been run on data from the second and third observing runs, where it was able to classify 24 different glitch categories. The downsides of GravitySpy are the constantly changing noise background of the \gwadj detectors and the new glitch types emerging which need to be trained on with volunteering again~\cite{gravityspy:2023}.
 

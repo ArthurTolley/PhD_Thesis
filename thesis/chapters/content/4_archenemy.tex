@@ -12,7 +12,7 @@ Different classes of glitches have been characterised using tools such as Gravit
   \label{4:fig:scattered_light}
 \end{figure}
 %
-\Scladj glitches occur when laser light in the interferometer is scattered from the main optical path by components within the detector. The motion of these components is coupled to seismic motion inducing a phase shift on the light being scattered as the surface moves back and forth. This \scl then recombines with the main laser, producing \scladj glitches in the data. The surfaces from which \scladj glitches originate have been objects on optical benches such as lenses, mirrors and photo-detectors~\cite{TAccadia:2010}.
+\Scladj glitches occur when laser light in the interferometer is scattered from the main optical path by components within the detector. The motion of these components is coupled to seismic motion, inducing a phase shift on the light being scattered as the surface moves back and forth. This \scl then recombines with the main laser, producing \scladj glitches in the data. The surfaces from which \scladj glitches originate have been objects on optical benches such as lenses, mirrors and photo-detectors~\cite{TAccadia:2010}.
 
 \Scladj glitches have been a significant problem when observing CBCs. As an example, GW190701\_203306 was coincident with a \scladj glitch, as shown in figure \ref{4:fig:obscured_detection}~\cite{gwtc2:2021}, requiring subtraction from the data before the event could be properly characterised~\cite{O3_subtraction:2022}. A further 7 candidate events were found to be in coincidence with \scladj glitches in the third observing run~\cite{gwtc3:2023}. For this reason, it is important to reduce the effect of \scladj glitches in the detectors and \gwadj search pipelines. \Scladj glitches occur as single or multiple glitches and can appear rapidly in time and simultaneously in frequency (see figure \ref{4:fig:consec_scattered_light}), which we refer to as harmonic glitches.
 
@@ -30,11 +30,11 @@ Different classes of glitches have been characterised using tools such as Gravit
 
 The most obvious way to remove the impact of glitches is removing the mechanisms which produce the glitches in the observatories. This has been investigated in previous works~\cite{reducing_scattering:2020, TAccadia:2010, Nuttall:2018, gwadaptive:2022, HilbertHuang:2017, tvf-EMD:2020, Scattering_Monitoring:2022, Was_Subtract:2021}, which focus on identifying the surfaces in which light is being scattered from and then mitigating the scattering by reducing the reflectivity of the surface, seismically isolating it or relocating it. 
 
-An alternative method for reducing \scladj glitches, known as ``RC tracking'', was implemented in the Advanced LIGO observatories in January 2020~\cite{reducing_scattering:2020}. The Advanced LIGO detectors employ a quadruple pendulum suspension for the test masses where two chains suspend four masses in this suspension system, one for the test mass optic and the other for the reaction mass. The reaction mass is used to impose a force upon the test mass and a significant source of \scladj glitches was the large relative motion between the test mass chain and the reaction chain. To mitigate this effect, the relative motion between the end test mass and the reaction mass needed to be reduced. This was achieved by ensuring the two chains are moving together by applying force to the top stage of the quadruple suspension system in Advanced LIGO. The implementation of RC tracking represented a decrease from $0.01 s^{-1}$ to $0.0001 s^{-1}$ and $0.0072 s^{-1}$ to $0.0012 s^{-1}$ in the number of \scladj glitches detected by Gravity Spy for LIGO-Hanford and LIGO-Livingston, respectively.
+An alternative method for reducing \scladj glitches, known as ``RC tracking'', was implemented in the Advanced LIGO observatories in January 2020~\cite{reducing_scattering:2020}. The Advanced LIGO detectors employ a quadruple pendulum suspension for the test masses, where two chains suspend four masses in this suspension system, one for the test mass optic and the other for the reaction mass. The reaction mass is used to impose a force upon the test mass, and a significant source of \scladj glitches was the large relative motion between the test mass chain and the reaction chain. To mitigate this effect, the relative motion between the end test mass and the reaction mass needed to be reduced. This was achieved by ensuring the two chains are moving together by applying force to the top stage of the quadruple suspension system in Advanced LIGO. The implementation of RC tracking represented a decrease from $0.01 s^{-1}$ to $0.0001 s^{-1}$ and $0.0072 s^{-1}$ to $0.0012 s^{-1}$ in the number of \scladj glitches detected by Gravity Spy for LIGO-Hanford and LIGO-Livingston, respectively.
 
 While methods for preventing \scladj glitches have been developed and have shown success, they have not been able to remove the problem of \scladj glitches from the data. Additionally, as the detectors continue to be upgraded and increase in sensitivity, new sources of \scladj glitches will continue to appear. Identifying these new sources and mitigating their effects can take many months, during which time the detectors are taking in data which might be affected by the presence of \scladj glitches. Therefore, it is not realistic to believe that analyses will be able to regularly run on data that does not contain \scladj glitches and this motivates us to develop a technique for mitigating the impact of these glitches when trying to identify CBCs in \gwadj data.
 
-In this work we present a new method for identifying and removing \scladj glitches from \gwadj data in advance of running searches to identify CBCs.
+In this work, we present a new method for identifying and removing \scladj glitches from \gwadj data in advance of running searches to identify CBCs.
 We first introduce a method for identifying when \scladj glitches are present in detector data, through the creation of a new modelled search for \scladj glitches, similar to how we search for \gws using matched filtering. We can model \scladj glitches, generate a suitable set of glitch waveforms and perform a matched filter search on detector data. We then subtract identified glitches from the data to increase detector sensitivity. The detector data isn't Gaussian and stationary, so the matched filter does have the potential to identify non-\scladj glitches, and potentially even \gwadj signals, as \scladj glitches. To prevent this we also demonstrate a new \scl $\chi^{2}$ test, which can distinguish between \scladj glitches, and other glitches---and \gwadj signals---in the data.
 
 We begin by reviewing previous research and describing the formulation of the waveform model used for characterizing \scladj glitches in section \ref{4:sec:sc_li}. In section \ref{4:sec:search_techniques} we introduce the various techniques used in the search to identify \scladj glitches in \gwadj data and the results of the \scladj glitch search. In section \ref{4:sec:results} we describe the results of a ``glitch-subtracted'' \gwadj search and any increases in sensitivity. We conclude in section \ref{4:sec:conclusion} and discuss the implementation of this method in future observing runs.
@@ -64,7 +64,7 @@ where $A_{0}$ is the amplitude of the light resonating in a Fabry–Pérot cavit
 %
 where $\delta x_{opt}$ is the displacement of the scattering surface and $x_0$ is the static optical path.
 
-The total amplitude of the beam inside the arm is given by $A_{tot} = A_{0} + A_{sc}$, with a phase angle equal to the phase noise introduced by the \scl $\delta \Phi = \frac{A_{sc}}{A_{0}} \cdot \sin \phi_{sc}$. The noise introduced by the \scl, $h_{sc}$, can be approximated through the relationship $\sin(\Phi_0+ \delta\Phi) \approx \cos(\Phi_0) \times \sin(\delta \Phi)$ for small $\delta\Phi$, and can be expressed as
+The total amplitude of the beam inside the arm is given by $A_{tot} = A_{0} + A_{sc}$, with a phase angle equal to the phase noise introduced by the \scl $\delta \Phi = \frac{A_{sc}}{A_{0}} \cdot \sin \phi_{sc}$. The noise introduced by the \scl, $h_{sc}$, can be approximated through the relationship $\sin(\phi+ \delta\phi) \approx \sin\phi + \cos\phi \cdot \delta\phi$ for small $\delta\phi$, and can be expressed as
 %
 \begin{equation}
     h_{sc}(t) = G \cdot \sin \left(\frac{4 \pi}{\lambda} (x_{0} + \delta x_{sc}(t) ) \right),
@@ -88,7 +88,7 @@ The displacement of the scatterer when presenting with oscillatory motion is the
 where $f_{m}$ is the frequency-modulated signal with modulation index $m = A_{m} \frac{4 \pi}{\lambda}$ and where $A_{m}$ is the amplitude of the $n$th harmonic. Finally, Equation~\ref{4:eqn:accadia_strain} can be simplified when considering only small bench motion, according to
 %
 \begin{equation}
-    h_{sc}(t) = G \cdot \cos\phi_{0} \cdot \frac{4 \pi}{\lambda} \cdot \delta x_{sc}(t) \;.
+    h_{sc}(t) = G \cdot \cos\phi_{0} \cdot \frac{4 \pi}{\lambda} \cdot \delta x_{sc}(t) + h_{\text{offset}}.
     \label{4:eqn:accadia_strain_linearised}
 \end{equation}
 
@@ -96,81 +96,50 @@ where $f_{m}$ is the frequency-modulated signal with modulation index $m = A_{m}
 
 The model introduced in~\cite{TAccadia:2010} for the \gwadj strain noise introduced by \scl uses a lot of knowledge about the detector state. The model used in this work will be more phenomenological in the parameterisation, allowing us to rely only on the characteristics of the glitches in the strain data and not knowledge of the detector configuration, especially in cases where this detector information might not be known. Each \scladj glitch, as viewed in a spectrogram (see figure \ref{4:fig:scattered_light}), has two easily identifiable features: the maximum frequency reached, \emph{glitch frequency} ($f_{gl}$); and the period of time the glitch exists in detector data, \emph{time period} ($T$).  In addition, we can fully describe an artifact by defining an \emph{amplitude} ($A$), \emph{phase} ($\psi$) and \emph{centre time} of the glitch ($t_0$).
 
-To formulate a model of \scladj glitches in terms of these parameters, we simplify equation \ref{4:eqn:accadia_strain_linearised}, treating the strain noise caused by \scl as the sinusoidal function
+To formulate a model of \scladj glitches in terms of these parameters, we simplify equation \ref{4:eqn:accadia_strain}, treating the strain noise caused by \scl as the sinusoidal function
 %
 \begin{equation}
-  h_{sc}(t) \propto \sin(\phi_{noise}(t)).
+  h_{sc}(t) = A \sin\left(\frac{4\pi}{\lambda}x(t) + \psi\right),
   \label{4:eqn:h_sc_initial}
 \end{equation}
 %
-Here the induced phase noise ($\phi_{noise}$) is equal to 
+where $A$ is some constant, $x(t)$ is the displacement of the scattering surface and $\psi$ is an offset.
+
+\Scladj glitches are caused by the physical increase in the distance travelled by the light as a consequence of being reflected off of a surface. We assume a simple harmonic oscillator for the surface displacement with frequency $f_{rep}$
 %
 \begin{equation}
-    \phi_{noise}(t) = 2 \pi f_{rep} t,
-     \label{4:eqn:phi_noise}
+    x(t) = B \sin\left(2\pi f_{rep}t\right),
+    \label{4:eqn:harmonic_displacement}
 \end{equation}
 %
-and $f_{rep}$ is the frequency of repetition of the sinusoid and is directly related to the \emph{time period}, $T$,
+which is directly related to the \emph{time period}, $T$,
 %
 \begin{equation}
   f_{rep} = \frac{1}{2 T}.
   \label{4:eqn:f_rep}
 \end{equation}
 %
-The \emph{time period} of a \scladj glitch only corresponds to half of a sinusoidal wave hence the multiplier of 2 on the denominator of equation \ref{4:eqn:f_rep}.
-
-\Scladj glitches are caused by the physical increase in the distance travelled by the light as a consequence of being reflected off of a surface. The light returning to the beam splitter from one arm will have travelled a different path length compared to the other arm and this path difference will act as a phase difference between the two arms causing non-destructive interference. The path difference and phase difference can be related with
+The \emph{time period} of a \scladj glitch only corresponds to half of a sinusoidal wave hence the multiplier of 2 on the denominator of equation \ref{4:eqn:f_rep}. We calculate the instantaneous frequency of the strain noise~\cite{TAccadia:2010}
 %
 \begin{equation}
-  \Delta \phi_{scattering}(t) = 2 \cdot \frac{2 \pi}{\lambda} \Delta x(t),
-  \label{4:eqn:delta_phi_scat}
+    f(t) = \left|\frac{1}{2\pi} \frac{d}{dt}\left(\frac{4\pi}{\lambda}x(t) + \psi\right)\right|,
+    \label{4:eqn:instant_freq}
 \end{equation}
 %
-where $\Delta x(t)$ indicates the change in the path taken by the light over time. An additional multiplier of 2 indicates our path difference is occurring twice, once when the light approaches the surface and again when leaving.
-
-We assume the scattering surfaces are oscillatory in motion and apply the same simplification made in equation \ref{4:eqn:accadia_oscillatory}, with an initial position $\Delta x = 0$ to a maximum displacement of $x_{0}$. This produces an equation for the path difference of the light,
+which we can use to predict the frequency of each scattered light glitch. We define the maximum frequency of each glitch (at the peak of the arch) as the glitch frequency, $f_{gl}$, which can be found by taking the maximum of Equation~\ref{4:eqn:instant_freq}
 %
 \begin{equation}
-  \Delta x(t) = x_{0} \sin(2 \pi f_{rep} t).
-  \label{4:eqn:delta_x_t}
+    f_{gl} = \text{max}\left[f(t)\right],
 \end{equation}
 %
-We substitute equation \ref{4:eqn:delta_x_t} into equation \ref{4:eqn:delta_phi_scat} and produce an equation for the phase noise induced by \scl
+giving an equation for the glitch frequency of a scattered light glitch
 %
 \begin{equation}
-  \phi_{scattering}(t) = \frac{4 \pi}{\lambda} x_{0} \sin(2 \pi f_{rep} t) \;,
-  \label{4:eqn:phi_sc}
+    f_{gl} = B \frac{4\pi}{\lambda} f_{rep}.
+    \label{4:eqn:glitch_frequency}
 \end{equation}
 %
-this equation for the phase noise induced by \scl, $\phi_{scattering}(t)$, and the equations for the generic phase noise, $\phi_{noise}(t)$ (equation \ref{4:eqn:phi_noise}), can now be used to create an equation for the strain noise caused by \scl.
-
-We take the derivatives of equations \ref{4:eqn:phi_noise} $\&$ \ref{4:eqn:phi_sc} with respect to time:
-%
-\begin{equation}
-  \phi_{noise} ^\prime (t) = 2 \pi F_{inst} (t),
-\end{equation}
-%
-\begin{equation}
-  \phi_{scattering} ^\prime (t) = \frac{4 \pi}{\lambda} x_{0} 2 \pi f_{rep} \cos(2 \pi f_{rep} t) \;,
-\end{equation}
-%
-where $F_{inst}$ is the instantaneous frequency at a specific time. We generate \scladj glitches from $\frac{-T}{2}$ to $\frac{T}{2}$ to ensure their maximum frequency occurs at $t = 0$. We define this maximum frequency as the \emph{glitch frequency}.
-
-We equate the two derivatives and set $t = 0$, this replaces $F_{inst}(t)$ with $f_{gl}$ and $\cos(2\pi f_{rep} t)$ with $1$, then re-arrange to find the maximum displacement of the scattering surface, $x_{0}$, as
-%
-\begin{equation}
-  x_{0} = \frac{f_{gl}}{f_{rep}} \frac{\lambda}{4 \pi}.
-  \label{4:eqn:x0}
-\end{equation}
-%
-Substituting equation \ref{4:eqn:x0} into equation \ref{4:eqn:phi_sc} gives us an expression for the \scladj phase noise,
-%
-\begin{equation}
-  \phi_{scattering}(t) = \frac{f_{gl}}{f_{rep}} \sin(2 \pi f_{rep} t),
-  \label{4:eqn:phi_sc2}
-\end{equation}
-%
-and substituting equation \ref{4:eqn:phi_sc2} as our $\phi_{noise}$ in equation \ref{4:eqn:h_sc_initial} we arrive at our model of \scladj glitches,
+Rearranging Equation~\ref{4:eqn:glitch_frequency} yields the expression $\frac{4\pi}{\lambda} = \frac{f_{gl}}{f_{rep} B}$ and when combined with Equations~\ref{4:eqn:h_sc_initial} and~\ref{4:eqn:harmonic_displacement} gives the final form of the strain noise induced by scattered light
 %
 \begin{equation}
   h_{sc}(t) = A \sin\left(\frac{f_{gl}}{f_{rep}} \sin(2 \pi f_{rep} t) + \psi\right),
@@ -192,45 +161,11 @@ Equipped with our model for \scladj glitches from the previous section, we now d
 
 \subsection{\label{4:subsec:MF}Matched filtering}
 
-Given our model of \scladj glitches, we can consider a realisation with specific values of the parameters discussed above. To identify glitches with these values of the parameterisation, we follow the same technique as that commonly used to identify CBCs and apply matched filtering. The matched filter is defined as~\cite{FINDCHIRP:2012}
-%
-\begin{equation}
-  \rho(t) = \frac{(h | s)}{\sqrt{(h | h)}} \equiv (\hat{h} | s).
-  \label{4:eqn:mf_1}
-\end{equation}
-%
-Here $h$ is the model template, $s$ the \gwadj data we are searching and we use the noise-weighted inner product defined between two time series $a(t)$ and $b(t)$ as
-%
-\begin{equation}
-  (a | b) = 4 Re \int^{\infty}_{0} \frac{\tilde{a}(f) \tilde{b}^*(f)}{S_n(f)} 
-  %e^{-2 \pi i f t} 
-  df.
-  \label{4:eqn:inner_product}
-\end{equation}
-%
-The tilde on $\tilde{a}$ and $\tilde{b}$ refer to the Fourier-transform of both variables into the frequency domain. The denominator, $S_n(f)$, represents the one-sided power spectral density (PSD) of the data, defined as
-%
-\begin{equation}
-  \langle \tilde{s}(f) \tilde{s}(f^\prime) \rangle = \frac{1}{2} S_n(f) \delta(f - f^\prime) \;,
-  \label{4:eqn:psd}
-\end{equation}
-%
-where the angle brackets denote an average over noise realisations and $\delta$ is the Dirac delta function.
-
-\Scladj glitches will take a range of values of the parameters describing them and we must be able to identify glitches anywhere in the parameter space. Following~\cite{FINDCHIRP:2012} we can analytically maximize over the \emph{amplitude}, \emph{phase} and the \emph{centre time} glitch parameters in equation \ref{4:eqn:model}. The matched filter naturally maximizes over \emph{amplitude} when expressed in terms of signal-to-noise ratio (SNR), and can be evaluated as a function of time by including a time shift in Equation~\ref{4:eqn:inner_product},
-%
-\begin{equation}
-  (a | b)(t) = \left| 4 Re \int^{\infty}_{0} \frac{\tilde{a}(f) \tilde{b}^*(f)}{S_n(f)} 
-  e^{-2 \pi i f t} 
-  df \right|.
-  \label{4:eqn:inner_product_time}
-\end{equation}
-%
-To maximize over phase we take the absolute value of the inner product, rather than the real part of the integral.
+Given our model of \scladj glitches, we can consider a realisation with specific values of the parameters discussed above. To identify glitches with these values of the parameterisation we use matched filtering, described in Section~\ref{2:sec:matched-filter}. \Scladj glitches will take a range of values of the parameters describing them and we must be able to identify glitches anywhere in the parameter space. Following~\cite{FINDCHIRP:2012} we can analytically maximize over the \emph{amplitude}, \emph{phase} and the \emph{centre time} glitch parameters in equation \ref{4:eqn:model} exactly as described in Section~\ref{2:sec:matched-filter}.
 
 \subsection{Template bank}
 
-Our \scladj glitch model is parameterised by 5 variables. As shown above, by maximizing over \emph{phase}, \emph{amplitude} and \emph{time}, we can analytically maximize the SNR over 3 of these variables. However, the remaining two describe the intrinsic evolution of the glitch and we must explicitly search over these parameters. To do this we create and use a ``template bank'' of \scladj glitch waveforms, created such that it would be able to identify glitches with any value of our 2 remaining parameters, \emph{glitch frequency} and \emph{time period}.
+Our \scladj glitch model is parameterised by 5 variables. As shown above, by maximizing over \emph{phase}, \emph{amplitude} and \emph{time}, we can analytically maximize the SNR over 3 of these variables. However, the remaining two describe the intrinsic evolution of the glitch, and we must explicitly search over these parameters. To do this we create and use a ``template bank'' of \scladj glitch waveforms, created such that it would be able to identify glitches with any value of our 2 remaining parameters, \emph{glitch frequency} and \emph{time period}.
 
 To generate this template bank, a stochastic template placement algorithm~\cite{Harry_sbank:2009} is used. This algorithm randomly generates a new template, places the template in the existing template bank and calculates the ``distance'' (how similar two templates appear) between the new template and existing templates. If the new template is too close to an existing template it is discarded, otherwise, it is accepted into the bank. The density of the bank is dependent on the allowed distance between two templates. The dominant cost of the search for \scladj glitches is matched filtering and is approximately linear in the number of templates, a larger template bank will find all the glitches with more accurate parameter values, but the computational cost of the search will be increased. The template bank generation alone does not constitute a significant computational cost in the search.
 
@@ -243,7 +178,7 @@ The distance function we have chosen to evaluate templates by is the match betwe
 %
 The value for the match, $M$,  is bounded between 0 and 1, where a value of 0 indicates orthogonal waveforms and a value of 1 indicates identical normalised waveforms. The maximum match allowed between any two templates in our bank is 0.97, which implies that a fully converged stochastic bank would have at least one waveform in it with $M \geq 0.97$ for any point in the space of parameters. 
 
-For our \scladj glitch search, we generated a template bank with \emph{time periods} $\in$ $1.8 \, \text{s}\text{--}5.5 \, \text{s}$ and \emph{glitch frequencies} $\in$ $20 \, \text{Hz}\text{--} 80 \, \text{Hz}$. We chose to use the Advanced LIGO zero-detuned high-power sensitivity curve~\cite{aLIGO_design_curve:2018}\footnote{The zero-detuned high-power sensitivity curve is a broader noise curve than the O3 Advanced LIGO data that we identify \scladj glitches in. However, this broader noise curve will result in \textit{more} template waveforms than we need, and will therefore overcover the parameter space, rather than potentially miss \scladj glitches.}. This allowed us to generate a template bank that contains 117,481 templates. We visualize the distribution of the templates as a function of \emph{time period} and \emph{glitch frequency} in Figure~\ref{4:fig:sq_bank}, observing a greater density of templates at higher frequencies and longer durations.
+For our \scladj glitch search, we generated a template bank with \emph{time periods} $\in$ $1.8 \, \text{s}\text{--}5.5 \, \text{s}$ and \emph{glitch frequencies} $\in$ $20 \, \text{Hz}\text{--} 80 \, \text{Hz}$. We chose to use the Advanced LIGO zero-detuned high-power sensitivity curve~\cite{aLIGO_design_curve:2018}\footnote{The zero-detuned high-power sensitivity curve is a broader noise curve than the O3 Advanced LIGO data that we identify \scladj glitches in. However, this broader noise curve will result in \textit{more} template waveforms than we need, and will therefore overcover the parameter space, rather than potentially miss \scladj glitches.}. This allowed us to generate a template bank that contains 117,481 templates. We visualize the distribution of the templates as a function of \emph{time period} and \emph{glitch frequency} in Figure~\ref{4:fig:sq_bank}, observing a greater density of templates at higher frequencies and longer durations, indicating that templates in this region look less similar and therefore, more templates are needed to fully describe the parameter space.
 
 \begin{figure}
   \centering
@@ -256,7 +191,7 @@ For our \scladj glitch search, we generated a template bank with \emph{time peri
 
 We test our method by searching through \gwadj data from 2019-11-18 16:13:05--2019-11-25 22:11:09 for the LIGO-Hanford and LIGO-Livingston detectors. This time corresponds to the 25th period of data used in the LVK analysis of O3 data for CBCs~\cite{gwtc3:2023} and is prior to the implementation of RC tracking~\cite{reducing_scattering:2020} in these detectors. We only analyse data that is flagged as ``suitable for analysis" on the Gravitational Wave Open Science Center~\cite{GWOSC:2021}\footnote{We note that in O3 \emph{only} data suitable for analysis is released, so we simply analyse all the publicly available data.}. This corresponds to 5.96 days of analysable data for LIGO-Hanford and 5.93 days for LIGO-Livingston.
 
-Equipped with our template bank we now identify potential \scladj glitches in the data. We matched filter all the data against all the templates, producing a SNR time series for every template in the bank. These SNR time series will contain peaks which, when above a certain limit, indicate the presence of a \scladj glitch at a particular time. We retain any maxima within the time series that have a SNR greater than 8. However, as we do this independently for every template, we will identify multiple peaks for any given glitch, and we will also find peaks that correspond to other types of glitch, or even \gwadj signals. We discuss how we reduce this to a list of identified \scladj glitches in the following subsections.
+Equipped with our template bank, we now identify potential \scladj glitches in the data. We matched filter all the data against all the templates, producing a SNR time series for every template in the bank. These SNR time series will contain peaks which, when above a certain limit, indicate a potential \scladj glitch at a particular time. We retain any maxima within the time series that have a SNR greater than 8. However, as we do this independently for every template, we will identify multiple peaks for any given glitch, and we will also find peaks that correspond to other types of glitch, or even \gwadj signals. We discuss how we reduce this to a list of identified \scladj glitches in the following subsections.
 
 \subsection{Scattered-light signal consistency test}
 
@@ -293,10 +228,10 @@ After computing the $\chi_{r}^{2}$ value for potential \scladj glitches, we foll
 \end{equation}
 %
 where $\rho_{rw}$ represents the re-weighted SNR of the \scladj glitch template calculated using the SNR, $\rho$, and the $\chi_{r}^{2}$ value of that template.
-We do note that this re-weighting function has been tuned for CBC waveforms and we did not repeat that tuning here with \scladj glitches. One could retune this statistic, specifically targeting \scladj glitches, using (for example) the automatic tuning procedure described in~\cite{McIsaac_Chi:2022}. However, we demonstrate the suitability of the $\chi^{2}$ test for our purposes in Figure~\ref{4:fig:chi_snr} where we show the $\chi_{r}^{2}$ vs SNR distribution of the triggers found by our \scladj glitch search when performed on data containing only \scladj glitches and data containing a binary black hole \gwadj injection.
+We do note that this re-weighting function has been tuned for CBC waveforms, and we did not repeat that tuning here with \scladj glitches. One could retune this statistic, specifically targeting \scladj glitches, using (for example) the automatic tuning procedure described in~\cite{McIsaac_Chi:2022}. However, we demonstrate the suitability of the $\chi^{2}$ test for our purposes in Figure~\ref{4:fig:chi_snr} where we show the $\chi_{r}^{2}$ vs SNR distribution of the triggers found by our \scladj glitch search when performed on data containing only \scladj glitches and data containing a binary black hole \gwadj injection.
 
 \begin{figure}
-  \makebox[\textwidth][c]{\includegraphics[width=\textwidth]{images/4_archenemy/Section3/3.4/SLvsBBH.pdf}}
+  \makebox[\textwidth][c]{\includegraphics[width=\textwidth]{Thesis/images/4_archenemy/Section3/3.4/SLvsBBH_6.pdf}}
   \caption{The signal-to-noise ratio (SNR) and $\chi_{r}^{2}$ values for the triggers identified by the matched filtering and clustering of the \scladj glitch template bank with data containing only \scladj glitches (grey hexagons) and data containing a binary black hole \gwadj injection (red triangles). The black contour lines represent the re-weighted SNR values the trigger will take when equation \ref{4:eqn:reweighting} is applied. The orange dashed vertical line indicates the SNR value limit of 8, above which we decide to perform the $\chi^{2}$ test and calculate the re-weighted SNR. The blue solid contour line indicates a re-weighted SNR value of 8, which is the limit at which we consider the trigger to be real. Different re-weighting parameter values will produce different contour line shapes. It can be seen that no triggers for the data containing the \gwadj injection lie beneath the contour line, and therefore no \scladj glitches are found on the \gwadj signal.}
   \label{4:fig:chi_snr}
 \end{figure}
@@ -320,9 +255,9 @@ We note that the $\chi^{2}$ test increases the number of matched filters require
     \label{4:fig:clustering_story}
 \end{figure}
 
-Our matched filtering process retains ``triggers'' (potential \scladj glitches) wherever the re-weighted signal-to-noise time series is larger than 8. We retain no more than one trigger within a window size equal to half the \emph{time period} of the template used to produce the re-weighted signal-to-noise time series and only store triggers at local maxima. A re-weighted signal-to-noise time series with multiple peaks and identified triggers can be seen in the top right panel in figure \ref{4:fig:clustering_story}.
+Our matched filtering process retains ``triggers'' (potential \scladj glitches) wherever the re-weighted signal-to-noise time series is larger than 8. We retain no more than one trigger within a window size equal to half the \emph{time period} of the template used to produce the re-weighted signal-to-noise time series, and only store triggers at local maxima. A re-weighted signal-to-noise time series with multiple peaks and identified triggers can be seen in the top right panel in figure \ref{4:fig:clustering_story}.
 
-After matched filtering all the templates against the data we will recover multiple triggers for any potential \scladj glitch, as we might expect to independently identify peaks in multiple templates around the true values of the glitch. We therefore collect all the triggers generated by the template bank and cluster these in time, using a window of half of the shortest duration template---$0.9$ seconds. This will result in a list of triggers corresponding to the highest re-weighted SNRs, where each trigger should correspond to a unique \scladj glitch. The bottom left panel in figure \ref{4:fig:clustering_story} shows an example of the triggers found by the search and the highest re-weighted SNR triggers found by clustering.
+After matched filtering all the templates against the data, we will recover multiple triggers for any potential \scladj glitch, as we might expect to independently identify peaks in multiple templates around the true values of the glitch. We therefore collect all the triggers generated by the template bank and cluster these in time, using a window of half of the shortest duration template---$0.9$ seconds. This will result in a list of triggers corresponding to the highest re-weighted SNRs, where each trigger should correspond to a unique \scladj glitch. The bottom left panel in figure \ref{4:fig:clustering_story} shows an example of the triggers found by the search and the highest re-weighted SNR triggers found by clustering.
 
 However, we also expect to see instances of harmonic glitches which are produced by the same scattering surface and so share the same \emph{time period} and have \emph{glitch frequency} values equal to a multiple of the lowest frequency glitch in the harmonic stack~\cite{TAccadia:2010}. We investigate each trigger in the list, searching for harmonic glitches occurring at the same time. We use the first list of triggers identified by all templates across the bank and filter by those that occur within $\pm0.05$ seconds of the \emph{centre time} of the trigger we are investigating, an example of this window can be seen in the top left panel of figure \ref{4:fig:clustering_story}. We then filter the triggers again, keeping only those with an associated \emph{time period} value within $\pm 10 \%$ of the trigger's \emph{time period}. Finally, we cluster these remaining triggers by their associated \emph{glitch frequency} using a window size of $4$Hz, a lower limit on the frequency separation of harmonic glitches, the bottom right panel in figure \ref{4:fig:clustering_story} shows the identification of harmonic glitches for the overlaid \scladj glitch in the top left panel of figure \ref{4:fig:clustering_story}.
 
@@ -336,7 +271,7 @@ For each segment, we then create a reduced template bank, consisting of template
 
 A further benefit of using these shorter data segments is that we are estimating the PSD of the data using only a short period of data close to the \scladj glitches being removed. This protects us from a rapidly changing PSD in non-stationary data, which might cause Gaussian noise to be identified with larger SNR in the periods where the PSD is larger. This can be resolved by including the variation in the power spectral density as an additional statistic in the re-ranking of triggers, which has been done for CBC \gwadj searches in~\cite{PSD_var:2020}.
 
-We demonstrate the hierarchical subtraction step on an amount of data which contains four injected \scladj glitches in a single harmonic stack, this can be seen in figure \ref{4:fig:injected_glitches}. As shown, the \scladj glitches are found and subtracted from the data leaving behind a cleaned segment of \gwadj data with no excess noise. Figure~\ref{4:fig:overlay_goods} shows the identified \scladj glitch triggers before and after performing the hierarchical subtraction step on a stretch of data containing real \scladj glitches. We identify more triggers prior to performing hierarchical subtraction, however there are more errant mismatches between \scladj glitches and the overlaid templates. By performing the hierarchical subtraction, we more accurately identify \scladj glitches, however, we miss some glitches that were previously identified. There is still some imperfection in this process and we do not refine the method further in this work, but highlight this as useful direction for future studies in removing \scladj glitches. 
+We demonstrate the hierarchical subtraction step on an amount of data which contains four injected \scladj glitches in a single harmonic stack, this can be seen in figure \ref{4:fig:injected_glitches}. As shown, the \scladj glitches are found and subtracted from the data leaving behind a cleaned segment of \gwadj data with no excess noise. Figure~\ref{4:fig:overlay_goods} shows the identified \scladj glitch triggers before and after performing the hierarchical subtraction step on a stretch of data containing real \scladj glitches. We identify more triggers prior to performing hierarchical subtraction, however there are more errant mismatches between \scladj glitches and the overlaid templates. By performing the hierarchical subtraction, we more accurately identify \scladj glitches, however, we miss some glitches that were previously identified. There is still some imperfection in this process, and we do not refine the method further in this work, but highlight this as useful direction for future studies in removing \scladj glitches. 
 
 \begin{figure}
      \centering
@@ -345,7 +280,7 @@ We demonstrate the hierarchical subtraction step on an amount of data which cont
         \hspace{0.02\linewidth}
         \includegraphics[width=0.49\linewidth]{images/4_archenemy/Section3/3.6/overlay_good_overlays_second.pdf}
      \end{minipage}
-         \caption{LIGO-Hanford data from 2019-11-23 17:54:22--2019-11-23 17:55:12 containing \scladj glitches which have been identified by the ArchEnemy search (left), there is a misalignment in the template found for a number of glitches in this period of data and some missed glitches. \Scladj glitches remaining after running the hierarchical subtraction search (right) for the same period of data, we have missed more \scladj glitches however misalignments have been removed. The highest harmonic at approximately $892$ seconds has been incorrectly split into two separate templates.}
+         \caption{LIGO-Hanford data from 2019-11-23 17:54:22--2019-11-23 17:55:12 containing \scladj glitches which have been identified by the ArchEnemy search (left), there is a misalignment in the template found for a number of glitches in this period of data and some missed glitches. Instead of finding all \scladj glitches at once we run a hierarchical subtraction to find the \scladj glitches in a chunk of time one-by-one. \Scladj glitches remaining after running the hierarchical subtraction search (right) for the same period of data, we have missed more \scladj glitches however misalignments have been removed. The highest harmonic at approximately $892$ seconds has been incorrectly split into two separate templates.}
     \label{4:fig:overlay_goods}
 \end{figure}
 
@@ -427,7 +362,7 @@ We now assess whether removing our identified list of \scladj glitches results i
 
 \subsection{Comparing search results with and without glitch subtraction}
 
-The PyCBC pipeline is able to assess the significance of potential CBCs in a given stretch of data, and does the same with a set of simulated signals. This significance is quoted in terms of a ``false-alarm rate'', which denotes how often we would expect to see a non-astrophysical event at least as significant as the coincident trigger being considered. In this work we assess sensitivity at a false-alarm threshold of 2 background events every year.
+The PyCBC pipeline is able to assess the significance of potential CBCs in a given stretch of data, and does the same with a set of simulated signals. This significance is quoted in terms of a ``false-alarm rate'', which denotes how often we would expect to see a non-astrophysical event at least as significant as the coincident trigger being considered. In this work, we assess sensitivity at a false-alarm threshold of 2 background events every year.
 
 The data we have searched over contained no previously found \gwadj signals~\cite{gwtc3:2023} and our search after subtracting \scladj glitches identified no new \gwadj signals. While the search hasn't found any \gws, we can still measure the improvement in the sensitivity of the detectors by comparing the number of simulated signals identified with a false-alarm rate below 2 per year for each injection set (described in Section~\ref{4:ssec:injsafety}) with and without removing glitches from the data. Table \ref{4:tab:found_injs} shows the number of injections found for all injection sets and both searches.
 %
@@ -450,7 +385,7 @@ NSBH & 1260 & 1265 & 1.00 & 8 & 3 \\
 
 \end{table}
 
-We compare the number of injections found by both searches but also look at the \gwadj injections found by the original search and missed by the glitch-subtracted search and vice versa, this information can be seen in Table~\ref{4:tab:found_injs}. Considering signals found by the original search and missed by the glitch-subtracted search there are $3$ binary black hole injections with false-alarm rates in the original search ranging from $0.5\text{--}0.3$ per year, one of which had a glitch removed approximately $9$ seconds after the injection, there are $5$ newly-missed binary neutron star injections with false-alarm rates ranging from $0.5\text{--}0.056$ per year, two of the five binary neutron star injections had glitches removed within $60$ seconds of the injection, and there are $3$ newly-missed neutron star black hole injections with false-alarm rates ranging from $0.5\text{--}0.086$, one had glitches removed within $60$ seconds of the injection. The other newly-missed injections showed no \scladj glitches within a $20$ second window for binary black hole injections and a $60$ second window for binary neutron star and neutron star black hole injections.
+We compare the number of injections found by both searches but also look at the \gwadj injections found by the original search and missed by the glitch-subtracted search and vice versa, this information can be seen in Table~\ref{4:tab:found_injs}. Considering signals found by the original search and missed by the glitch-subtracted search there are $3$ binary black hole injections with false-alarm rates in the original search ranging from $0.5\text{--}0.3$ per year, one of which had a glitch removed approximately $9$ seconds after the injection, there are $5$ newly-missed binary neutron star injections with false-alarm rates ranging from $0.5\text{--}0.056$ per year, two of the five binary neutron star injections had glitches removed within $60$ seconds of the injection, and there are $3$ newly-missed neutron star black hole injections with false-alarm rates ranging from $0.5\text{--}0.086$ per year, one had glitches removed within $60$ seconds of the injection. The other newly-missed injections showed no \scladj glitches within a $20$ second window for binary black hole injections and a $60$ second window for binary neutron star and neutron star black hole injections.
 
 The glitch-subtracted search identifies $10$ additional binary black hole injections, the most significant of which have false-alarm rates of 1 per $190.50$, 1 per $7633.84$ and 1 per $8643.73$ years. We illustrate the last of these in Figure~\ref{4:fig:ae_found} (top). $5$ extra binary neutron star injections were found, with false-alarm rates from $0.5\text{--}0.19$ per year and $8$ neutron star black hole injections were found, where the false-alarm rate of the most significant is 1 per $9961.55$ years. This injection can also be seen in Figure~\ref{4:fig:ae_found} (bottom). We find $6$ of the $10$ binary black hole injections have \scladj glitches within a $20$ second window of the injection, $3$ of $5$ binary neutron star injections have \scladj glitches within a $60$ second window of the injection and, $6$ of the $8$ neutron star black hole injections have \scladj glitches within a $60$ second window of the injection. We provide more details about the newly-found and newly-missed injections in~\ref{4:sec:apdx_injections_table}
 
@@ -470,9 +405,9 @@ The glitch-subtracted search identifies $10$ additional binary black hole inject
     \label{4:fig:ae_found}
 \end{figure}
 
-To quantify the sensitivity of the search we calculate the sensitive volume in which we can observe \gwadj signals. To calculate the sensitive volume we measure the detection efficiency of different distance bins taken from the injection sets and then multiply the efficiencies by the volume enclosed by the distance bins, these volumes are then summed to find the total volume the search is sensitive to~\cite{rw_snr_eq:2012}. We are then able to calculate the ratio in sensitivities between the glitch-subtracted \gwadj search and the original \gwadj search,  revealing the improvement that subtracting \scladj glitches has made.
+To quantify the sensitivity of the search, we calculate the sensitive volume in which we can observe \gwadj signals. To calculate the sensitive volume we measure the detection efficiency of different distance bins taken from the injection sets and then multiply the efficiencies by the volume enclosed by the distance bins, these volumes are then summed to find the total volume the search is sensitive to~\cite{rw_snr_eq:2012}. We are then able to calculate the ratio in sensitivities between the glitch-subtracted \gwadj search and the original \gwadj search,  revealing the improvement that subtracting \scladj glitches has made.
 
-Figure~\ref{4:fig:allinj_vt_ratio} displays the ratio of the sensitive volume measured for the glitch-subtracted \gwadj search and the original PyCBC \gwadj search, across different false-alarm rate values, we quote our sensitivity ratios at a false-alarm rate value of 2 per year. The same set of injected signals was used for both \gwadj searches and therefore a direct comparison of search sensitivities can be made via this ratio. Disappointingly, the measured sensitivity improvement is small in the results we obtain. For the binary black hole injections we measure a sensitivity ratio at a 2 per year false-alarm rate of $1.01$, for binary neutron stars $1.00$ and neutron-star--black-holes $1.00$. 
+Figure~\ref{4:fig:allinj_vt_ratio} displays the ratio of the sensitive volume measured for the glitch-subtracted \gwadj search and the original PyCBC \gwadj search, across different false-alarm rate values, we quote our sensitivity ratios at a false-alarm rate value of 2 per year. The same set of injected signals was used for both \gwadj searches, and therefore a direct comparison of search sensitivities can be made via this ratio. Disappointingly, the measured sensitivity improvement is small in the results we obtain. For the binary black hole injections we measure a sensitivity ratio at a 2 per year false-alarm rate of $1.01$, for binary neutron stars $1.00$ and neutron-star--black-holes $1.00$. 
 
 The statistical significance of the sensitivity increase we report for the binary black hole injection set can be found by investigating the null hypothesis of seeing the same $1\%$ increase under the assumption that the subtraction of \scladj glitches does not actually increase sensitivity. When performing this analysis we find that our result is not statistically significant at the 95\% confidence interval --i.e. there is a 5.24\% chance that we would measure such an increase in sensitivity at least as large as this under the null hypothesis-- (see~\ref{4:sec:apdx_stat_sig} for details). However, the marginal sensitivity increase would not justify repeating the \scladj glitch search and glitch-subtracted \gwadj search on a larger injection set, instead more work is needed to better identify and remove \scladj glitches while remaining safe in the presence of \gwadj signals.
 
@@ -483,47 +418,9 @@ The statistical significance of the sensitivity increase we report for the binar
      \label{4:fig:allinj_vt_ratio}
 \end{figure}
 
-\section{\label{4:sec:conclusion}Conclusion}
+\subsection{\label{4:sec:apdx_injections_table}Injections tables}
 
-We have demonstrated a new method for modelling \scladj glitches and identifying and characterizing these glitches in a period of \gwadj data. We have developed a \scladj glitch specific $\chi^{2}$ test which can discriminate between \scladj glitches, other types of glitches and \gwadj signals. We have searched through a representative stretch of \gwadj data known to contain \scladj glitches, found thousands of these glitches and subtracted them from the \gwadj data prior to running a search for \gws. The results of this search include a small increase in the measured sensitivity of the \gwadj search for binary black hole \gwadj signals, and modest change to sensitivity for binary neutron star and neutron star black hole \gwadj signals.
-
-We highlight that the task of accurately identifying and parameterizing \scladj glitches in the data is not a trivial one, especially where there are repeated, and harmonic, glitches present in the data. We have developed a new $\chi^{2}$ test to reduce the number of false identifications of \scladj glitches, but we do still see cases where we have misidentified other glitches, and even some loud \gwadj signals, as caused by \scl, and cases where we do not correctly identify, or parameterize, actual \scladj glitches. Improving this identification process would be important in improving the efficacy of this process.
-
-The possibility of using this model of \scladj glitches as a bespoke application to \gwadj signals which are known to have coincident \scladj glitches has been explored and implemented into Bilby~\cite{BILBY:2019} to perform a parameter estimation of \scladj glitches and removing these to produce glitch-free data~\cite{Udall:2023}. The inclusion of the extra term from~\cite{Was_Subtract:2021} within the model can help identify \scladj glitches more accurately. Selectively subtracting glitches based on the presence of a \gwadj signal is possible by moving the glitch subtraction process inside the \gwadj searches and including the results of other \gwadj discriminators~\cite{rw_snr_eq:2012, McIsaac_Chi:2022} to determine the legitimacy of an ArchEnemy identified glitch.
-
-The results of the application of the ArchEnemy search pipeline, the list of \scladj glitches, can also be used in other applications. For example, it could be used in the form of a veto~\cite{O2O3_DetChar:2021}, where we use knowledge of the presence of \scladj glitches to down rank periods of time in \gwadj data. Additionally, we could use \scladj glitches previously identified by tools such as Gravity Spy~\cite{gravityspy:2023} and target known \scladj glitches with the ArchEnemy search pipeline.
-
-As a final note, while we acknowledge that the sensitivity improvements that we have observed---${\sim} 1\%$---are very modest, the concept of removing \scladj glitches, or other identified glitch classes, from the data prior to matched filtering for CBCs is one that we encourage others to explore further. An increase in the rate of events or the rate of \scladj glitches in future observing runs will mean an increase in the number of affected events, such techniques offer a method for mitigating the effect that these glitches will have on the search, maximizing the number of observations that can be made.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Appendix}
-\section{\label{4:sec:apdx_stat_sig}Statistical significance}
-
-We report a $1\%$ increase in the sensitivity for the binary black hole injection set in the glitch-subtracted \gwadj search (see Section~\ref{4:sec:results}). We wish to determine the statistical significance of this result under the null hypothesis that subtracting \scladj glitches prior to searching for \gws does not increase the sensitivity of the \gwadj search. The binary black hole injection set contains $6200$ injected signals, $10$ additional injections were found in the glitch-subtracted \gwadj search, $3$ additional injections were missed in our search, this gives us $13$ injections which have changed state.
-
-First, we calculate the probability that an injection has been affected by the glitch removal, 
-%
-\begin{equation}
-    p = \frac{13}{6200} = 0.21\% ,
-\end{equation}
-%
-then we calculate the standard deviation, 
-%
-\begin{equation}
-    \textrm{std} = \sqrt{n * p * (1 - p)} = 3.60 .
-\end{equation}
-%
-Using the standard deviation we calculate the number of standard deviations our result deviates from the mean. We divide the number of positively changed (newly-found) injections by the standard deviation, 
-%
-\begin{equation}
-    \textrm{standard deviations} = \frac{(10 - 3)}{3.60} = 1.94 .
-\end{equation}
-%
-Under the assumption of no sensitivity increase caused by the subtraction of glitches, we measure our result of +7 newly-found \gwadj injections to lie $1.94$ standard deviations from an expected value of $0$ newly-found injections. The critical value of a 95\% confidence interval, that is to say there is a 1 in 20 chance of our null hypothesis being true, is $1.96$ meaning our result is within the 95\% confidence interval. We can describe this as there being a 5.24\% chance that our result is not caused by the subtraction of glitches but is instead caused by random chance. To reduce the error in the computed sensitivity ratio a larger injection set test would be required, this would need a large time and computational power investment which we do not believe is justified in the case of such a minor increase in the sensitivity.
-
-\section{\label{4:sec:apdx_injections_table}Injections tables}
-
-Here we have three tables which contain data on the newly-found and newly-missed injections for each injection set. The tables are separated into the values for the inverse false-alarm rate and ranking statistic found for each injection in both searches then the SNR, $\chi^{2}$ and PSD variation values for each detector in both searches. The first table is the results of the binary black hole injection set, the second table is the binary neutron star injection set and the third is the neutron star black hole injection set. A horizontal dashed line separates newly-found and newly-missed injections, using a false-alarm rate threshold of 2 per year. There were 2 newly-found binary black hole injections which were not found at all by the original search and therefore they do not appear in the first table.
+Here we have three tables which contain data on the newly-found and newly-missed injections for each injection set. The tables are separated into the values for the inverse false-alarm rate and ranking statistic found for each injection in both searches then the SNR, $\chi^{2}$ and PSD variation values for each detector in both searches. The first table is the results of the binary black hole injection set, the second table is the binary neutron star injection set and the third is the neutron star black hole injection set. A horizontal dashed line separates newly-found and newly-missed injections, using a false-alarm rate threshold of 2 per year. There were 2 newly-found binary black hole injections which were not found at all by the original search, and therefore they do not appear in the first table.
 
 There have been 34 newly-found or newly-missed \gwadj injections when subtracting \scladj glitches, it is informative to understand how the \gwadj search is influenced by the glitch subtraction to cause this outcome. The ranking statistic~\cite{PyCBC_global:2020} represents the legitimacy of a signal being astrophysical in origin and is partially computed using the re-weighted SNR, which is itself computed using the initial SNR alongside the various \gwadj discriminators and the PSD variation measurement~\cite{PSD_var:2020}. We use the trigger information saved by the \gwadj search to identify why injections that weren't found previously have been found post-glitch subtraction, and vice versa. 
 
@@ -632,4 +529,38 @@ Stat. & & & Var. & & & Var. & & Stat. & & & Var. & & & Var.\\
 \end{landscape}
 \restoregeometry % restore the default margins for subsequent pages
 
-%%begin novalidate
+\section{\label{4:sec:apdx_stat_sig}Statistical significance}
+
+We report a $1\%$ increase in the sensitivity for the binary black hole injection set in the glitch-subtracted \gwadj search (see Section~\ref{4:sec:results}). We wish to determine the statistical significance of this result under the null hypothesis that subtracting \scladj glitches prior to searching for \gws does not increase the sensitivity of the \gwadj search. The binary black hole injection set contains $6200$ injected signals, $10$ additional injections were found in the glitch-subtracted \gwadj search, $3$ additional injections were missed in our search, this gives us $13$ injections which have changed state.
+
+First, we calculate the probability that an injection has been affected by the glitch removal, 
+%
+\begin{equation}
+    p = \frac{13}{6200} = 0.21\% ,
+\end{equation}
+%
+then we calculate the standard deviation, 
+%
+\begin{equation}
+    \textrm{std} = \sqrt{n * p * (1 - p)} = 3.60 .
+\end{equation}
+%
+Using the standard deviation we calculate the number of standard deviations our result deviates from the mean. We divide the number of positively changed (newly-found) injections by the standard deviation, 
+%
+\begin{equation}
+    \textrm{standard deviation} = \frac{(10 - 3)}{3.60} = 1.94 .
+\end{equation}
+%
+Under the assumption of no sensitivity increase caused by the subtraction of glitches, we measure our result of +7 newly-found \gwadj injections to lie $1.94$ standard deviations from an expected value of $0$ newly-found injections. The critical value of a 95\% confidence interval, that is to say there is a 1 in 20 chance of our null hypothesis being true, is $1.96$ meaning our result is within the 95\% confidence interval. We can describe this as there being a 5.24\% chance that our result is not caused by the subtraction of glitches but is instead caused by random chance. To reduce the error in the computed sensitivity ratio a larger injection set test would be required, this would need a large time and computational power investment which we do not believe is justified in the case of such a minor increase in the sensitivity.
+
+\section{\label{4:sec:conclusion}Conclusion}
+
+We have demonstrated a new method for modelling \scladj glitches and identifying and characterizing these glitches in a period of \gwadj data. We have developed a \scladj glitch specific $\chi^{2}$ test which can discriminate between \scladj glitches, other types of glitches and \gwadj signals. We have searched through a representative stretch of \gwadj data known to contain \scladj glitches, found thousands of these glitches and subtracted them from the \gwadj data prior to running a search for \gws. The results of this search include a small increase in the measured sensitivity of the \gwadj search for binary black hole \gwadj signals, and modest change to sensitivity for binary neutron star and neutron star black hole \gwadj signals.
+
+We highlight that the task of accurately identifying and parameterizing \scladj glitches in the data is not a trivial one, especially where there are repeated, and harmonic, glitches present in the data. We have developed a new $\chi^{2}$ test to reduce the number of false identifications of \scladj glitches, but we do still see cases where we have misidentified other glitches, and even some loud \gwadj signals, as caused by \scl, and cases where we do not correctly identify, or parameterize, actual \scladj glitches. Improving this identification process would be important in improving the efficacy of this process.
+
+The possibility of using this model of \scladj glitches as a bespoke application to \gwadj signals which are known to have coincident \scladj glitches has been explored and implemented into Bilby~\cite{BILBY:2019} to perform a parameter estimation of \scladj glitches and removing these to produce glitch-free data~\cite{Udall:2023}. The inclusion of the extra term from~\cite{Was_Subtract:2021} within the model can help identify \scladj glitches more accurately. Selectively subtracting glitches based on the presence of a \gwadj signal is possible by moving the glitch subtraction process inside the \gwadj searches and including the results of other \gwadj discriminators~\cite{rw_snr_eq:2012, McIsaac_Chi:2022} to determine the legitimacy of an ArchEnemy identified glitch.
+
+The results of the application of the ArchEnemy search pipeline, the list of \scladj glitches, can also be used in other applications. For example, it could be used in the form of a veto~\cite{O2O3_DetChar:2021}, where we use knowledge of the presence of \scladj glitches to down rank periods of time in \gwadj data. Additionally, we could use \scladj glitches previously identified by tools such as Gravity Spy~\cite{gravityspy:2023} and target known \scladj glitches with the ArchEnemy search pipeline.
+
+As a final note, while we acknowledge that the sensitivity improvements that we have observed---${\sim} 1\%$---are very modest, the concept of removing \scladj glitches, or other identified glitch classes, from the data prior to matched filtering for CBCs is one that we encourage others to explore further. An increase in the rate of events or the rate of \scladj glitches in future observing runs will mean an increase in the number of affected events, such techniques offer a method for mitigating the effect that these glitches will have on the search, maximizing the number of observations that can be made.

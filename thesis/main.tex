@@ -1,4 +1,4 @@
-\documentclass[12pt,twoside]{report} % Two-sided, reduce the size of the inner margins
+\documentclass[a4paper,12pt,twoside]{report} % Two-sided, reduce the size of the inner margins
 
 % \usepackage{setspace}\doublespacing
 \usepackage{setspace}\onehalfspacing
@@ -7,41 +7,56 @@
 \usepackage[sc]{mathpazo}
 
 % Packages
-% \usepackage[a4paper,top=30mm,bottom=30mm,inner=20mm,outer=20mm,bindingoffset=10mm,showframe=True]{geometry}
+%\usepackage[top=30mm,bottom=30mm,inner=20mm,outer=20mm,bindingoffset=10mm,showframe=True]{geometry}
 \usepackage[a4paper,top=30mm,bottom=30mm,inner=20mm,outer=20mm,bindingoffset=10mm]{geometry}
 
+\usepackage{hyperref}  % Load it once without options
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=purple,
+    urlcolor=red
+}
+
+\usepackage{doi}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{geometry}
-%\usepackage{mathtools}
+\usepackage{mathtools}
 \usepackage{listings}
 \usepackage[table]{xcolor}
 \usepackage{multirow}
 \usepackage{array}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage[colorlinks=true,
-            linkcolor=blue,
-            citecolor=purple,
-            urlcolor=red,
-            ]{hyperref}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{rotating}
 \usepackage{adjustbox}
 \usepackage{quoting} % For quotes in chapters
+\usepackage[absolute,overlay]{textpos} % For putting the UoP logo in the top right
+\usepackage{tcolorbox} % For colour box around Thesis Title
+\usepackage{siunitx}
+
+
 
 \usepackage{printlen} % For making plots look right
 
-\usepackage[
-backend=biber,
-style=numeric-comp,
-sorting=none,
-maxnames=3,
-minnames=1
-]{biblatex}
-\addbibresource{refs.bib}
+
+% BIBLATEX NOT WORKING ON ICG SERVER
+% \usepackage[
+% style=numeric-comp,
+% sorting=none,
+% maxnames=3,
+% minnames=1
+% ]{biblatex}
+% \addbibresource{refs.bib}
+
+% USING BIBTEX INSTEAD
+\usepackage[numbers,sort&compress]{natbib}
+
 
 \usepackage{arydshln}
 \usepackage{makecell}
@@ -259,10 +274,10 @@ minnames=1
 \tableofcontents
 
 %---% List of Figures %---%
-\listoffigures
+% \listoffigures
 
 %---% List of Tables %---%
-\listoftables
+% \listoftables
 
 % Reset page numbering and switch to Arabic numerals for main content
 \cleardoublepage
@@ -277,7 +292,7 @@ minnames=1
 %---% General Relativity %---%
 \chapter[Gravitational Waves]{\label{chapter:1-gravitational-waves}Gravitational Waves}
 \chapterquote{``This little manoeuvre's gonna cost us 51 years.''}{Joseph Cooper, Interstellar}
-In this thesis we focus on improving the capabilities of \gwadj search pipelines to detect \gwadj signals from compact binary coalescences (CBCs). As an introduction to the research chapters later in this thesis we will briefly discuss gravitational radiation, its detection using laser interferometry and, the \gwadj signals we expect to see from CBCs.
+In this thesis, we focus on improving the capabilities of \gwadj search pipelines to detect \gwadj signals from compact binary coalescences (CBCs). As an introduction to the research chapters later in this thesis, we will briefly discuss gravitational radiation, its detection using laser interferometry and, the \gwadj signals we expect to see from CBCs.
 \input{chapters/content/1_general_relativity}
 
 %---% Searches %---%
@@ -299,7 +314,7 @@ This chapter reproduces the published work carrying the name \textit{"ArchEnemy:
 %---% PyCBC Live Ranking Statistic %---%
 \chapter[Improving the PyCBC Live Ranking Statistic]{\label{chapter:5-pycbc-live}Improving the PyCBC Live Ranking Statistic}
 \chapterquote{``Have patience, all will be explained.''}{Guthix, The World Wakes}
-This work will be published as part of the PyCBC Live fourth observing run methods paper which is currently being drafted. I am responsible for the changes concerning the exponential noise model in the PyCBC Live ranking statistic as well as contributing to the development necessary to introduce these changes in the PyCBC Live infrastructure.
+This work will be published as part of the PyCBC Live fourth observing run methods paper, which is currently being drafted. I am responsible for the changes concerning the exponential noise model in the PyCBC Live ranking statistic as well as contributing to the development necessary to introduce these changes in the PyCBC Live infrastructure.
 \input{chapters/content/5_pycbclive}
 
 %---% Early Warning Ranking Statistic %---%
@@ -310,7 +325,7 @@ The work that forms this chapter was performed as my final project during the Ph
 
 %---% Other Work %---%
 \chapter[Optimising Signal-to-Noise Ratio in PyCBC Live]{\label{chapter:7-snr-optimiser}Optimising Signal-to-Noise Ratio in PyCBC Live}
-\chapterquote{``''}{Hat Films}
+\chapterquote{``Are we there yet?''}{Donkey, Shrek 2}
 The work that forms this chapter was performed as my first initial project upon starting my PhD and small additions were made over the course of the PhD. The PyCBC Live SNR optimiser has not been detailed in any PyCBC methods publication to date and will form a section in the upcoming fourth observing run PyCBC Live methods paper where these changes will be published. I was responsible for tuning the current PyCBC Live SNR optimiser, developing and introducing a new optimiser to PyCBC Live, and implementing astrophysically-motivated bounds on the spin template parameters.
 \input{chapters/content/7_snr_optimiser}
 
@@ -330,10 +345,14 @@ The work that forms this chapter was performed as my first initial project upon 
 % \chapterquote{``Are we there yet?''}{Donkey, Shrek 2}
 % % \input{chapters/content/appendix}
 
-% \bibliographystyle{unsrt}
-% \bibliography{refs}
 \nocite{*}
-\printbibliography
+
+% BIBTEX
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+% BIBLATEX
+% \printbibliography
 
 \includepdf[pages=-]{chapters/UPR16-Ethics-Review-Checklist.pdf}
 

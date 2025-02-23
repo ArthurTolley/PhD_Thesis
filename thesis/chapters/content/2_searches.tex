@@ -51,7 +51,7 @@ We begin with the single-detector search techniques to identify potential \gwadj
 \subsection{\label{2:sec:matched-filter}Matched filtering}
 
 % Use Jolien's book
-Detecting \gws relies on being able to distinguish between data that contains a \gwadj signal, \( s(t) = n(t) + h(t) \), and data which is only noise, \( s(t) = n(t) \). We must construct an optimal detection statistic, which expresses the value of the probability that the data contains a known signal. The optimal detection statistic is found by computing the ratio of the probability that the data contains the signal (hypothesis $\mathcal{H}_{1}$) to the probability that the data is pure noise (the null hypothesis $\mathcal{H}_{0}$)
+Detecting \gws relies on being able to distinguish between data that contains only noise, \( s(t) = n(t) \), and data which contains a \gwadj signal, \( s(t) = n(t) + h(t) \). We must construct an optimal detection statistic, which expresses the value of the probability that the data contains a known signal. The Neyman-Pearson likelihood ratio forms the optimal detection statistic~\cite{Biswas:2012} and is found by computing the ratio of the probability that the data contains the signal (hypothesis $\mathcal{H}_{1}$) to the probability that the data is pure noise (the null hypothesis $\mathcal{H}_{0}$)
 %
 \begin{equation}
     \Lambda = \frac{P(s|\mathcal{H}_{1})}{P(s|\mathcal{H}_{0})},
@@ -65,6 +65,22 @@ where \( \Lambda \) is the likelihood ratio that serves as the detection statist
 \end{equation}
 %
 where \( p(s|\mathcal{H}_{1}) \) is the probability density that the data contains the signal, and \( p(s|\mathcal{H}_{0}) \) is the probability density that the data is pure noise.
+
+We first define the noise-weighted inner product between two time series $s(t)$ (data) and $h(t)$ (signal) as~\cite{PyCBC:2016}
+%
+\begin{equation}
+  (s | h) = 4 \Re \int^{\infty}_{0} \frac{\tilde{s}(f) \tilde{h}^*(f)}{S_n(f)} df,
+  \label{2:eqn:inner_product}
+\end{equation}
+%
+where a tilde denotes a Fourier transformed version of the variable and where $S_n(f)$, represents the one-sided power spectral density (PSD) of the data, defined as
+%
+\begin{equation}
+  \langle \tilde{s}(f) \tilde{s}(f^\prime) \rangle = \frac{1}{2} S_n(f) \delta(f - f^\prime) \;,
+  \label{2:eqn:psd}
+\end{equation}
+%
+where angle brackets denote an average over noise realisations and $\delta$ is the Dirac delta function. It is important to note, $p(a|b)$ denotes conditional probability and $(a|b)$ denotes the noise-weighted inner product.
 
 If the detector noise is Gaussian, we can compute the probability densities
 %
@@ -86,23 +102,9 @@ The exponential scaling of the likelihood values can introduce numerical instabi
     \label{2:eq:log_likelihood_ratio}
 \end{equation}
 %
-From Equation~\ref{2:eq:log_likelihood_ratio} we can see that the likelihood ratio depends only on the data through the inner product of $s$ and $h$. We define the noise-weighted inner product between two time series $s(t)$ and $h(t)$ as
-%
-\begin{equation}
-  (s | h) = 4 \Re \int^{\infty}_{0} \frac{\tilde{s}(f) \tilde{h}^*(f)}{S_n(f)} df,
-  \label{2:eqn:inner_product}
-\end{equation}
-%
-where a tilde denotes a Fourier transformed version of the variable and where $S_n(f)$, represents the one-sided power spectral density (PSD) of the data, defined as
-%
-\begin{equation}
-  \langle \tilde{s}(f) \tilde{s}(f^\prime) \rangle = \frac{1}{2} S_n(f) \delta(f - f^\prime) \;,
-  \label{2:eqn:psd}
-\end{equation}
-%
-where angle brackets denote an average over noise realisations and $\delta$ is the Dirac delta function. This inner product is the optimal detection statistic and is known as the \textit{matched filter}, effectively a noise-weighted correlation between the known signal and the data.
+From Equation~\ref{2:eq:log_likelihood_ratio} we can see that the likelihood ratio depends only on the data through the inner product of $s$ and $h$ and is the optimal detection statistic known as the \textit{matched filter}, effectively a noise-weighted correlation between the known signal and the data.
 
-Since we are interested in evaluating the presence of a signal in the data, it is useful to define the \textit{signal-to-noise ratio} (SNR), \( \rho \), which quantifies how strong the signal is relative to the background noise. The SNR is defined as~\cite{FINDCHIRP:2012}
+Since we are interested in evaluating the presence of a signal in the data, it is useful to define the \textit{signal-to-noise ratio} (SNR), \( \rho \), which quantifies how strong the signal is relative to the background noise. The SNR of a known signal in data can be derived as~\cite{FINDCHIRP:2012}
 %
 \begin{equation}
     \rho = \frac{(s|h)}{\sqrt{(h|h)}}.
@@ -170,7 +172,7 @@ We can then calculate $\rho^{2}$ using these two new signals to maximise over th
     \label{2:eq:phase_max}
 \end{equation}
 %
-having made the assumption that $\tilde{h}_{\pi/2}(f) = i\tilde{h}_{0}(f)$ which is true for frequency domain waveforms with the stationary phase approximation~\cite{Droz:1999}. We take the square root of Equation~\ref{2:eq:phase_max} to get the SNR, where phase has been maximised over
+having made the assumption that $\tilde{h}_{\pi/2}(f) = i\tilde{h}_{0}(f)$ which is true for frequency domain waveforms with the stationary phase approximation~\cite{Droz:1999}. Conventionally we take the square root of Equation~\ref{2:eq:phase_max} to obtain the SNR, where phase has been maximised over
 \begin{equation}
     \rho = \sqrt{\underset{\Phi}{\text{max}}(\rho^{2}(t))}.
 \end{equation}
@@ -224,11 +226,11 @@ In a geometric approach, a lattice is defined within the template parameter spac
 
 \subsection{\label{2:sec:signal-consistency}Signal consistency tests}
 
-The matched filter is described as the optimal detection statistic in stationary Gaussian noise for searching for known signals. While we have dealt with the case of an unknown signal, we now consider the case where the detector noise is not Gaussian. Within the detector data we have many instances of short duration bursts of excess power that are non-Gaussian, commonly called `glitches'~\cite{LIGO_data_quality:2015}.
+The matched filter is described as the optimal detection statistic in stationary Gaussian noise for searching for known signals. While we have dealt with the case of an unknown signal, we now consider the case where the detector noise is not Gaussian. Within the detector data, we have many instances of short duration bursts of excess power that are non-Gaussian, commonly called `glitches'~\cite{LIGO_data_quality:2015}.
 
-Glitches produce large SNRs in the matched filter even when they do not share the same morphological characteristics. To combat this we use signal consistency tests, which are able to discriminate between glitches and signal based on the distribution of the power present in the detector data.
+Glitches produce large SNRs in the matched filter even when they do not share the same morphological characteristics. To combat this, we use signal consistency tests, which are able to discriminate between glitches and signal based on the distribution of the power present in the detector data.
 
-We know the expected time and frequency evolution of a \gwadj signal using our waveform models. The time-frequency waveform consistency test described in~\cite{Allen_Chi:2005} (the Allen $\chi^{2}$ test) divides the signal template into $p$ sub-templates such that each sub-template contributes equally to the total SNR
+We know the expected time and frequency evolution of a \gwadj signal using our waveform models. The time-frequency waveform consistency test described in~\cite{Allen_Chi:2005} (the Allen $\chi^{2}$ test) divides the signal template into $p$ sub-templates such that each sub-template contributes equally to the total SNR,
 %
 \begin{equation}
     4 \int^{f_{1}}_{0}\frac{\tilde{s}(f) \tilde{h}_{1}(p)^*(f)}{Sn(f)}df = 4 \int^{f_{2}}_{f_{1}}\frac{\tilde{s}(f) \tilde{h}_{2}(p)}{Sn(f)}df = ... =  4 \int^{\inf}_{f_{p-1}}\frac{\tilde{s}(f) \tilde{h}_{p}(f)}{Sn(f)}df ,
@@ -251,7 +253,7 @@ If the data noise is Gaussian the $\chi^{2}$ value will be $\chi^{2}$ distribute
     \label{2:eq:reduced_chisq}
 \end{equation}
 %
-Another $\chi^{2}$ test used by \gwadj searches is the sine-Gaussian $\chi^{2}$ test~\cite{PyCBC_sg:2018} which searches for excess power in the frequencies above the expected frequency range of the signal.
+The sine-Gaussian $\chi^{2}$ test is another test used by \gwadj searches to identify excess power in frequencies \textit{above} the expected frequency range of the signal. To do this, multiple sine-Gaussian functions are defined across the frequency range and matched filtered with the data to find deviations from the expected SNR at each frequency~\cite{PyCBC_sg:2018}. If a \gwadj signal merges at a specific frequency, then we do not expect a large SNR for sine-Gaussian functions at frequencies greater than the merger frequency.
 
 These two $\chi^{2}$ tests are used to re-weigh the SNR of the matched filter, first the Allen $\chi^{2}$ test is applied~\cite{McIsaac_Chi:2022}
 %
@@ -273,6 +275,8 @@ then the sine-Gaussian $\chi^{2}$ test is applied
     \end{cases}
 \end{equation}
 %
+We note that the coefficients used in the re-weighing are determined empirically and can be tuned for different populations (though this has not been done).
+
 We define a detection threshold such that a template found at a time with SNR above the threshold will be considered for consideration as a \gwadj signal, we call these detections `triggers'. The re-weighted SNR is used to rank detector triggers from single detector matched filters.
 
 \subsection{\label{2:sec:auto-gating}Auto-gating}
@@ -295,7 +299,7 @@ Gating occurs automatically in \gwadj searches in a process called `auto-gating'
 
 Non-Gaussian transients in our detector data lead to greatly increased possibility for a \gwadj detector to report detections of \gwadj signals caused by non-astrophysical sources. If, after our signal-consistency tests, a glitch has a large SNR we are unable to make a distinction between it and a real event.
 
-In terms of the optimal detection statistic, we must include further components which can reject glitches while ensuring we continue to detect all possible real events. The most powerful method for confirming the detection in one detector is the coincidental detection of the same signal in another detector. We call this a \textit{coincidence test}; the requirement that for a signal to be considered real it must have been observed in multiple detectors.
+In terms of the optimal detection statistic, we must include further components which can reject glitches while ensuring we continue to detect all possible real events. The most powerful method for confirming the detection in one detector is the coincidental detection of the same signal in another detector. We call this a \textit{coincidence test}; the requirement that for a signal to be considered real, it must have been observed in multiple detectors.
 
 In a two detector example, for example LIGO-Hanford and LIGO-Livingston, the signal seen by both detectors will not be exactly the same. The detectors are located approximately $3,000 \, \text{km}$ from one another, (Figure~\ref{2:fig:observatories}) and we know \gws propagate at the speed of light (Section~\ref{1:sec:keplerian_derivation}).
 %
@@ -306,15 +310,25 @@ In a two detector example, for example LIGO-Hanford and LIGO-Livingston, the sig
     \label{2:fig:observatories}
 \end{figure}
 %
-Therefore, we can expect a maximum delay between single-detector detections of $10 \, \text{ms}$. For the coincidence test we must allow a window between single detector triggers of this light travel time. An additional coincidence requirement in PyCBC is the intrinsic parameters of the two single detector triggers being the same, i.e. they have seen the same gravitational waveform.
+Therefore, we can expect a maximum delay between single-detector detections of $10 \, \text{ms}$. For the coincidence test, we must allow a window between single detector triggers of this light travel time. An additional coincidence requirement in PyCBC is the intrinsic parameters of the two single detector triggers being the same, i.e. they have seen the same gravitational waveform.
 
 
 \subsection{\label{2:sec:ranking-statistic}Ranking statistic}
 
-Finally, we can combine all these components to create a ranking statistic to use as the detection statistic for identifying \gwadj signals from \gwadj detector data. The optimal detection statistic is the likelihood ratio~\cite{Biswas:2012}
+Finally, we can combine all these components to create a ranking statistic to use as the detection statistic for identifying \gwadj signals from \gwadj detector data. The likelihood ratio is calculated using the signal and noise event rate densities, defined as~\cite{PyCBC_global:2020}
 %
 \begin{equation}
-    \Lambda(\vec{\kappa}) = \frac{r_{n}(\vec{\kappa})}{r_{s}(\vec{\kappa})},
+    r_{s}(\kappa) = \frac{\text{Number of signal events}}{\text{Volume} \times \text{Time}},
+\end{equation}
+%
+\begin{equation}
+    r_{n}(\kappa) = \frac{\text{Number of noise events}}{\text{Volume} \times \text{Time}}.
+\end{equation}
+%
+We compare the number of signal and noise events over the total Volume-Time (VT) observed, the number of signal events should increase with an increase in both volume and time, but the number of noise events will not change with an increase in volume, only time. We use the volume in the noise event rate density calculation to allow us to simply compare the two rates as the VT cancels in likelihood ratio
+%
+\begin{equation}
+    \Lambda(\vec{\kappa}) = \frac{r_{s}(\vec{\kappa})}{r_{n}(\vec{\kappa})},
 \end{equation}
 %
 where $\vec{\kappa}$ is a set of parameters
@@ -325,40 +339,32 @@ where $\vec{\kappa}$ is a set of parameters
 %
 $\vec{\kappa}$ contains three categories of parameter: first, the single detector trigger parameters for each detector $d$, SNR, Allen-$\chi^{2}$, sine-Gaussian $\chi^{2}$ and template sensitivity ($\sigma_{d}$); next, the intrinsic template parameters $\vec{\theta}$ and; the coincident trigger parameters, amplitude ratio ($\mathfrak{A}_{ab}$), time of arrival difference ($\delta t_{ab}$) and phase difference ($\delta \phi_{ab}$) between two detectors $d_{1}$ and $d_{2}$.
 
-The likelihood ratio is expressed as a ratio of event rate densities~\cite{PyCBC_global:2020} where
-%
-\begin{equation}
-    r_{s}(\kappa) = \frac{\text{Number of signal events}}{\text{Volume} \times \text{Time}},
-\end{equation}
-%
-\begin{equation}
-    r_{n}(\kappa) = \frac{\text{Number of noise events}}{\text{Volume} \times \text{Time}}.
-\end{equation}
-%
 Again, it is natural to use the log-likelihood ratio due to the order of magnitude difference between the event rate densities
 %
 \begin{equation}
     R(\vec{\kappa}) = \log \Lambda(\vec{\kappa}) = \log r_{s}(\vec{\kappa}) - \log r_{n}(\vec{\kappa}).
 \end{equation}
 %
-We call the log-likelihood detection statistic the ranking statistic which is constructed from a noise model and signal model. The PyCBC noise and signal models have changed over the course of the \gwadj search history. We will describe the models used in~\cite{PyCBC:2016}, the first iteration of the \texttt{PyCBC} search for \cbcs.
+We call the log-likelihood detection statistic the ranking statistic, which is constructed from a noise model and signal model. The PyCBC noise and signal models have changed over the course of the \gwadj search history. We will describe the models used in~\cite{PyCBC:2016}, the first iteration of the \texttt{PyCBC} search for \cbcs.
 
 \subsubsection{\label{2:sec:pycbc-2016}PyCBC}
 
-The \texttt{PyCBC} search pipeline ranked single detector triggers by their SNR and $\chi^{2}$ values to create a re-weighted SNR, $\hat{\rho}$ for each detector. The ranking statistic noise model used by the \texttt{PyCBC} search pipeline was a simple quadrature sum of single detector re-weighted SNRs
+The \texttt{PyCBC} search pipeline ranked single detector triggers by their SNR and $\chi^{2}$ values to create a re-weighted SNR, $\hat{\rho}_{d}$, for each detector. The \texttt{PyCBC} search pipeline ranking statistic noise event rate model provides information on how likely an event is to be caused by noise. The noise event rate model used by the \texttt{PyCBC} search pipeline was a simple quadrature sum of single detector re-weighted SNRs,
 %
 \begin{equation}
-    \hat{\rho}^{2} = \sqrt{\hat{\rho}^{2}_{d_{1}} + \hat{\rho}^{2}_{d_{2}}}.
+    \hat{\rho}^{2} = \sqrt{\hat{\rho}^{2}_{d_{1}} + \hat{\rho}^{2}_{d_{2}}},
     \label{2:eq:PyCBC_noise_model}
 \end{equation}
 %
-The \texttt{PyCBC} search pipeline had no signal model and so the ranking statistic was simply the noise model presented above. As detailed in~\cite{PyCBC:2016}, this ranking statistic was shown to `downrank' all triggers below a re-weighted SNR of $6$ in both a Gaussian noise simulation and the $6^{th}$ science run of LIGO~\cite{rw_snr_eq:2012}. We note that in this case there are $0$ real signals in the data and therefore this noise model has been applied to only noise triggers.
+where a large $\hat{\rho}^{2}$ indicates a more significant event, less likely to be caused by noise.
+
+The \texttt{PyCBC} search pipeline had no signal event rate model, and so the ranking statistic was simply the noise event rate model presented above. As detailed in~\cite{PyCBC:2016}, this ranking statistic was shown to `downrank' all triggers below a re-weighted SNR of $6$ in both a Gaussian noise simulation and the $6^{th}$ science run of LIGO~\cite{rw_snr_eq:2012}. We note that in this case there are $0$ real signals in the data and therefore this noise model has been applied to only noise triggers.
 
 \subsection{\label{2:sec:background-estimation}Candidate event significance}
 
 We can define some threshold at which a coincident trigger with ranking statistic value above this threshold can be preliminary considered to be a \gwadj event, we refer to these coincident triggers as \textit{candidates}. We define the \textit{significance} of the candidate as the \textit{false-alarm rate}. False alarms are coincident triggers that have been cause entirely by noise, with no astrophysical origin. The rate of false alarms depends on the search pipeline's response to detector noise and must be measured empirically.
 
-The PyCBC search pipeline measures the false-alarm rate using `time slides'. As discussed in Section~\ref{2:sec:coincidence-test}, a coincident trigger can only be formed if the triggers are within the light travel time window. Therefore, if a coincidence is made between two single detector triggers outside this window it \textbf{must} be caused by detector noise and not an astrophysical signal. To measure the background rate of coincident triggers we can take the triggers from the first detector and count all the coincidences made with the triggers from the second detector after shifting the time in the second detector by greater than the light travel time window. This ensures that any coincidences made cannot possibly have been due to a real signal because the coincidences will have occurred outside the light travel time window. An example of a background coincidence by these time slides for the three detector case can be seen in Figure~\ref{2:fig:timeslides}.
+The PyCBC search pipeline measures the false-alarm rate using `time slides'. As discussed in Section~\ref{2:sec:coincidence-test}, a coincident trigger can only be formed if the triggers are within the light travel time window. Therefore, if a coincidence is made between two single detector triggers outside this window it \textbf{must} be caused by detector noise and not an astrophysical signal. To measure the background rate of coincident triggers, we can take the triggers from the first detector and count all the coincidences made with the triggers from the second detector after shifting the time in the second detector by greater than the light travel time window. This ensures that any coincidences made cannot possibly have been due to a real signal because the coincidences will have occurred outside the light travel time window. An example of a background coincidence by these time slides for the three detector case can be seen in Figure~\ref{2:fig:timeslides}.
 %
 \begin{figure}
     \centering
@@ -368,9 +374,9 @@ The PyCBC search pipeline measures the false-alarm rate using `time slides'. As 
 \end{figure}
 %
 
-The time sliding procedure is repeated many times to produce a large sample of false-alarm coincidences which are used to compute the false-alarm rate as a function of the ranking statistic.
+The time sliding procedure is repeated many times to produce a large sample of false-alarm coincidences, which are used to compute the false-alarm rate as a function of the ranking statistic.
 
-To measure the significance of each candidate event we assign a p-value. In our pipeline the p-value of a candidate event is the probability that there are one or more false-alarm events that have a ranking statistic value greater than or equal to the ranking statistic of the detector value, $p_{b} = P(R_{FA} \ge R_{CE})$. The p-values of candidate events are calculated under the null hypothesis that \textit{all} triggers are seen due to noise. To confidently claim the candidate event as real, we must demonstrate that the null hypothesis given the candidate event ranking statistic value is highly improbable (the p-value is small).
+To measure the significance of each candidate event, we assign a p-value. In our pipeline, the p-value of a candidate event is the probability that there are one or more false-alarm events that have a ranking statistic value greater than or equal to the ranking statistic of the detector value, $p_{b} = P(R_{FA} \ge R_{CE})$. The p-values of candidate events are calculated under the null hypothesis that \textit{all} triggers are seen due to noise. To confidently claim the candidate event as real, we must demonstrate that the null hypothesis given the candidate event ranking statistic value is highly improbable (the p-value is small).
 
 We can do this by measuring the number of noise background events, $n_{b}$, that have a ranking statistic value higher than the candidate event. If we do this for all ranking statistic values we can build up a mapping of ranking statistic to false-alarm rate. The function $n_{b}(R)$ gives the number of background events with a ranking statistic value higher than $R$, the ranking statistic value. The probability that one or more background events are found above $R$ given the observing time $T$ and the background time $T_{b}$ is~\cite{PyCBC:2016}
 %
@@ -421,7 +427,7 @@ The flow chart describing the structure of the \texttt{PyCBC} pipeline has been 
 
 \subsubsection{Template bank generation}
 
-A key consideration for \gwadj search pipelines is computational cost. A greater computational cost requires more time to analyse \gwadj data alongside greater monetary cost and carbon emission cost. The dominant cost for modelled searches is matched filtering. Therefore, the number of templates in the template bank is proportional to the computational cost of the search. The number of templates is tuned to balance a minimal loss in matched filter SNR with the computational cost.
+A key consideration for \gwadj search pipelines is computational cost. A greater computational cost requires more time to analyse \gwadj data, alongside greater monetary cost and carbon emission cost. The dominant cost for modelled searches is matched filtering. Therefore, the number of templates in the template bank is proportional to the computational cost of the search. The number of templates is tuned to balance a minimal loss in matched filter SNR with the computational cost.
 
 The template bank in the PyCBC search is shared between all detectors to allow a coincidence requirement of triggers sharing the same template between detectors. The template bank is generated given a power spectral density (PSD) and therefore we must create a PSD that is averaged over time for all detectors. The PSD is measured every $2048 \, \text{seconds}$ independently in each detector using Welch's method and taking the median average, this gives $N$ power spectra $S_{n}$ for each detector. The harmonic mean PSD for a single detector across all analysis time is then found
 %
@@ -450,7 +456,7 @@ A third observing run template bank can be seen plotted in the $m_{1}\text{--}m_
 
 \subsubsection{Matched filtering and clustering}
 
-The matched filter between template bank and data is performed on each block of data to create a list of single detector triggers. Triggers are only stored if their matched filter SNR is greater than $5.5$. Suppose we have a trigger with an SNR of $10.0$, according to our template bank minimum match we should have at least one additional trigger (and indeed have many) above the SNR threshold for a nearby template. To prevent the recording of multiple triggers from different templates for the same candidate event we use a \textit{time clustering} algorithm which selects and keeps only the highest SNR trigger in a predefined time window. Another clustering algorithm, is employed to trigger across the template bank to prevent the triggering of a loud glitch in one region of the template bank from subduing a real signal trigger in a completely different region.
+The matched filter between template bank and data is performed on each block of data to create a list of single detector triggers. Triggers are only stored if their matched filter SNR is greater than $5.5$. Suppose we have a trigger with an SNR of $10.0$, according to our template bank minimum match we should have at least one additional trigger (and indeed have many) above the SNR threshold for a nearby template. To prevent the recording of multiple triggers from different templates for the same candidate event, we use a \textit{time clustering} algorithm which selects and keeps only the highest SNR trigger in a predefined time window. Another clustering algorithm, is employed to trigger across the template bank to prevent the triggering of a loud glitch in one region of the template bank from subduing a real signal trigger in a completely different region.
 
 \subsubsection{Signal consistency test}
 
@@ -466,7 +472,7 @@ The triggers then have the $\chi^{2}$ test~\cite{Allen_Chi:2005} applied to ensu
 
 \subsubsection{Coincidence tests}
 
-Single detector triggers are combined and evaluated based on their trigger times and template parameters, triggers that have been found within the maximum light travel time between the two detectors ($10 \, \text{ms}$ for LIGO-Hanford and LIGO-Livingston) with an exactly matching template can be considered to originate from the same \gwadj signal~\cite{Robinson:2008}. The result of this process is a list of coincident triggers found with SNR above the threshold in two or more detectors with exact template parameters across detectors.
+Single detector triggers are combined and evaluated based on their trigger times and template parameters, triggers that have been found within the maximum light travel time between the two detectors ($10 \, \text{ms}$ for LIGO-Hanford and LIGO-Livingston) with an exactly matching template can be considered to originate from the same \gwadj signal~\cite{Robinson:2008}. The result of this process is a list of coincident triggers found with SNR above the threshold in two or more detectors, with exact template parameters across detectors.
 
 \subsubsection{Generate background, rank triggers, establish significance and estimate search sensitivity}
 

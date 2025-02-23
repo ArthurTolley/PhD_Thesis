@@ -50,7 +50,7 @@ and we can introduce a quantity known as the \textit{trace reverse tensor}
 %
 where $h = \eta^{\mu\nu}h_{\mu\nu}$ is the trace of the metric perturbation.
 
-We can then express the linearised Einstein tensor in terms of the linearised Riemann tensor and our trace reverse metric tensor
+We can then express the linearised Einstein tensor in terms of the linearised Riemann tensor and our trace reverse metric tensor~\cite{Moore_book:2012}
 %
 \begin{equation}
     R_{\mu\nu} - \frac{1}{2}g_{\mu\nu}R = \frac{1}{2}\left(\partial^{\sigma}\partial_{\mu}\Bar{h}_{\sigma\nu} - \partial^{\sigma}\partial_{\sigma}\Bar{h}_{\mu\nu} + \partial_{\nu}\partial^{\alpha}\Bar{h}_{\mu\alpha} - \eta_{\mu\nu}\partial^{\alpha}\partial^{\beta}\Bar{h}_{\alpha\beta}\right).
@@ -102,7 +102,7 @@ and remains valid as long as the weak-field approximation holds in the new coord
 We have chosen a coordinate system where Equation~\ref{1:eq:divergence_gone} is satisfied, and in this gauge, the Einstein field equations simplify to
 %
 \begin{equation}
-    \Box \Bar{h}_{\mu\nu} = -16 \pi T^{\mu\nu}
+    \Box \Bar{h}_{\mu\nu} = -16 \pi T^{\mu\nu} .
     \label{1:eq:lorentz_gauge_efe}
 \end{equation}
 %
@@ -140,7 +140,7 @@ First, we apply the gauge condition stated in Equation~\ref{1:eq:divergence_gone
     0 &= k^{\mu} A_{\mu\nu},
 \end{align}
 %
-this implies that \gws are \textit{transverse}. This removes the components of $\bar{h}_{\mu\nu}$ that are parallel to the direction of propagation of the \gw; hence, $\bar{h}_{0i} = 0$.\footnote{Roman letter indices represent spatial dimensions ($x$, $y$, $z$).} For instance, a \gw travelling in the $z$-direction will have purely spatial components in the $x$ and $y$ directions.
+this implies that \gws are \textit{transverse}. This removes the components of $\bar{h}_{\mu\nu}$ that are parallel to the direction of propagation of the \gw; hence, $\bar{h}_{0i} = 0$\footnote{Roman letter indices represent spatial dimensions ($x$, $y$, $z$).} and $A_{t\mu} = 0$. For instance, a \gw travelling in the $z$-direction will have purely spatial components in the $x$ and $y$ directions.
 
 Second, we require $\bar{h}^{\mu}_{\mu} = 0$, the trace of the \gw to vanish. This removes the possibility of a volume change in spacetime due to \gwadj transmission. We say that our \gws are now \textit{traceless}. This gauge is called the \textit{transverse-traceless} (TT) gauge.
 
@@ -159,7 +159,7 @@ In the TT gauge, we can express the metric perturbation $h^{TT}_{\mu\nu}$ for a 
    \label{1:eqn:h_TT}
 \end{equation}
 %
-We define the plus and cross polarisations as
+We define the plus and cross polarisations as~\cite{Moore_book:2012}
 %
 \begin{equation}
     h_+ = A_+ \cos(\omega t - \omega z + \phi_{0}),
@@ -203,7 +203,7 @@ It can be seen that the effect of the $\times$ polarisation is the same as the $
 
 \subsection{\label{1:sec:gw-emission}\Gwadj emission in linearised gravity}
 
-We now return to Equation~\ref{1:eq:lorentz_gauge_efe} and reconsider the stress-energy tensor. The solution to the Einstein equations can be obtained using the Green's function,
+We now return to Equation~\ref{1:eq:lorentz_gauge_efe} and reconsider the stress-energy tensor. The solution to the Einstein equations can be obtained using the Green's function~\cite{Dhurkunde:2024},
 %
 \begin{equation}
     \Bar{h}_{\mu\nu}(t, \vec{x}) = 4 \int d^3 x^{\prime} \frac{T_{\mu\nu}\left(t - |\vec{x} - \vec{x}^{\prime}|, \vec{x}^{\prime}\right)}{|\vec{x} - \vec{x}^{\prime}|},
@@ -221,27 +221,77 @@ We expand the stress-energy tensor using a Taylor expansion around the retarded 
 %
 to leading order. We can see that the \gws are dependent on the integral of the stress-energy tensor over a volume containing the source, evaluated at the retarded time.
 
-In the TT gauge, and using the laws of conservation of total energy and momentum, the right-hand side of Equation~\ref{1:eq:quadrupole_simplification} can be expressed as
+Using the laws of conservation of total energy and momentum, $\partial^{\mu}T_{\mu\nu}=0$, we can see that the integral of the $T_{t\nu}$ and $T_{\nu t}$ components will be constant in time. We choose to ignore these components and focus only on observable signals in the spatial dimensions moving forward.
+
+The right-hand side of Equation~\ref{1:eq:quadrupole_simplification} can be expressed as
 %
 \begin{equation}
-    \frac{4}{r} \int d^3 x^{\prime} T_{\mu\nu}\left(t - r, \vec{x}^{\prime}\right) = \frac{2}{r}\frac{\partial^{2}}{\partial t^{2}} \int T_{00} x_{\mu} x_{\nu} d^{3} x^{\prime},
+    \frac{4}{r} \int d^3 x^{\prime} T_{ij} = \frac{2}{r}\frac{\partial^{2}}{\partial t^{2}} \int T_{00} x_{i} x_{j} d^{3} x^{\prime},
 \end{equation}
 %
 where $T_{00} \approx \rho$, the Newtonian mass density. This expression is referred to as the \textit{mass quadrupole moment tensor} of the mass distribution
 %
 \begin{equation}
-    I_{\mu\nu} := \int T_{00} x_{\mu} x_{\nu} d^{3} x^{\prime},
+    M_{ij} := \int T_{00} x_{i} x_{j} d^{3} x^{\prime},
     \label{1:eq:quadrupole_moment_tensor}
 \end{equation}
 %
 and when substituted into Equation~\ref{1:eq:quadrupole_simplification}, we obtain the \textit{quadrupole formula}
 %
 \begin{equation}
-    h^{TT}_{\mu\nu} = \frac{2}{r} \ddot{I}_{\mu\nu}(t-r).
+    h_{ij} = \frac{2}{r} \ddot{M}_{ij}(t-r),
     \label{1:eq:quadrupole_formula}
 \end{equation}
 %
+where each dot over a tensor represents on derivative with respect to time.
+
 The key properties of this equation are the dependence of gravitational radiation on the second time derivative of the quadrupole moment tensor, indicating that \gws are produced by rapid changes in the quadrupole moment tensor, such as the accelerations of masses and their directional changes during orbital cycles. Additionally, the \gwadj strain falls off inversely with distance $r$ from the source.
+
+To extract the plus and cross polarisations of the metric perturbation we must now transform into the transverse-traceless gauge, this is done using the projection tensor~\cite{McIsaac_Thesis:2023}
+%
+\begin{equation}
+    P^{i}_{j}(\hat{n}) = \delta^{i}_{j} - n^{i}n_{j}
+\end{equation}
+%
+where
+%
+\begin{equation}
+    P^{i}_{j}P^{j}_{k} = P^{i}_{k}
+\end{equation}
+%
+and $\hat{n}$ is a normal vector such that $|\hat{n}| = 1$. Applying the projection vector to a three-dimensional vector will project it down into the two-dimensional plane orthogonal to $\hat{n}$. To get the components of $h_{ij}$ which are transverse to $\hat{n}$ we need to apply the projection tensor once for each index
+%
+\begin{equation}
+    h^{T}_{kl} = P^{i}_{k}P^{j}_{l}h_{ij},
+\end{equation}
+%
+and then to remove the trace of the tensor we use the Minkowski metric
+%
+\begin{equation}
+    h^{T} = \eta^{ij}h^{T}_{ij} = P^{ij}h_{ij}.
+\end{equation}
+%
+From this we can construct the tensor $\frac{1}{2}P_{kl}h^{T}$ which will have a trace of $h^{T}$ and will be transverse to $\hat{n}$ allowing us to subtract it from the transverse metric perturbation to get the metric perturbation in it's transverse-traceless form
+%
+\begin{equation}
+    h^{TT}_{kl} = \Lambda^{,ij}_{kl} h_{ij} 
+\end{equation}
+%
+where
+%
+\begin{equation}
+    \Lambda^{,ij}_{kl} = \left(P^{i}_{k}P^{j}_{l} - \frac{1}{2}P_{kl}P^{ij}\right).
+\end{equation}
+%
+Therefore, we can apply $\Lambda^{,ij}_{kl}$ to Equation~\ref{1:eq:quadrupole_formula} to get the transverse-traceless perturbation. For a gravitational wave travelling in the z-direction with $n^{i} = (0,0,1)$ (referred to as the "radiation" frame) we get plus and cross polarisations as functions of $\ddot{M}_{ij}$
+%
+\begin{equation}
+    h_{+}^{TT} = \frac{G}{r}\left(\ddot{M}_{xx} - \ddot{M}_{yy}\right)
+\end{equation}
+%
+\begin{equation}
+    h_{\times}^{TT} = \frac{2G}{r}\left(\ddot{M}_{xy}\right).
+\end{equation}
 
 The total power radiated by a source is the \textit{luminosity flux}, and it must equal the energy carried by the \gws, due to the conservation of energy. We can obtain the luminosity flux by integrating the energy flux over a sphere with infinite radius from the source. The total energy loss rate is expressed as
 %
@@ -250,20 +300,14 @@ The total power radiated by a source is the \textit{luminosity flux}, and it mus
     \label{1:eq:de_dt}
 \end{equation}
 %
-where $\mathcal{L}$ is the \gwadj luminosity flux. The luminosity flux at a large distance from the source is given by
+where $\mathcal{L}$ is the \gwadj luminosity flux. The luminosity flux at a large distance from the source is given by~\cite{Creighton_book:2009}
 %
 \begin{equation}
-    L = \frac{1}{5} \left\langle \dddot{Q}^{jk} \dddot{Q}_{jk} \right\rangle,
+    L = \frac{1}{5} \left\langle \dddot{M}^{jk} \dddot{M}_{jk} \right\rangle,
     \label{1:eq:luminosity_flux}
 \end{equation}
 %
-where $Q_{jk}(t)$ is the mass quadrupole moment of the source, defined as
-%
-\begin{equation}
-    Q_{jk}(t) = \int \rho(t, x^i) \left( x_j x_k - \frac{1}{3} \delta_{jk} x_l x^l \right) d^3x,
-\end{equation}
-%
-where $\rho$ is the mass density distribution and $\delta_{jk}$ is the Kronecker delta. The angular brackets represent averaging over all directions, and $\dddot{Q}_{jk}$ refers to the third time derivative of the quadrupole moment. This shows that any source with a non-vanishing second derivative of its mass quadrupole moment will emit \gws.
+where the angular brackets represent averaging over all directions, and $\dddot{M}_{jk}$ refers to the third time derivative of the quadrupole moment. This shows that any source with a non-vanishing second derivative of its mass quadrupole moment will emit \gws.
 
 Thus, through the quadrupole formula and \gwadj luminosity, we see that rapidly accelerating masses with a non-zero quadrupole moment are ideal sources of gravitational radiation.
 
@@ -295,7 +339,7 @@ Having described the effect of \gws on a ring of particles, we now describe how 
 \subsection{\label{1:sec:laser_interferometry}Laser interferometry}
 
 % Basic Concept of Laser Interferometry
-The physical effect of a passing \gw on a ring of particles (Figure~\ref{1:fig:ring_of_particles}) is described as a stretching and squeezing, changing the particles' proper distances depending on the polarisation of the \gw. The \gwadj observatories are Michelson interferometers and we can visualise the L-shape of them as experiencing similar effects to the ring of particles. A basic diagram of the LIGO interferometer design can be seen in Figure~\ref{1:fig:ifo}.
+The physical effect of a passing \gw on a ring of particles (Figure~\ref{1:fig:ring_of_particles}) is described as a stretching and squeezing, changing the particles' proper distances depending on the polarisation of the \gw. The \gwadj observatories are Michelson interferometers, and we can visualise the L-shape of them as experiencing similar effects to the ring of particles. A basic diagram of the LIGO interferometer design can be seen in Figure~\ref{1:fig:ifo}.
 %
 \begin{figure}
     \centering
@@ -305,7 +349,7 @@ The physical effect of a passing \gw on a ring of particles (Figure~\ref{1:fig:r
 \end{figure}
 %
 
-Half the light from the laser incident on the beam splitter is transmitted to the end test mass in the $y$-direction (ETM$_{\text{N}}$) and half to the end test mass to the $x$-direction(ETM$_{\text{E}}$). The end test masses are mirrors which reflect the light back toward the beam splitter. When no \gw is present, the length of the $x$ and $y$ arm cavities are equal and the light returning to the beam splitter interferes destructively meaning no light is detected by the photo-detector output of the detector.
+Half the light from the laser incident on the beam splitter is transmitted to the end test mass in the $y$-direction (ETM$_{\text{N}}$) and half to the end test mass in the $x$-direction(ETM$_{\text{E}}$). The end test masses are mirrors which reflect the light back toward the beam splitter. When no \gw is present, the length of the $x$ and $y$ arm cavities are equal and the light returning to the beam splitter interferes destructively, meaning no light is detected by the photo-detector output of the detector.
 
 % 
 Using Equation~\ref{1:eq:proper_dist_two_particles}, where we are treating the detector arms like two particles placed at ($L, 0, 0$) for the end test mass of the $x$ arm and ($0, L, 0$) for the $y$-arm, we can calculate the change in arm length (proper distance) with respect to the beam splitter at the origin under the influence of a \gw propagating in the $z$-direction
@@ -323,7 +367,7 @@ where $L$ is the length of the detector arm ($4 \, \text{km}$ for advanced LIGO)
 The strain experienced by the $x$ and $y$ arms is directly related to both the magnitude of the $h_{+}$ \gwadj polarisation and the length of the detector arm. The arm in the $x$-direction will experience stretching, while the arm in the $y$-direction will experience squeezing.
 
 % Calculating the Length Change in Interferometer Arms
-The coupling of motion in both arms leads us to require the use of the differential change in arm length to calculate the \gwadj strain
+The coupling of motion in both arms leads us to require the use of the differential change in arm length to calculate the \gwadj strain,
 %
 \begin{equation}
     h(t) = \frac{\delta L_1 - \delta L_2}{L},
@@ -344,9 +388,9 @@ and the difference in lengths for two interferometer arms is
     h(t) = \frac{1}{2} h_{ij}n_{1}^{i}n_{1}^{j} - \frac{1}{2} h_{ij}n_{2}^{i}n_{2}^{j},
 \end{equation}
 %
-where crucially $h_{ij}$ is measured in the detector's reference frame. If our detector is located in the $x-y$ plane the \gwadj signal is entirely polarised in the $h_{+}$ direction.
+where crucially $h_{ij}$ is measured in the detector's reference frame. If our detector is located in the $x-y$ plane, the \gwadj signal is entirely polarised in the $h_{+}$ direction.
 
-The \gw observed by the detector will not be the same as the \gw emitted by the source. To transform between radiation frame and detector frame we perform a set of rotations by angles ($\Theta, \Phi, \Psi$) to adjust for the orientation and polarisation of the wave. Figure~\ref{1:eq:detector_frame_rotations} shows the required angles to describe effects on the \gwadj signal due to these transformations.
+The \gw signal observed will depend on the orientation between source and detector. To transform between radiation frame and detector frame, we perform a set of rotations by angles ($\theta, \phi, \psi$) to adjust for the orientation and polarisation of the wave. Figure~\ref{1:eq:detector_frame_rotations} shows the required angles to describe effects on the \gwadj signal due to these transformations.
 %
 \begin{figure}
     \centering
@@ -360,18 +404,18 @@ Suppose we have a \gwadj signal in the radiation frame, to transform into the de
 \begin{equation}
     R^{i}_{j} = 
     \begin{pmatrix}
-        \cos\Phi & -\sin\Phi & 0 \\
-        \sin\Phi &  \cos\Phi & 0 \\
+        \cos\phi & -\sin\phi & 0 \\
+        \sin\phi &  \cos\phi & 0 \\
         0        &  0        & 1
     \end{pmatrix}
     \begin{pmatrix}
         1 & 0 & 0 \\
-        0 & \cos\Theta & -\sin\Theta \\
-        0 & \sin\Theta & \cos\Theta \\
+        0 & \cos\theta & -\sin\theta \\
+        0 & \sin\theta & \cos\theta \\
     \end{pmatrix}
     \begin{pmatrix}
-        \cos\Psi & -\sin\Psi & 0 \\
-        \sin\Psi &  \cos\Psi & 0 \\
+        \cos\psi & -\sin\psi & 0 \\
+        \sin\psi &  \cos\psi & 0 \\
         0        &  0        & 1
     \end{pmatrix},
     \label{1:eq:detector_frame_rotations}
@@ -384,7 +428,7 @@ such that when transforming the spatial components of $h_{ij}$ using this tensor
     \label{1:eq:h_t_linear_combination}
 \end{equation}
 %
-where
+where,
 %
 \begin{equation}
     F_{+}((\Theta, \Phi, \Psi)) = \frac{1}{2}(1 + \cos^{2}(\Theta))\cos2\Phi\cos2\Psi - \cos\Theta\sin2\Phi\sin2\Psi,
@@ -394,23 +438,23 @@ where
     F_{\times}((\Theta, \Phi, \Psi)) = -\frac{1}{2}(1 + \cos^{2}(\Theta))\cos2\Phi\cos2\Psi - \cos\Theta\sin2\Phi\sin2\Psi
 \end{equation}
 %
-which are the antennae responses of the detector to the $+$ and $\times$ polarisations respectively, which describe the sensitivity of the detector to \gws at different sky positions. 
+which are the antenna responses of the detector to the $+$ and $\times$ polarisations respectively, which describe the sensitivity of the detector to \gws at different sky positions. 
 
 
 \subsection{\label{1:sec:increase-det-sens}Increasing detector sensitivity}
 
 % Relating Strain to Gravitational Wave Signal
-With detector arm lengths on the order of $\mathcal{O}(10^{3}) \, \text{m}$ and a laser wavelength of approximately $1 \, \mu\text{m}$, we are only able to measure a fractional change in the arm length on the order of $10^{-9} \, \text{m}$. However, our detectors are capable of measuring induced strain from passing \gws as small as $\mathcal{O}(10^{-22})$. In this section, we discuss the detector improvements that enable these detections.
+With detector arm lengths on the order of ${\sim}10^{3} \, \text{m}$ and a laser wavelength of approximately $1 \, \mu\text{m}$, we are only able to measure a fractional change in the arm length on the order of $10^{-9} \, \text{m}$. However, our detectors are capable of measuring induced strain from passing \gws as small as $10^{-22}$. In this section, we discuss the detector improvements that enable these detections.
 
-One technique used to effectively increase the arm length of the detectors is to allow the light travel down the arms multiple times. The Fabry-Pérot cavities~\cite{aLIGO:2015} in the arms of the aLIGO detectors include an additional mirror on the input test mass (ITM), facing the end mirrors, which is highly reflective, allowing only a small fraction of light to transmit through. As a result, the light reflects multiple times between these two mirrors, increasing the optical path length to approximately $1000 \, \text{km}$. This also has the effect of building up laser power in the arms, sharpening the interference fringes to improve the ability to distinguish between noise and signal at the photo-detector~\cite{Meers:1988}.
+One technique used to effectively increase the arm length of the detectors is to allow the light to travel down the arms multiple times. The Fabry-Pérot cavities~\cite{aLIGO:2015} in the arms of the aLIGO detectors include an additional mirror on the input test mass (ITM), facing the end mirrors, which is highly reflective, allowing only a small fraction of light to transmit through. As a result, the light reflects multiple times between these two mirrors, increasing the optical path length to approximately $1000 \, \text{km}$. This also has the effect of building up laser power in the arms, sharpening the interference fringes to improve the ability to distinguish between noise and signal at the photo-detector~\cite{Meers:1988}.
 
-Two additional components that increase detector sensitivity are: \textit{power recycling}, where a mirror at the laser input port redirects reflected light back into the interferometer, boosting the circulating power within the arms and enhancing the signal-to-noise ratio, enabling the detection of weaker \gwadj signals. The second improvement is the \textit{signal recycling mirror}, placed at the output port, which resonates with specific \gwadj frequencies, effectively increasing the detector's sensitivity to signals of interest. By tuning this mirror, the interferometer's sensitivity can be optimized for certain frequency bands. These improvements together allow the detector to reach sensitivities capable of observing strain on the order of $\mathcal{O}(10^{-22})$.
+Two additional components that increase detector sensitivity are: \textit{power recycling}, where a mirror at the laser input port redirects reflected light back into the interferometer, boosting the circulating power within the arms and enhancing the signal-to-noise ratio, enabling the detection of weaker \gwadj signals. The second improvement is the \textit{signal recycling mirror}, placed at the output port, which resonates with specific \gwadj frequencies, effectively increasing the detector's sensitivity to signals of interest. By tuning this mirror, the interferometer's sensitivity can be optimized for certain frequency bands. These improvements together allow the detector to reach sensitivities capable of observing strain on the order of $10^{-22}$ for short-duration signals up to a few seconds long.
 
 \section{\label{1:sec:modelling_CBC}Modelling compact binary coalescences}
 
-The primary sources of \gws seen by Earth-based \gwadj detectors are those from \cbcs. \Cbcs (CBC) are the inspiral and merger of two compact objects (black holes or neutron stars). The binary system will emit \gws and slowly dissipate the orbital energy of the system. The system is locked in the cycle of a decreasing orbit leading to greater acceleration, increasing the rate at which energy is being dissipated and the orbital radius decreases. The orbit will decay until an eventual merger between the two objects. We have observed three distinct CBC systems: binary black holes (BBH), binary neutron stars (BNS) and neutron star - black hole binaries. 
+The primary sources of \gws seen by Earth-based \gwadj detectors are those from \cbcs. \Cbcs (CBC) are the inspiral and merger of two compact objects (black holes or neutron stars). The binary system will emit \gws and slowly dissipate the orbital energy of the system. The system is locked in the cycle of a decreasing orbit leading to greater acceleration, increasing the rate at which energy is being dissipated and the orbital radius decreases. The orbit will decay until an eventual merger between the two objects. We have observed three distinct CBC systems: binary black holes~\cite{GW150914:2016} (BBH), binary neutron stars~\cite{GW170817:2017} (BNS) and neutron star — black hole binaries~\cite{nsbh:2021}. 
 
-In this section we describe the \gws emitted by a CBC and the physical effects these would have on \gwadj detectors. First, we need to describe the intrinsic parameters of the \gwadj signal being created and the extrinsic, observational parameters which affect the signal based on how it is being observed. Next, we derive a gravitational waveform with a very simple binary system of two point-like masses using the Newtonian formalism.
+In this section, we describe the \gws emitted by a CBC and the physical effects these would have on \gwadj detectors. First, we need to describe the intrinsic parameters of the \gwadj signal being created and the extrinsic, observational parameters which affect the signal based on how it is being observed. Next, we derive a gravitational waveform with a very simple binary system of two point-like masses using the Newtonian formalism.
 
 \subsection{\label{1:sec:CBC-parameters}Waveform parameters}
 
@@ -434,20 +478,20 @@ The extrinsic parameters affect how the \gwadj signal is observed,
    \item Coalescence phase, $\phi_{c}$ 
 \end{itemize}
 
-There are additional parameters that describe other physical effects such as: tidal deformations, eccentricity, the neutron star equation of state, or potential deviations from \GR. In this work we will ignore these additional effects and focus on the $15$ parameters listed above.
+There are additional parameters that describe other physical effects such as: tidal deformations, eccentricity, the neutron star equation of state, or potential deviations from \GR. In this work, we will ignore these additional effects and focus on the $15$ parameters listed above.
 
 \subsection{\label{1:sec:keplerian_derivation}Simple CBC inspiral}
 
 We can derive $h_{+}$ and $h_{\times}$ for a binary system modelled as a decaying quasi-circular orbit of two point masses around a shared centre of mass. These two point masses are in the `inspiral' regime, where they are radiating \gws, travelling with speeds much less than $c$ and, are not close to merging. We choose a frame of reference where the plane of the binary is in the $x$-$y$ direction and the binary is situated at a distance $r$ from the observer.
 
-We obtain the orbital velocity in Kepler's laws of planetary motion by equating the Newtonian gravitational force and the orbital centripetal force
+Assuming a circular orbit, we obtain the orbital velocity in Kepler's laws of planetary motion by equating the Newtonian gravitational force and the orbital centripetal force
 %
 \begin{align}
     \frac{m_{1} m_{2}}{a^{2}} = \frac{\mu v^{2}}{a}, \\
     v = \sqrt{\frac{m_{1} + m_{2}}{a}},
 \end{align}
 %
-where $m_{1}$ and $m_{2}$ are the masses of the objects, $\mu$ is the reduced mass of the system and $a$ is the distance between the two objects.
+where $m_{1}$ and $m_{2}$ are the masses of the objects, $\mu$ is the reduced mass of the system ($\mu = \frac{m_1m_2}{(m_1+m_2)}$) and $a$ is the distance between the two objects.
 %
 Using $\omega = v/a$, we can obtain the orbital frequency
 %
@@ -484,11 +528,11 @@ The line of sight between the binary system and the observer is defined by the i
     h_{\times}(t) = \frac{4}{r} M\eta v^{2} \left(\frac{\cos\iota}{2}\right)\sin\left(2\omega_{orbit}t+2\Phi_{c}\right),
 \end{equation}
 %
-where $\eta = \frac{m_{1}m_{2}}{(m_{1} + m_{2})^{2}}$ is the symmetric mass ratio and $\Phi_{c}$ is the coalescence phase of the system. A key observation from these equations is that the frequency of the \gws is twice that of the binary orbital frequency.
+where $M = m_1 + m_2$ is the total mass of the system, $\eta = \frac{m_{1}m_{2}}{(m_{1} + m_{2})^{2}}$ is the symmetric mass ratio and $\Phi_{c}$ is the coalescence phase of the system. A key observation from these equations is that the frequency of the \gws is twice that of the binary orbital frequency.
 
 We have an embedded assumption that the separation distance of the two objects will remain constant. We know that the radiation of \gws will decrease the orbit of the binary system, and so by solving equations~\ref{1:eq:de_dt} and~\ref{1:eq:luminosity_flux}, we can find the power radiated by the binary system. The energy loss will increase the binary orbital frequency, from this we can calculate the change in phase and amplitude as a function of time.
 
-In the two point source example we relate the orbital velocity, $\omega_{orbit}$ to the particle separation, $a$, using Equation~\ref{1:eq:omega_orbit} and then when introducing the \textit{chirp mass},$\mathcal{M}$, of the binary system
+In the two point source example we relate the orbital velocity, $\omega_{orbit}$ to the particle separation, $a$, using Equation~\ref{1:eq:omega_orbit} and then when introducing the \textit{chirp mass}, $\mathcal{M}$, of the binary system
 %
 \begin{equation}
     \mathcal{M} = \frac{(m_{1}m_{2})^{\frac{3}{5}}}{(m_{1} + m_{2})^\frac{1}{5}},
@@ -520,7 +564,7 @@ and when substituted into Equation~\ref{1:eq:cbc_eg_de_dt} and solving we obtain
 where $t_{0}$ is the fiducial starting time for integration which is used to map the time to define a new time variable $\tau = t_{c} - t$.
 
 
-We can integrate Equation~\ref{1:eq:omega_orbit_f_of_tau} over time to find the orbital phase of the \gwadj signal
+We can integrate Equation~\ref{1:eq:omega_orbit_f_of_tau} over time to find the orbital phase of the \gwadj signal,
 %
 \begin{align}
     \Phi(\tau) &= \int^{t}_{t+{0}} \omega_{orbit} dt, \\ 
@@ -529,7 +573,7 @@ We can integrate Equation~\ref{1:eq:omega_orbit_f_of_tau} over time to find the 
 %
 where $\Phi_{c}$ is the coalescence phase.
 
-Finally, combining the previous equations we have derived
+Finally, combining the previous equations, we have derived
 %
 \begin{equation}
     h_{+}(\tau) = \frac{1}{r}\left(\frac{G\mathcal{M}}{c^{2}}\right)^{\frac{5}{4}}\left(\frac{5}{c\tau}\right)^{\frac{1}{4}}\left(\frac{1+\cos^{2}\iota}{2}\right)\cos\Phi(\tau),
@@ -539,7 +583,7 @@ Finally, combining the previous equations we have derived
     h_{\times}(\tau) = \frac{1}{r}\left(\frac{G\mathcal{M}}{c^{2}}\right)^{\frac{5}{4}}\left(\frac{5}{c\tau}\right)^{\frac{1}{4}}\cos\iota\sin\Phi(\tau),
 \end{equation}
 %
-the \gwadj polarisations for a metric perturbation originating from our simple two-point particle binary system. From these equations it's easy to show that both the amplitude and frequency of the system will increase rapidly and ``chirp'' as it approaches coalescence. Also clear to see is that these \gwadj signals are dependent only on the chirp mass of the system\footnote{We have chosen to retain $G$ and $c$ as they contribute to the strain value we expect from \gws.}.
+the \gwadj polarisations for a metric perturbation originating from our simple two-point particle binary system. From these equations, it's easy to show that both the amplitude and frequency of the system will increase rapidly and ``chirp'' as it approaches coalescence. Also clear to see is that these \gwadj signals are dependent only on the chirp mass of the system.
 
 \subsection{\label{1:sec:fourier_transform_chirp}Fourier transform of the chirp signal}
 
@@ -585,7 +629,7 @@ Here, \( d_L \) denotes the luminosity distance to the source, and \( \iota \) i
 
 Our Newtonian model of the \gwadj signal from a CBC source has been derived with simplifications. However, the real signals detected by \gwadj detectors are far more complex, requiring corrections to account for the effects of \GR. The post-Newtonian (PN) expansion technique improves the accuracy of gravitational waveforms by introducing relativistic corrections to the waveform, accounting for deviations from Newtonian gravity due to \GR~\cite{2PN_1:1996, 2PN_2:1996, 2PN_3:1995}.
 
-The PN expansion can be performed by expanding in powers of \( v/c \), where \( v \) is the velocity of the orbiting bodies, to obtain the corrections to the waveform which can then be summed to get waveforms up to the require PN order. For a CBC, the waveform could be written as
+The PN expansion can be performed by expanding in powers of \( v/c \), where \( v \) is the velocity of the orbiting bodies, to obtain the corrections to the waveform which can then be summed to get waveforms up to the required PN order. For a CBC, the waveform could be written as
 %
 \begin{equation}
     h(t) = h_{\text{Newtonian}}(t) + h_{\text{1PN}}(t) + h_{\text{1.5PN}}(t) + h_{\text{2PN}}(t) + \cdots,
@@ -595,14 +639,14 @@ where \( h_{\text{Newtonian}}(t) \) is the leading-order Newtonian term, and the
 
 \subsection{\label{1:sec:full_waveform}Full waveform}
 
-The post-Newtonian (PN) formalism is accurate during the inspiral phase of the waveform when the two objects are still distant from each other and formalism does not cover the entire evolution of the system. The system continues to emit \gws throughout the merger and post-merger phases, including the ringdown phase, where the newly formed object settles into its final shape. The \gwadj emission peaks during the merger, making it crucial for detecting \gws. The ringdown phase is particularly valuable for testing General Relativity (GR)~\cite{GW150914_TGR:2016, GW170817_TGR:2019, O3_TGR:2021}.
+The post-Newtonian (PN) formalism is accurate during the inspiral phase of the waveform when the two objects are still distant from each other, and formalism does not cover the entire evolution of the system. The system continues to emit \gws throughout the merger and post-merger phases, including the ringdown phase, where the newly formed object settles into its final shape. The \gwadj emission peaks during the merger, making it crucial for detecting \gws. The ringdown phase is particularly valuable for testing General Relativity (GR)~\cite{GW150914_TGR:2016, GW170817_TGR:2019, O3_TGR:2021}.
 
 Generating full waveforms requires solving the Einstein field equations using numerical relativity (NR), a process that can take weeks. To efficiently model the entire evolution of the waveform---comprising the inspiral, merger, and ringdown (IMR) phases (see Figure~\ref{1:fig:IMR})---waveform families use a combination of NR waveforms and analytical or semi-analytical approximations. This approach balances accuracy with computational efficiency. The following subsections briefly describe these waveform models.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{images/1_general_relativity/modelling_cbc/IMR.pdf}
-    \caption{The evolution of a compact binary merger is illustrated through three distinct phases. The inspiral phase involves the two compact objects orbiting each other, with the orbit decaying as they emit \gws. This phase is modeled using post-Newtonian theory. The merger phase occurs when the objects' orbit shrinks sufficiently for them to merge into a new compact object, modeled using numerical relativity. The ringdown phase represents the newly formed object's vibration as it settles into its final shape, modeled using perturbation theory. This image is adapted from~\cite{IMR_plot:2016}.}
+    \caption{The evolution of a compact binary merger is illustrated through three distinct phases. The inspiral phase involves the two compact objects orbiting each other, with the orbit decaying as they emit \gws. This phase is modelled using post-Newtonian theory. The merger phase occurs when the orbital radius decreases sufficiently for the objects to merge into a new compact object, modelled using numerical relativity. The ringdown phase represents the newly formed object's vibration as it settles into its final shape, modelled using perturbation theory. This image is adapted from~\cite{IMR_plot:2016}.}
     \label{1:fig:IMR}
 \end{figure}
 
