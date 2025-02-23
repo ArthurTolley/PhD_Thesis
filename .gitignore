@@ -1,0 +1,30 @@
+# LaTeX auxiliary and intermediate files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.log
+*.lof
+*.lot
+*.out
+*.toc
+*.run.xml
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Output files
+*.dvi
+*.ps
+
+# Backup and swap files
+*~
+*.bak
+*.swp
+*.swo
+
+# VS Code and other editor-specific files
+.vscode/
+*.code-workspace
+*.idea/
+*.DS_Store
